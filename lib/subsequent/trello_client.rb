@@ -1,0 +1,57 @@
+module Subsequent::TrelloClient
+  YAML_LOAD_OPTIONS = { permitted_classes: [Symbol], symbolize_names: true }
+
+  def self.auth_params
+    {
+      key: config.fetch(:trello_key),
+      token: config.fetch(:trello_token),
+    }
+  end
+
+  def self.trello_api_url(path, **params)
+    params.merge!(auth_params)
+
+    "https://api.trello.com/1/#{path}?#{params.to_query}"
+  end
+
+  def self.fetch_data(path)
+    url = trello_api_url(path)
+    result = JSON.parse(HTTP.get(url).to_s)
+
+    if result.is_a?(Array)
+      result.map { |item| transform_keys(item) }
+    else
+      transform_keys(result)
+    end
+  end
+
+  def self.complete_checklist_item(item)
+    HTTP.put(trello_api_url("cards/#{item.card_id}/checkItem/#{item.id}", state: "complete"))
+  end
+
+  def self.transform_keys(hash)
+    hash.deep_transform_keys { |key| key.underscore.to_sym }
+  end
+
+  def self.fetch_next_card
+    data = Subsequent::TrelloClient.fetch_cards(config.fetch(:trello_list_id))
+
+    Subsequent::Models::Card.new(**data.first)
+  end
+
+  def self.fetch_cards(list_id)
+    fetch_data("lists/#{list_id}/cards")
+  end
+
+  def self.fetch_checklists(card_id)
+    fetch_data("cards/#{card_id}/checklists")
+  end
+
+  def self.config
+    @config ||= YAML.safe_load_file(config_path, **YAML_LOAD_OPTIONS)
+  end
+
+  def self.config_path
+    File.join(Dir.home, ".subsequent/config.yml")
+  end
+end
