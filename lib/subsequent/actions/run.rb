@@ -3,16 +3,46 @@ module Subsequent::Actions::Run
   extend Subsequent::Colors
 
   DISPLAY_COUNT = 5
+  SPINNER = [
+    "▐⠂       ▌",
+    "▐⠈       ▌",
+    "▐ ⠂      ▌",
+    "▐ ⠠      ▌",
+    "▐  ⡀     ▌",
+    "▐  ⠠     ▌",
+    "▐   ⠂    ▌",
+    "▐   ⠈    ▌",
+    "▐    ⠂   ▌",
+    "▐    ⠠   ▌",
+    "▐     ⡀  ▌",
+    "▐     ⠠  ▌",
+    "▐      ⠂ ▌",
+    "▐      ⠈ ▌",
+    "▐       ⠂▌",
+    "▐       ⠠▌",
+    "▐       ⡀▌",
+    "▐      ⠠ ▌",
+    "▐      ⠂ ▌",
+    "▐     ⠈  ▌",
+    "▐     ⠂  ▌",
+    "▐    ⠠   ▌",
+    "▐    ⡀   ▌",
+    "▐   ⠠    ▌",
+    "▐   ⠂    ▌",
+    "▐  ⠈     ▌",
+    "▐  ⠂     ▌",
+    "▐ ⠠      ▌",
+    "▐ ⡀      ▌",
+    "▐⠠       ▌"
+  ].cycle
 
   def self.call
-    loop do
-      $stdout.clear_screen
+    fetch_data => { card:, checklist:, checklist_items: }
 
+    loop do
       # ☐ ✔
-      card = Subsequent::TrelloClient.fetch_next_card
-      checklist = card.checklists.find(&:unchecked_items?)
       if checklist
-        checklist.unchecked_items.first(DISPLAY_COUNT).each_with_index do |item, index|
+        checklist_items.each_with_index do |item, index|
           puts "#{index + 1}. ☐ #{green(item.name)}"
         end
       else
@@ -22,7 +52,7 @@ module Subsequent::Actions::Run
       puts
       puts commands
 
-      handle_input(checklist)
+      handle_input(checklist) => { card:, checklist:, checklist_items: }
     end
   end
 
@@ -34,6 +64,28 @@ module Subsequent::Actions::Run
     ]
   end
 
+  def self.fetch_data
+    $stdout.clear_screen
+    card = load_card
+    checklist = card.checklists.find(&:unchecked_items?)
+    checklist_items = checklist.unchecked_items.first(DISPLAY_COUNT)
+
+    { card:, checklist:, checklist_items: }
+  end
+
+  def self.load_card
+    thread = Thread.new { Subsequent::TrelloClient.fetch_next_card }
+
+    while thread.alive?
+      $stdout.clear_screen
+      print SPINNER.next
+      sleep 0.1
+    end
+    $stdout.clear_screen
+
+    thread.value
+  end
+
   def self.handle_input(checklist)
     input = $stdin.getch
 
@@ -41,7 +93,7 @@ module Subsequent::Actions::Run
       puts yellow("Goodbye!")
       exit
     elsif input == "r"
-      return
+      fetch_data
     else
       task_number = Integer(input)
       max_task_number = [checklist.unchecked_items.size, DISPLAY_COUNT].min
@@ -55,6 +107,7 @@ module Subsequent::Actions::Run
       if input == "y"
         Subsequent::TrelloClient.complete_checklist_item(item)
       end
+      fetch_data
     end
   rescue ArgumentError
     retry
