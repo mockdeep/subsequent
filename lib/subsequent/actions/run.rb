@@ -8,7 +8,7 @@ module Subsequent::Actions::Run
       checklist = card.checklists.find(&:unchecked_items?)
       if checklist
         checklist.unchecked_items.first(5).each_with_index do |item, index|
-          puts "#{index + 1}. #{item.name}"
+          puts "#{index + 1}. ☐ #{item.name}"
         end
       else
         puts "No unchecked items, finish card: #{card.name}"
