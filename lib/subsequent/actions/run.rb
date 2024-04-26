@@ -23,7 +23,6 @@ module Subsequent::Actions::Run
 
   def self.handle_input(checklist)
     input = $stdin.getch
-    puts input
 
     if input == "q" || input == "\u0004"
       puts "Exiting"
@@ -46,7 +45,6 @@ module Subsequent::Actions::Run
       end
     end
   rescue ArgumentError
-    puts "Invalid input, please try again"
     retry
   end
 end
