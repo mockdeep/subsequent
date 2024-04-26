@@ -24,8 +24,8 @@ module Subsequent::Actions::Run
   def self.handle_input(checklist)
     input = $stdin.getch
 
-    if input == "q" || input == "\u0004"
-      puts "Exiting"
+    if input == "q" || input == "\u0004" || input == "\u0003"
+      puts "Goodbye!"
       exit
     elsif input == "r"
       return
