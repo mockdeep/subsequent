@@ -1,5 +1,7 @@
 module Subsequent::Actions::Run
 
+  extend Subsequent::Colors
+
   def self.call
     loop do
       system("clear")
@@ -8,24 +10,32 @@ module Subsequent::Actions::Run
       checklist = card.checklists.find(&:unchecked_items?)
       if checklist
         checklist.unchecked_items.first(5).each_with_index do |item, index|
-          puts "#{index + 1}. ☐ #{item.name}"
+          puts "#{index + 1}. ☐ #{green(item.name)}"
         end
       else
         puts "No unchecked items, finish card: #{card.name}"
       end
 
       puts
-      puts "Press a number to complete task, 'q' to quit, 'r' to refresh"
+      puts commands
 
       handle_input(checklist)
     end
+  end
+
+  def self.commands
+    [
+      "Press a number to complete task",
+      "#{cyan("q")} to quit",
+      "#{cyan("r")} to refresh",
+    ]
   end
 
   def self.handle_input(checklist)
     input = $stdin.getch
 
     if input == "q" || input == "\u0004" || input == "\u0003"
-      puts "Goodbye!"
+      puts yellow("Goodbye!")
       exit
     elsif input == "r"
       return
