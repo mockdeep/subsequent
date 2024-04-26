@@ -6,7 +6,7 @@ module Subsequent::Actions::Run
 
   def self.call
     loop do
-      system("clear")
+      $stdout.clear_screen
 
       # ☐ ✔
       card = Subsequent::TrelloClient.fetch_next_card
