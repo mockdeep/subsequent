@@ -2,14 +2,17 @@ module Subsequent::Actions::Run
 
   extend Subsequent::Colors
 
+  DISPLAY_COUNT = 5
+
   def self.call
     loop do
       system("clear")
 
+      # ☐ ✔
       card = Subsequent::TrelloClient.fetch_next_card
       checklist = card.checklists.find(&:unchecked_items?)
       if checklist
-        checklist.unchecked_items.first(5).each_with_index do |item, index|
+        checklist.unchecked_items.first(DISPLAY_COUNT).each_with_index do |item, index|
           puts "#{index + 1}. ☐ #{green(item.name)}"
         end
       else
@@ -41,9 +44,8 @@ module Subsequent::Actions::Run
       return
     else
       task_number = Integer(input)
-      if task_number < 1 || task_number > checklist.unchecked_items.size
-        raise ArgumentError
-      end
+      max_task_number = [checklist.unchecked_items.size, DISPLAY_COUNT].min
+      raise ArgumentError if task_number < 1 || task_number > max_task_number
 
       item = checklist.unchecked_items[input.to_i - 1]
 
