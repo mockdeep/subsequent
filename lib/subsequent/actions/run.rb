@@ -41,6 +41,8 @@ module Subsequent::Actions::Run
 
     loop do
       $stdout.clear_screen
+      puts card.name
+      puts "=" * card.name.size
       if checklist
         checklist_items.each_with_index do |item, index|
           icon = item.checked? ? "✔" : "☐"
@@ -48,21 +50,22 @@ module Subsequent::Actions::Run
           puts "#{index + 1}. #{icon} #{name}"
         end
       else
-        puts "No unchecked items, finish card: #{card.name}"
+        puts "No unchecked items, finish the card!"
       end
 
       puts
-      puts commands
+      puts commands(checklist_items)
 
       handle_input(card, checklist, checklist_items) => { card:, checklist:, checklist_items: }
     end
   end
 
-  def self.commands
+  def self.commands(checklist_items)
+    item_range = (1..checklist_items.size)
     [
-      "Press a number to complete task",
-      "#{cyan("q")} to quit",
+      "#{cyan(item_range)} to toggle task",
       "#{cyan("r")} to refresh",
+      "#{cyan("q")} to quit",
     ]
   end
 
