@@ -25,8 +25,10 @@ module Subsequent::TrelloClient
     end
   end
 
-  def self.complete_checklist_item(item)
-    HTTP.put(trello_api_url("cards/#{item.card_id}/checkItem/#{item.id}", state: "complete"))
+  def self.toggle_checklist_item(item)
+    state = item.checked? ? "incomplete" : "complete"
+    item.state = state
+    HTTP.put(trello_api_url("cards/#{item.card_id}/checkItem/#{item.id}", state:))
   end
 
   def self.transform_keys(hash)
