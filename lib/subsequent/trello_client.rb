@@ -44,7 +44,9 @@ module Subsequent::TrelloClient
   end
 
   def self.fetch_checklists(card_id)
-    fetch_data("cards/#{card_id}/checklists")
+    fetch_data("cards/#{card_id}/checklists").sort_by do |checklist_data|
+      checklist_data.fetch(:pos)
+    end
   end
 
   def self.config
