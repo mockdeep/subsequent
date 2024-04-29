@@ -6,6 +6,7 @@ require "io/console"
 require "yaml"
 
 module Subsequent
+  class Error < StandardError; end
 end
 
 require_relative "subsequent/version"
