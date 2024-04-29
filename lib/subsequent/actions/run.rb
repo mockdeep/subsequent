@@ -61,18 +61,19 @@ module Subsequent::Actions::Run
   end
 
   def self.commands(checklist_items)
-    item_range = (1..checklist_items.size)
+    item_range = (1..checklist_items.size) if checklist_items
     [
-      "#{cyan(item_range)} to toggle task",
+      item_range && "#{cyan(item_range)} to toggle task",
       "#{cyan("r")} to refresh",
       "#{cyan("q")} to quit",
-    ]
+    ].compact
   end
 
   def self.fetch_data
     card = load_card
     checklist = card.checklists.find(&:unchecked_items?)
-    checklist_items = checklist.unchecked_items.first(DISPLAY_COUNT)
+    checklist_items =
+      checklist && checklist.unchecked_items.first(DISPLAY_COUNT)
 
     { card:, checklist:, checklist_items: }
   end
