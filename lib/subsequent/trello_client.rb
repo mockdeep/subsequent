@@ -15,8 +15,13 @@ module Subsequent::TrelloClient
   end
 
   def self.fetch_data(path)
-    url = trello_api_url(path)
-    result = JSON.parse(HTTP.get(url).to_s)
+    response = HTTP.get(trello_api_url(path))
+
+    unless response.status.success?
+      raise Subsequent::Error, "Failed to fetch data from Trello"
+    end
+
+    result = JSON.parse(response.to_s)
 
     if result.is_a?(Array)
       result.map { |item| transform_keys(item) }
@@ -28,7 +33,13 @@ module Subsequent::TrelloClient
   def self.toggle_checklist_item(item)
     state = item.checked? ? "incomplete" : "complete"
     item.state = state
-    HTTP.put(trello_api_url("cards/#{item.card_id}/checkItem/#{item.id}", state:))
+    path = "cards/#{item.card_id}/checkItem/#{item.id}"
+
+    response = HTTP.put(trello_api_url(path, state:))
+
+    unless response.status.success?
+      raise Subsequent::Error, "Failed to toggle checklist item"
+    end
   end
 
   def self.transform_keys(hash)
