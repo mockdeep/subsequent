@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
-require "subsequent"
+require_relative "support/coverage"
+require_relative "support/webmock"
+
+require_relative "../lib/subsequent"
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
@@ -11,5 +14,10 @@ RSpec.configure do |config|
 
   config.expect_with :rspec do |c|
     c.syntax = :expect
+  end
+
+  config.before do
+    Subsequent::TrelloClient.config_path =
+      File.join(__dir__, "fixtures", "config.yml")
   end
 end
