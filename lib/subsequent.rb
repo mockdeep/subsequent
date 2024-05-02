@@ -10,7 +10,7 @@ module Subsequent
 end
 
 require_relative "subsequent/version"
-require_relative "subsequent/colors"
+require_relative "subsequent/text_formatting"
 require_relative "subsequent/actions"
 require_relative "subsequent/models"
 require_relative "subsequent/trello_client"

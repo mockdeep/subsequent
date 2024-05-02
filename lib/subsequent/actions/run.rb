@@ -1,6 +1,6 @@
 module Subsequent::Actions::Run
 
-  extend Subsequent::Colors
+  extend Subsequent::TextFormatting
 
   DISPLAY_COUNT = 5
   SPINNER = [
@@ -41,7 +41,7 @@ module Subsequent::Actions::Run
 
     loop do
       $stdout.clear_screen
-      puts card.name
+      puts "#{card.name} (#{link(card.short_url)})"
       puts "=" * card.name.size
       if checklist
         checklist_items.each_with_index do |item, index|
@@ -112,4 +112,5 @@ module Subsequent::Actions::Run
   rescue ArgumentError
     retry
   end
+
 end
