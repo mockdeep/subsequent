@@ -22,4 +22,11 @@ module Subsequent::TextFormatting
   def link(url)
     "\e]8;;#{url}\e\\link\e]8;;\e\\"
   end
+
+  def linkify(string)
+    string
+      .split
+      .map { |word| word.start_with?("http") ? "(#{link(word)})" : word }
+      .join(" ")
+  end
 end
