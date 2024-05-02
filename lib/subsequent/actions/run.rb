@@ -46,7 +46,8 @@ module Subsequent::Actions::Run
       if checklist
         checklist_items.each_with_index do |item, index|
           icon = item.checked? ? "✔" : "☐"
-          name = item.checked? ? gray(item.name) : green(item.name)
+          item_name = linkify(item.name)
+          name = item.checked? ? gray(item_name) : green(item_name)
           puts "#{index + 1}. #{icon} #{name}"
         end
       else
