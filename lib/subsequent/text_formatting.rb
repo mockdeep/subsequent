@@ -1,4 +1,4 @@
-module Subsequent::Colors
+module Subsequent::TextFormatting
   def gray(string)
     "\e[94m#{string}\e[0m"
   end
@@ -17,5 +17,9 @@ module Subsequent::Colors
 
   def yellow(string)
     "\e[33m#{string}\e[0m"
+  end
+
+  def self.link(url)
+    "\e]8;;#{url}\e\\link\e]8;;\e\\"
   end
 end
