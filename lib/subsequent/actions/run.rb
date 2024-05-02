@@ -64,7 +64,7 @@ module Subsequent::Actions::Run
   def self.commands(checklist_items)
     item_range = (1..checklist_items.size) if checklist_items
     [
-      item_range && "#{cyan(item_range)} to toggle task",
+      item_range && "#{cyan(item_range.to_a.join(", "))} to toggle task",
       "#{cyan("r")} to refresh",
       "#{cyan("q")} to quit",
     ].compact
