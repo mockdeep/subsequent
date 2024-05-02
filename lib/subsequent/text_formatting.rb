@@ -19,7 +19,7 @@ module Subsequent::TextFormatting
     "\e[33m#{string}\e[0m"
   end
 
-  def self.link(url)
+  def link(url)
     "\e]8;;#{url}\e\\link\e]8;;\e\\"
   end
 end
