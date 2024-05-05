@@ -10,3 +10,13 @@ require "rubocop/rake_task"
 RuboCop::RakeTask.new
 
 task default: %i[spec rubocop]
+
+desc "Start irb with Subsequent loaded"
+task :console do
+  require "irb"
+  require "irb/completion"
+  require_relative "lib/subsequent"
+
+  ARGV.clear
+  IRB.start
+end
