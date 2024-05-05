@@ -20,4 +20,5 @@ Style/StringLiteralsInInterpolation:
 Layout/LineLength:
   Max: 80
 
+Lint/ConstantResolution: { Enabled: false }
 Style/Copyright: { Enabled: false }
