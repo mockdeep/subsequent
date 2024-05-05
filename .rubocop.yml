@@ -18,4 +18,6 @@ Style/StringLiteralsInInterpolation:
   EnforcedStyle: double_quotes
 
 Layout/LineLength:
-  Max: 120
+  Max: 80
+
+Style/Copyright: { Enabled: false }
