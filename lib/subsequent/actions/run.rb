@@ -1,6 +1,7 @@
 module Subsequent::Actions::Run
 
   extend Subsequent::TextFormatting
+  extend Subsequent::Configuration::Helpers
 
   DISPLAY_COUNT = 5
   SPINNER = [
@@ -40,22 +41,22 @@ module Subsequent::Actions::Run
     fetch_data => { card:, checklist:, checklist_items: }
 
     loop do
-      $stdout.clear_screen
-      puts "#{card.name} (#{link(card.short_url)})"
-      puts "=" * card.name.size
+      output.clear_screen
+      output.puts "#{card.name} (#{link(card.short_url)})"
+      output.puts "=" * card.name.size
       if checklist
         checklist_items.each_with_index do |item, index|
           icon = item.checked? ? "✔" : "☐"
           item_name = linkify(item.name)
           name = item.checked? ? gray(item_name) : green(item_name)
-          puts "#{index + 1}. #{icon} #{name}"
+          output.puts "#{index + 1}. #{icon} #{name}"
         end
       else
-        puts "No unchecked items, finish the card!"
+        output.puts "No unchecked items, finish the card!"
       end
 
-      puts
-      puts commands(checklist_items)
+      output.puts
+      output.puts commands(checklist_items)
 
       handle_input(card, checklist, checklist_items) => { card:, checklist:, checklist_items: }
     end
@@ -83,28 +84,28 @@ module Subsequent::Actions::Run
     thread = Thread.new { Subsequent::TrelloClient.fetch_next_card }
 
     while thread.alive?
-      $stdout.clear_screen
-      print SPINNER.next
+      output.clear_screen
+      output.print SPINNER.next
       sleep 0.1
     end
-    $stdout.clear_screen
+    output.clear_screen
 
     thread.value
   end
 
   def self.handle_input(card, checklist, checklist_items)
-    input = $stdin.getch
+    char = input.getch
 
-    if input == "q" || input == "\u0004" || input == "\u0003"
-      puts yellow("Goodbye!")
+    if char == "q" || char == "\u0004" || char == "\u0003"
+      output.puts yellow("Goodbye!")
       exit
-    elsif input == "r"
+    elsif char == "r"
       fetch_data
     else
-      task_number = Integer(input)
+      task_number = Integer(char)
       raise ArgumentError if task_number < 1 || task_number > checklist_items.size
 
-      item = checklist_items[input.to_i - 1]
+      item = checklist_items[task_number - 1]
 
       Subsequent::TrelloClient.toggle_checklist_item(item)
 

@@ -9,6 +9,8 @@ module Subsequent; end
 
 class Subsequent::Error < StandardError; end
 
+require_relative "subsequent/configuration"
+require_relative "subsequent/configuration/helpers"
 require_relative "subsequent/version"
 require_relative "subsequent/text_formatting"
 require_relative "subsequent/actions"
