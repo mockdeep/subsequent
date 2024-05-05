@@ -5,9 +5,9 @@ require "http"
 require "io/console"
 require "yaml"
 
-module Subsequent
-  class Error < StandardError; end
-end
+module Subsequent; end
+
+class Subsequent::Error < StandardError; end
 
 require_relative "subsequent/version"
 require_relative "subsequent/text_formatting"
