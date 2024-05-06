@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 require_relative "support/coverage"
+require_relative "support/fixtures"
+require_relative "support/io"
 require_relative "support/webmock"
 
 require_relative "../lib/subsequent"
@@ -14,10 +16,5 @@ RSpec.configure do |config|
 
   config.expect_with :rspec do |c|
     c.syntax = :expect
-  end
-
-  config.before do
-    Subsequent::TrelloClient.config_path =
-      File.join(__dir__, "fixtures", "config.yml")
   end
 end

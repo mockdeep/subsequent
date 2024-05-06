@@ -9,4 +9,4 @@ SimpleCov.start do
   add_group "Support", "spec/support"
 end
 
-SimpleCov.minimum_coverage(line: 57, branch: 7)
+SimpleCov.minimum_coverage(line: 82, branch: 31)

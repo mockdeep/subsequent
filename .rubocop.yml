@@ -9,6 +9,14 @@ AllCops:
   DefaultFormatter: fuubar
   TargetRubyVersion: 3.3
 
+Style/MethodCallWithArgsParentheses:
+  AllowedMethods:
+    - describe
+    - not_to
+    - puts
+    - raise
+    - to
+
 Style/StringLiterals:
   Enabled: true
   EnforcedStyle: double_quotes
