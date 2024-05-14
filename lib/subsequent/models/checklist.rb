@@ -4,7 +4,7 @@ class Subsequent::Models::Checklist
   def initialize(card_id:, check_items:, **checklist_data)
     self.items = check_items.map do |item_data|
       Subsequent::Models::ChecklistItem.new(card_id:, **item_data)
-    end
+    end.sort
   end
 
   def unchecked_items?

@@ -30,5 +30,7 @@ Style/ClassAndModuleChildren: { EnforcedStyle: compact }
 Layout/LineLength:
   Max: 80
 
+Layout/SingleLineBlockChain: { Enabled: false }
+
 Lint/ConstantResolution: { Enabled: false }
 Style/Copyright: { Enabled: false }
