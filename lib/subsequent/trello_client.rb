@@ -3,15 +3,9 @@ module Subsequent::TrelloClient
 
   class << self
     def fetch_next_card
-      data = fetch_cards(config.fetch(:trello_list_id))
+      data = fetch_cards
 
       Subsequent::Models::Card.new(**data.first)
-    end
-
-    def fetch_checklists(card_id)
-      fetch_data("cards/#{card_id}/checklists").sort_by do |checklist_data|
-        checklist_data.fetch(:pos)
-      end
     end
 
     def toggle_checklist_item(item)
@@ -37,8 +31,10 @@ module Subsequent::TrelloClient
 
     private
 
-    def fetch_cards(list_id)
-      fetch_data("lists/#{list_id}/cards")
+    def fetch_cards
+      path = "lists/#{config.fetch(:trello_list_id)}/cards"
+
+      fetch_data(path, checklists: "all")
     end
 
     def auth_params
@@ -54,8 +50,8 @@ module Subsequent::TrelloClient
       "https://api.trello.com/1/#{path}?#{params.to_query}"
     end
 
-    def fetch_data(path)
-      response = HTTP.get(trello_api_url(path))
+    def fetch_data(path, **params)
+      response = HTTP.get(trello_api_url(path, **params))
 
       unless response.status.success?
         raise Subsequent::Error, "Failed to fetch data from Trello"

@@ -1,10 +1,15 @@
 class Subsequent::Models::Checklist
-  attr_accessor :items
+  attr_accessor :items, :pos
 
-  def initialize(card_id:, check_items:, **checklist_data)
+  def initialize(card_id:, check_items:, pos:, **checklist_data)
+    self.pos = pos
     self.items = check_items.map do |item_data|
       Subsequent::Models::ChecklistItem.new(card_id:, **item_data)
     end.sort
+  end
+
+  def <=>(other)
+    pos <=> other.pos
   end
 
   def unchecked_items?

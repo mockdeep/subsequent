@@ -4,22 +4,16 @@ RSpec.describe Subsequent::TrelloClient do
   end
 
   def api_card
-    { id: "123", name: "blah", short_url: "http://example.com" }
+    { id: "123", name: "blah", short_url: "http://example.com", checklists: [api_checklist] }
   end
 
   def test_cards_url
-    "https://api.trello.com/1/lists/test-list-id/cards?key=test-key&token=test-token"
-  end
-
-  def test_checklists_url
-    "https://api.trello.com/1/cards/123/checklists?key=test-key&token=test-token"
+    "https://api.trello.com/1/lists/test-list-id/cards?checklists=all&key=test-key&token=test-token"
   end
 
   describe ".fetch_next_card" do
     it "returns the next card" do
       stub_request(:get, test_cards_url).to_return(body: [api_card].to_json)
-      stub_request(:get, test_checklists_url)
-        .to_return(body: [api_checklist].to_json)
 
       card = described_class.fetch_next_card
 
