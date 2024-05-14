@@ -9,7 +9,7 @@ RSpec.describe Subsequent::Models::Checklist do
     it "sorts the check items by position" do
       check_items = [check_item_data(pos: 52), check_item_data(pos: 31)]
 
-      checklist = described_class.new(card_id: 1, check_items:)
+      checklist = described_class.new(card_id: 1, pos: 1, check_items:)
 
       expect(checklist.items.map(&:pos)).to eq([31, 52])
     end

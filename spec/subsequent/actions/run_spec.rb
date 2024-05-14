@@ -18,15 +18,11 @@ RSpec.describe Subsequent::Actions::Run do
   end
 
   def api_card
-    { id: "123", name: "blah", short_url: "http://example.com" }
+    { id: "123", name: "blah", short_url: "http://example.com", checklists: [api_checklist] }
   end
 
   def test_cards_url
-    "https://api.trello.com/1/lists/test-list-id/cards?key=test-key&token=test-token"
-  end
-
-  def test_checklists_url
-    "https://api.trello.com/1/cards/123/checklists?key=test-key&token=test-token"
+    "https://api.trello.com/1/lists/test-list-id/cards?checklists=all&key=test-key&token=test-token"
   end
 
   def end_boilerplate
@@ -41,10 +37,6 @@ RSpec.describe Subsequent::Actions::Run do
     stub_request(:get, test_cards_url).to_return(body: cards.to_json)
   end
 
-  def stub_checklists(checklists)
-    stub_request(:get, test_checklists_url).to_return(body: checklists.to_json)
-  end
-
   def no_unchecked_items_output(card_data)
     <<~OUTPUT.strip
       #{card_data[:name]} (#{link(card_data[:short_url])})
@@ -57,7 +49,6 @@ RSpec.describe Subsequent::Actions::Run do
 
   it "displays a card with no unchecked checklist items" do
     stub_cards([api_card])
-    stub_checklists([api_checklist])
 
     call
 
