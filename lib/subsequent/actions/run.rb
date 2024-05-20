@@ -4,38 +4,6 @@ module Subsequent::Actions::Run
   extend Subsequent::Configuration::Helpers
 
   DISPLAY_COUNT = 5
-  SPINNER = [
-    "▐⠂       ▌",
-    "▐⠈       ▌",
-    "▐ ⠂      ▌",
-    "▐ ⠠      ▌",
-    "▐  ⡀     ▌",
-    "▐  ⠠     ▌",
-    "▐   ⠂    ▌",
-    "▐   ⠈    ▌",
-    "▐    ⠂   ▌",
-    "▐    ⠠   ▌",
-    "▐     ⡀  ▌",
-    "▐     ⠠  ▌",
-    "▐      ⠂ ▌",
-    "▐      ⠈ ▌",
-    "▐       ⠂▌",
-    "▐       ⠠▌",
-    "▐       ⡀▌",
-    "▐      ⠠ ▌",
-    "▐      ⠂ ▌",
-    "▐     ⠈  ▌",
-    "▐     ⠂  ▌",
-    "▐    ⠠   ▌",
-    "▐    ⡀   ▌",
-    "▐   ⠠    ▌",
-    "▐   ⠂    ▌",
-    "▐  ⠈     ▌",
-    "▐  ⠂     ▌",
-    "▐ ⠠      ▌",
-    "▐ ⡀      ▌",
-    "▐⠠       ▌"
-  ].cycle
 
   def self.call
     fetch_data => { cards:, card:, checklist:, checklist_items:, mode: }
@@ -93,20 +61,9 @@ module Subsequent::Actions::Run
   end
 
   def self.load_cards
-    if ENV["DEBUG"]
-      return Subsequent::TrelloClient.fetch_cards
+    Subsequent::Actions::Spin.call do
+      Subsequent::TrelloClient.fetch_cards
     end
-
-    thread = Thread.new { Subsequent::TrelloClient.fetch_cards }
-
-    while thread.alive?
-      output.clear_screen
-      output.print SPINNER.next
-      sleep 0.1
-    end
-    output.clear_screen
-
-    thread.value
   end
 
   def self.handle_input(cards, card, checklist, checklist_items, mode)
