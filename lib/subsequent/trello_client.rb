@@ -2,10 +2,39 @@ module Subsequent::TrelloClient
   YAML_LOAD_OPTIONS = { permitted_classes: [Symbol], symbolize_names: true }
 
   class << self
-    def fetch_next_card
-      data = fetch_cards
+    def fetch_cards
+      path = "lists/#{config.fetch(:trello_list_id)}/cards"
 
-      Subsequent::Models::Card.new(**data.first)
+      cards_data = fetch_data(path, checklists: "all")
+
+      cards_data.map { |data| Subsequent::Models::Card.new(**data) }
+    end
+
+    def update_checklist_item(checklist_item, **params)
+      path = "cards/#{checklist_item.card_id}/checkItem/#{checklist_item.id}"
+      response = HTTP.put(trello_api_url(path, **params))
+
+      unless response.status.success?
+        raise Subsequent::Error, "Failed to update checklist item"
+      end
+    end
+
+    def update_checklist(checklist, **params)
+      path = "checklist/#{checklist.id}"
+      response = HTTP.put(trello_api_url(path, **params))
+
+      unless response.status.success?
+        raise Subsequent::Error, "Failed to update checklist"
+      end
+    end
+
+    def update_card(card, **params)
+      path = "cards/#{card.id}"
+      response = HTTP.put(trello_api_url(path, **params))
+
+      unless response.status.success?
+        raise Subsequent::Error, "Failed to update card"
+      end
     end
 
     def toggle_checklist_item(item)
@@ -30,12 +59,6 @@ module Subsequent::TrelloClient
     end
 
     private
-
-    def fetch_cards
-      path = "lists/#{config.fetch(:trello_list_id)}/cards"
-
-      fetch_data(path, checklists: "all")
-    end
 
     def auth_params
       {
