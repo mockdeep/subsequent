@@ -34,3 +34,4 @@ Layout/SingleLineBlockChain: { Enabled: false }
 
 Lint/ConstantResolution: { Enabled: false }
 Style/Copyright: { Enabled: false }
+Style/MissingElse: { Enabled: false }

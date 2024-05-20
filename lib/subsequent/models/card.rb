@@ -1,7 +1,9 @@
 class Subsequent::Models::Card
-  attr_accessor :checklists, :name, :short_url
+  attr_accessor :checklists, :id, :name, :pos, :short_url
 
-  def initialize(id:, name:, short_url:, checklists:, **card_data)
+  def initialize(id:, name:, pos:, short_url:, checklists:, **card_data)
+    self.id = id
+    self.pos = pos
     self.checklists =
       checklists.map do |checklist_data|
         Subsequent::Models::Checklist.new(card_id: id, **checklist_data)

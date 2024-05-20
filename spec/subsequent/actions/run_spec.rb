@@ -18,16 +18,27 @@ RSpec.describe Subsequent::Actions::Run do
   end
 
   def api_card
-    { id: "123", name: "blah", short_url: "http://example.com", checklists: [api_checklist] }
+    { id: "123", name: "blah", pos: 5, short_url: "http://example.com", checklists: [api_checklist] }
   end
 
   def test_cards_url
     "https://api.trello.com/1/lists/test-list-id/cards?checklists=all&key=test-key&token=test-token"
   end
 
+  def checklist_end_boilerplate
+    <<~OUTPUT.strip
+      #{cyan("1")} to toggle task
+      #{cyan("r")} to refresh
+      #{cyan("c")} to cycle
+      #{cyan("q")} to quit
+      #{yellow("Goodbye!")}
+    OUTPUT
+  end
+
   def end_boilerplate
     <<~OUTPUT.strip
       #{cyan("r")} to refresh
+      #{cyan("c")} to cycle
       #{cyan("q")} to quit
       #{yellow("Goodbye!")}
     OUTPUT
@@ -53,5 +64,66 @@ RSpec.describe Subsequent::Actions::Run do
     call
 
     expect(output.string.strip).to eq(no_unchecked_items_output(api_card))
+  end
+
+  it "displays a card with unchecked checklist items" do
+    card_data = api_card
+    card_data[:checklists].first[:check_items] =
+      [{ pos: 1, name: "Check Item", id: 5, state: "incomplete" }]
+    stub_cards([card_data])
+
+    call
+
+    expected_output = <<~OUTPUT.strip
+      #{card_data[:name]} (#{link(card_data[:short_url])})
+      ====
+      1. ☐ #{green("Check Item")}
+
+      #{checklist_end_boilerplate}
+    OUTPUT
+
+    expect(output.string.strip).to eq(expected_output)
+  end
+
+  it "cycles the checklist item" do
+    card_data = api_card
+    card_data[:checklists].first[:check_items] =
+      [{ pos: 1, name: "Check Item", id: 5, state: "incomplete" }]
+    stub_cards([card_data])
+    put_url = "https://api.trello.com/1/cards/123/checkItem/5?key=test-key&pos=2&token=test-token"
+    stub_request(:put, put_url).to_return(body: "{}")
+
+    input.puts("ci")
+    call
+
+    expect(a_request(:put, put_url)).to have_been_made
+  end
+
+  it "cycles the checklist" do
+    card_data = api_card
+    card_data[:checklists].first[:check_items] =
+      [{ pos: 1, name: "Check Item", id: 5, state: "incomplete" }]
+    stub_cards([card_data])
+    put_url = "https://api.trello.com/1/checklist/456?key=test-key&pos=2&token=test-token"
+    stub_request(:put, put_url).to_return(body: "{}")
+
+    input.puts("cl")
+    call
+
+    expect(a_request(:put, put_url)).to have_been_made
+  end
+
+  it "cycles the card" do
+    card_data = api_card
+    card_data[:checklists].first[:check_items] =
+      [{ pos: 1, name: "Check Item", id: 5, state: "incomplete" }]
+    stub_cards([card_data])
+    put_url = "https://api.trello.com/1/cards/123?key=test-key&pos=6&token=test-token"
+    stub_request(:put, put_url).to_return(body: "{}")
+
+    input.puts("cc")
+    call
+
+    expect(a_request(:put, put_url)).to have_been_made
   end
 end
