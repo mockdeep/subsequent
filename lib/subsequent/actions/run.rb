@@ -1,14 +1,18 @@
 module Subsequent::Actions::Run
 
+  State = Data.define(:cards, :card, :checklist, :checklist_items, :mode)
+
   extend Subsequent::TextFormatting
   extend Subsequent::Configuration::Helpers
 
   DISPLAY_COUNT = 5
 
   def self.call
-    fetch_data => { cards:, card:, checklist:, checklist_items:, mode: }
+    state = fetch_data
 
     loop do
+      state => { card:, checklist:, checklist_items: }
+
       output.clear_screen
       output.puts "#{card.name} (#{link(card.short_url)})"
       output.puts "=" * card.name.size
@@ -24,14 +28,15 @@ module Subsequent::Actions::Run
       end
 
       output.puts
-      output.puts commands(checklist:, checklist_items:, mode:)
+      output.puts commands(state)
 
-      handle_input(cards, card, checklist, checklist_items, mode) =>
-        { cards:, card:, checklist:, checklist_items:, mode: }
+      state = handle_input(state)
     end
   end
 
-  def self.commands(checklist:, checklist_items:, mode:)
+  def self.commands(state)
+    state => { checklist:, checklist_items:, mode: }
+
     if mode == :cycle
       [
         checklist_items && "#{cyan("i")} to move checklist item to the end",
@@ -59,7 +64,7 @@ module Subsequent::Actions::Run
     checklist_items =
       checklist && checklist.unchecked_items.first(DISPLAY_COUNT)
 
-    { cards:, card:, checklist:, checklist_items:, mode: :normal }
+    State.new(cards:, card:, checklist:, checklist_items:, mode: :normal)
   end
 
   def self.load_cards
@@ -68,46 +73,53 @@ module Subsequent::Actions::Run
     end
   end
 
-  def self.handle_input(cards, card, checklist, checklist_items, mode)
+  def self.handle_input(state)
+    state => { checklist_items:, mode: }
+
     if mode == :cycle
-      return cycle(cards:, card:, checklist:, checklist_items:)
+      return cycle(state)
     end
 
     char = input.getch
 
     case char
-    when "q", "\u0004", "\u0003"
-      output.puts yellow("Goodbye!")
-      exit
+    when ("1"..checklist_items.to_a.size.to_s)
+      toggle_checklist_item(state, char)
     when "r"
       fetch_data
     when "c"
-      { cards:, card:, checklist:, checklist_items:, mode: :cycle }
+      State.new(**state.to_h, mode: :cycle)
     when "o"
-      open_links(card, checklist_items)
-
-      { cards:, card:, checklist:, checklist_items:, mode: }
+      open_links(state)
     when "a"
-      archive_card(cards:, card:, checklist:, checklist_items:, mode:)
-    when ("1"..checklist_items.to_a.size.to_s)
-      task_number = Integer(char)
-
-      item = checklist_items[task_number - 1]
-
-      Subsequent::TrelloClient.toggle_checklist_item(item)
-
-      { cards:, card:, checklist:, checklist_items:, mode: }
+      archive_card(state)
+    when "q", "\u0004", "\u0003"
+      output.puts yellow("Goodbye!")
+      exit
     else
-      { cards:, card:, checklist:, checklist_items:, mode: }
+      state
     end
   end
 
-  def self.cycle(cards:, card:, checklist:, checklist_items:)
+  def self.toggle_checklist_item(state, char)
+    state => { checklist_items: }
+
+    task_number = Integer(char)
+    item = checklist_items[task_number - 1]
+
+    Subsequent::TrelloClient.toggle_checklist_item(item)
+
+    state
+  end
+
+  def self.cycle(state)
+    state => { cards:, card:, checklist:, checklist_items: }
+
     char = input.getch
 
     case char
     when "q", "\u0004", "\u0003"
-      { cards:, card:, checklist:, checklist_items:, mode: :normal }
+      State.new(**state.to_h, mode: :normal)
     when "i"
       checklist_item = checklist_items.first
       pos = checklist.items.last.pos + 1
@@ -122,25 +134,33 @@ module Subsequent::Actions::Run
       Subsequent::TrelloClient.update_card(card, pos:)
       fetch_data
     else
-      { cards:, card:, checklist:, checklist_items:, mode: :cycle }
+      State.new(**state.to_h, mode: :cycle)
     end
   end
 
-  def self.open_links(card, checklist_items)
-    if checklist_items.blank?
-      system("open", card.short_url)
-      return
-    end
+  def self.open_links(state)
+    state => { card:, checklist_items: }
 
-    checklist_items.flat_map(&:links).each do |link|
+    links =
+      if checklist_items.present?
+        checklist_items.flat_map(&:links)
+      else
+        [card.short_url]
+      end
+
+    links.each do |link|
       system("open", link)
 
       # otherwise system can open links in inconsistent order
       sleep(0.1)
     end
+
+    state
   end
 
-  def self.archive_card(cards:, card:, checklist:, checklist_items:, mode:)
+  def self.archive_card(state)
+    state => { card: }
+
     output.print("#{red("Archive this card?")} (y/n) ")
     char = input.getch
 
@@ -148,7 +168,7 @@ module Subsequent::Actions::Run
       Subsequent::TrelloClient.update_card(card, closed: true)
       fetch_data
     else
-      { cards:, card:, checklist:, checklist_items:, mode: }
+      state
     end
   end
 end
