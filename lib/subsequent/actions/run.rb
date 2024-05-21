@@ -89,18 +89,17 @@ module Subsequent::Actions::Run
       { cards:, card:, checklist:, checklist_items:, mode: }
     when "a"
       archive_card(cards:, card:, checklist:, checklist_items:, mode:)
-    else
+    when ("1"..checklist_items.to_a.size.to_s)
       task_number = Integer(char)
-      raise ArgumentError if task_number < 1 || task_number > checklist_items.size
 
       item = checklist_items[task_number - 1]
 
       Subsequent::TrelloClient.toggle_checklist_item(item)
 
       { cards:, card:, checklist:, checklist_items:, mode: }
+    else
+      { cards:, card:, checklist:, checklist_items:, mode: }
     end
-  rescue ArgumentError
-    retry
   end
 
   def self.cycle(cards:, card:, checklist:, checklist_items:)

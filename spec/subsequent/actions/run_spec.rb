@@ -5,7 +5,7 @@ RSpec.describe Subsequent::Actions::Run do
   include Subsequent::TextFormatting
 
   def call
-    input.puts("q")
+    input.print("q")
     input.rewind
 
     described_class.call
@@ -89,6 +89,60 @@ RSpec.describe Subsequent::Actions::Run do
     expect(output.string.strip).to eq(expected_output)
   end
 
+  it "marks a checklist item as complete" do
+    card_data = api_card
+    card_data[:checklists].first[:check_items] =
+      [{ pos: 1, name: "Check Item", id: 5, state: "incomplete" }]
+    stub_cards([card_data])
+    put_url = "https://api.trello.com/1/cards/123/checkItem/5?key=test-key&state=complete&token=test-token"
+    stub_request(:put, put_url).to_return(body: "{}")
+
+    input.print("1")
+
+    call
+
+    expect(a_request(:put, put_url)).to have_been_made
+  end
+
+  it "does nothing if the number is out of range" do
+    card_data = api_card
+    card_data[:checklists].first[:check_items] =
+      [{ pos: 1, name: "Check Item", id: 5, state: "incomplete" }]
+    stub_cards([card_data])
+
+    input.print("2")
+
+    call
+
+    expect(a_request(:put, /checkItem/)).not_to have_been_made
+  end
+
+  it "does nothing if the number is 0" do
+    card_data = api_card
+    card_data[:checklists].first[:check_items] =
+      [{ pos: 1, name: "Check Item", id: 5, state: "incomplete" }]
+    stub_cards([card_data])
+
+    input.print("0")
+
+    call
+
+    expect(a_request(:put, /checkItem/)).not_to have_been_made
+  end
+
+  it "does nothing if a non-option key is pressed" do
+    card_data = api_card
+    card_data[:checklists].first[:check_items] =
+      [{ pos: 1, name: "Check Item", id: 5, state: "incomplete" }]
+    stub_cards([card_data])
+
+    input.print("z")
+
+    call
+
+    expect(a_request(:put, /checkItem/)).not_to have_been_made
+  end
+
   it "cycles the checklist item" do
     card_data = api_card
     card_data[:checklists].first[:check_items] =
@@ -97,7 +151,7 @@ RSpec.describe Subsequent::Actions::Run do
     put_url = "https://api.trello.com/1/cards/123/checkItem/5?key=test-key&pos=2&token=test-token"
     stub_request(:put, put_url).to_return(body: "{}")
 
-    input.puts("ci")
+    input.print("ci")
     call
 
     expect(a_request(:put, put_url)).to have_been_made
@@ -111,7 +165,7 @@ RSpec.describe Subsequent::Actions::Run do
     put_url = "https://api.trello.com/1/checklist/456?key=test-key&pos=2&token=test-token"
     stub_request(:put, put_url).to_return(body: "{}")
 
-    input.puts("cl")
+    input.print("cl")
     call
 
     expect(a_request(:put, put_url)).to have_been_made
@@ -125,7 +179,7 @@ RSpec.describe Subsequent::Actions::Run do
     put_url = "https://api.trello.com/1/cards/123?key=test-key&pos=6&token=test-token"
     stub_request(:put, put_url).to_return(body: "{}")
 
-    input.puts("cc")
+    input.print("cc")
     call
 
     expect(a_request(:put, put_url)).to have_been_made
@@ -137,8 +191,8 @@ RSpec.describe Subsequent::Actions::Run do
       [{ pos: 1, name: "Check Item", id: 5, state: "incomplete" }]
     stub_cards([card_data])
 
-    input.puts("c")
-    input.puts("q")
+    input.print("c")
+    input.print("q")
 
     call
 
@@ -161,7 +215,7 @@ RSpec.describe Subsequent::Actions::Run do
 
     allow(described_class).to receive(:system).twice
 
-    input.puts("o")
+    input.print("o")
     call
 
     expect(described_class)
@@ -177,7 +231,7 @@ RSpec.describe Subsequent::Actions::Run do
 
     allow(described_class).to receive(:system)
 
-    input.puts("o")
+    input.print("o")
     call
 
     expect(described_class)
@@ -190,7 +244,7 @@ RSpec.describe Subsequent::Actions::Run do
     put_url = "https://api.trello.com/1/cards/123?key=test-key&closed=true&token=test-token"
     stub_request(:put, put_url).to_return(body: "{}")
 
-    input.puts("ay")
+    input.print("ay")
     call
 
     expect(a_request(:put, put_url)).to have_been_made
@@ -202,7 +256,7 @@ RSpec.describe Subsequent::Actions::Run do
     put_url = "https://api.trello.com/1/cards/123?key=test-key&closed=true&token=test-token"
     stub_request(:put, put_url).to_return(body: "{}")
 
-    input.puts("an")
+    input.print("an")
 
     call
 
