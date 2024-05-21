@@ -16,4 +16,8 @@ class Subsequent::Models::ChecklistItem
   def checked?
     state == "complete"
   end
+
+  def links
+    name.scan(%r{https?://\S+})
+  end
 end

@@ -30,6 +30,7 @@ RSpec.describe Subsequent::Actions::Run do
       #{cyan("1")} to toggle task
       #{cyan("r")} to refresh
       #{cyan("c")} to cycle
+      #{cyan("o")} to open links
       #{cyan("q")} to quit
       #{yellow("Goodbye!")}
     OUTPUT
@@ -39,6 +40,7 @@ RSpec.describe Subsequent::Actions::Run do
     <<~OUTPUT.strip
       #{cyan("r")} to refresh
       #{cyan("c")} to cycle
+      #{cyan("o")} to open links
       #{cyan("q")} to quit
       #{yellow("Goodbye!")}
     OUTPUT
@@ -125,5 +127,37 @@ RSpec.describe Subsequent::Actions::Run do
     call
 
     expect(a_request(:put, put_url)).to have_been_made
+  end
+
+  it "opens links for checklist items" do
+    card_data = api_card
+    name = "foo https://example.com bar https://example.org baz"
+    card_data[:checklists].first[:check_items] =
+      [{ pos: 1, name:, id: 5, state: "incomplete" }]
+    stub_cards([card_data])
+
+    allow(described_class).to receive(:system).twice
+
+    input.puts("o")
+    call
+
+    expect(described_class)
+      .to have_received(:system).with("open", "https://example.com").ordered
+    expect(described_class)
+      .to have_received(:system).with("open", "https://example.org").ordered
+  end
+
+  it "opens the card's short URL when there are no checklist items" do
+    card_data = api_card
+    card_data[:checklists].first[:check_items] = []
+    stub_cards([card_data])
+
+    allow(described_class).to receive(:system)
+
+    input.puts("o")
+    call
+
+    expect(described_class)
+      .to have_received(:system).with("open", "http://example.com")
   end
 end
