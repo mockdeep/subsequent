@@ -45,6 +45,7 @@ module Subsequent::Actions::Run
         item_range && "#{cyan(item_range.to_a.join(", "))} to toggle task",
         "#{cyan("r")} to refresh",
         "#{cyan("c")} to cycle",
+        "#{cyan("o")} to open links",
         "#{cyan("q")} to quit",
       ].compact
     end
@@ -81,6 +82,10 @@ module Subsequent::Actions::Run
       fetch_data
     when "c"
       { cards:, card:, checklist:, checklist_items:, mode: :cycle }
+    when "o"
+      open_links(card, checklist_items)
+
+      { cards:, card:, checklist:, checklist_items:, mode: }
     else
       task_number = Integer(char)
       raise ArgumentError if task_number < 1 || task_number > checklist_items.size
@@ -116,6 +121,20 @@ module Subsequent::Actions::Run
       fetch_data
     else
       { cards:, card:, checklist:, checklist_items:, mode: :cycle }
+    end
+  end
+
+  def self.open_links(card, checklist_items)
+    if checklist_items.blank?
+      system("open", card.short_url)
+      return
+    end
+
+    checklist_items.flat_map(&:links).each do |link|
+      system("open", link)
+
+      # otherwise system can open links in inconsistent order
+      sleep(0.1)
     end
   end
 
