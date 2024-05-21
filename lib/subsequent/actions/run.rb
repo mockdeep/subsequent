@@ -105,7 +105,7 @@ module Subsequent::Actions::Run
 
     case char
     when "q", "\u0004", "\u0003"
-      { card:, checklist:, checklist_items:, mode: :normal }
+      { cards:, card:, checklist:, checklist_items:, mode: :normal }
     when "i"
       checklist_item = checklist_items.first
       pos = checklist.items.last.pos + 1

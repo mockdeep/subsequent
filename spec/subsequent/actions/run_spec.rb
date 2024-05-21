@@ -129,6 +129,27 @@ RSpec.describe Subsequent::Actions::Run do
     expect(a_request(:put, put_url)).to have_been_made
   end
 
+  it "backs out of cycle mode" do
+    card_data = api_card
+    card_data[:checklists].first[:check_items] =
+      [{ pos: 1, name: "Check Item", id: 5, state: "incomplete" }]
+    stub_cards([card_data])
+
+    input.puts("c")
+    input.puts("q")
+
+    call
+
+    expected_output = <<~OUTPUT.strip
+      #{card_data[:name]} (#{link(card_data[:short_url])})
+      ====
+      1. ☐ #{green("Check Item")}
+
+      #{checklist_end_boilerplate}
+    OUTPUT
+    expect(output.string.strip).to eq(expected_output)
+  end
+
   it "opens links for checklist items" do
     card_data = api_card
     name = "foo https://example.com bar https://example.org baz"
