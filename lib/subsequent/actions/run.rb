@@ -46,6 +46,7 @@ module Subsequent::Actions::Run
         "#{cyan("r")} to refresh",
         "#{cyan("c")} to cycle",
         "#{cyan("o")} to open links",
+        "#{cyan("a")} to archive card",
         "#{cyan("q")} to quit",
       ].compact
     end
@@ -86,6 +87,8 @@ module Subsequent::Actions::Run
       open_links(card, checklist_items)
 
       { cards:, card:, checklist:, checklist_items:, mode: }
+    when "a"
+      archive_card(cards:, card:, checklist:, checklist_items:, mode:)
     else
       task_number = Integer(char)
       raise ArgumentError if task_number < 1 || task_number > checklist_items.size
@@ -138,4 +141,15 @@ module Subsequent::Actions::Run
     end
   end
 
+  def self.archive_card(cards:, card:, checklist:, checklist_items:, mode:)
+    output.print("#{red("Archive this card?")} (y/n) ")
+    char = input.getch
+
+    if char == "y"
+      Subsequent::TrelloClient.update_card(card, closed: true)
+      fetch_data
+    else
+      { cards:, card:, checklist:, checklist_items:, mode: }
+    end
+  end
 end
