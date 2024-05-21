@@ -31,6 +31,7 @@ RSpec.describe Subsequent::Actions::Run do
       #{cyan("r")} to refresh
       #{cyan("c")} to cycle
       #{cyan("o")} to open links
+      #{cyan("a")} to archive card
       #{cyan("q")} to quit
       #{yellow("Goodbye!")}
     OUTPUT
@@ -41,6 +42,7 @@ RSpec.describe Subsequent::Actions::Run do
       #{cyan("r")} to refresh
       #{cyan("c")} to cycle
       #{cyan("o")} to open links
+      #{cyan("a")} to archive card
       #{cyan("q")} to quit
       #{yellow("Goodbye!")}
     OUTPUT
@@ -180,5 +182,30 @@ RSpec.describe Subsequent::Actions::Run do
 
     expect(described_class)
       .to have_received(:system).with("open", "http://example.com")
+  end
+
+  it "archives the card" do
+    card_data = api_card
+    stub_cards([card_data])
+    put_url = "https://api.trello.com/1/cards/123?key=test-key&closed=true&token=test-token"
+    stub_request(:put, put_url).to_return(body: "{}")
+
+    input.puts("ay")
+    call
+
+    expect(a_request(:put, put_url)).to have_been_made
+  end
+
+  it "does not archive the card when user cancels" do
+    card_data = api_card
+    stub_cards([card_data])
+    put_url = "https://api.trello.com/1/cards/123?key=test-key&closed=true&token=test-token"
+    stub_request(:put, put_url).to_return(body: "{}")
+
+    input.puts("an")
+
+    call
+
+    expect(a_request(:put, put_url)).not_to have_been_made
   end
 end
