@@ -38,21 +38,23 @@ module Subsequent::Actions::Run
     state => { checklist:, checklist_items:, mode: }
 
     if mode == :cycle
-      [
-        checklist_items && "#{cyan("i")} to move checklist item to the end",
-        checklist && "#{cyan("l")} to move checklist to the end",
-        "#{cyan("c")} to move card to the end",
-        "#{cyan("q")} to cancel",
-      ].compact
+      string = [
+        "move first",
+        checklist_items && "(#{cyan("i")})tem,",
+        checklist && "(#{cyan("l")})ist or",
+        "(#{cyan("c")})ard to the end",
+      ].compact.join(" ")
+
+      [string, "(#{cyan("q")}) to cancel",].compact
     else
-      item_range = (1..checklist_items.size) if checklist_items
+      item_range = (1..checklist_items.size).to_a.map(&method(:cyan)) if checklist_items
       [
-        item_range && "#{cyan(item_range.to_a.join(", "))} to toggle task",
-        "#{cyan("r")} to refresh",
-        "#{cyan("c")} to cycle",
-        "#{cyan("o")} to open links",
-        "#{cyan("a")} to archive card",
-        "#{cyan("q")} to quit",
+        item_range && "(#{item_range.join(", ")}) toggle task",
+        "(#{cyan("r")})efresh " \
+        "(#{cyan("c")})ycle " \
+        "(#{cyan("o")})pen-links " \
+        "(#{cyan("a")})rchive " \
+        "(#{cyan("q")})uit"
       ].compact
     end
   end

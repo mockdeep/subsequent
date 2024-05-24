@@ -27,23 +27,23 @@ RSpec.describe Subsequent::Actions::Run do
 
   def checklist_end_boilerplate
     <<~OUTPUT.strip
-      #{cyan("1")} to toggle task
-      #{cyan("r")} to refresh
-      #{cyan("c")} to cycle
-      #{cyan("o")} to open links
-      #{cyan("a")} to archive card
-      #{cyan("q")} to quit
+      (#{cyan("1")}) toggle task
+      (#{cyan("r")})efresh \
+      (#{cyan("c")})ycle \
+      (#{cyan("o")})pen-links \
+      (#{cyan("a")})rchive \
+      (#{cyan("q")})uit
       #{yellow("Goodbye!")}
     OUTPUT
   end
 
   def end_boilerplate
     <<~OUTPUT.strip
-      #{cyan("r")} to refresh
-      #{cyan("c")} to cycle
-      #{cyan("o")} to open links
-      #{cyan("a")} to archive card
-      #{cyan("q")} to quit
+      (#{cyan("r")})efresh \
+      (#{cyan("c")})ycle \
+      (#{cyan("o")})pen-links \
+      (#{cyan("a")})rchive \
+      (#{cyan("q")})uit
       #{yellow("Goodbye!")}
     OUTPUT
   end
