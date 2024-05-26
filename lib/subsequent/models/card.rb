@@ -7,9 +7,7 @@ class Subsequent::Models::Card
     self.id = id
     self.pos = pos
     self.checklists =
-      checklists.map do |checklist_data|
-        Subsequent::Models::Checklist.new(card_id: id, **checklist_data)
-      end.sort
+      Subsequent::Models::Checklist.from_data(checklists, card: self)
     self.name = name
     self.short_url = short_url
   end

@@ -76,12 +76,6 @@ Style/DocumentationMethod:
     - 'lib/subsequent/models/checklist_item.rb'
     - 'lib/subsequent/trello_client.rb'
 
-# Offense count: 2
-Style/MethodCalledOnDoEndBlock:
-  Exclude:
-    - 'lib/subsequent/models/card.rb'
-    - 'lib/subsequent/models/checklist.rb'
-
 # Offense count: 7
 # This cop supports unsafe autocorrection (--autocorrect-all).
 Style/RequireOrder:
