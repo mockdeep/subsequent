@@ -31,4 +31,8 @@ module Subsequent::DisplayHelpers
       .map { |word| word.start_with?("http") ? "(#{link(word)})" : word }
       .join(" ")
   end
+
+  def show_spinner(&)
+    Subsequent::Actions::Spin.call(&)
+  end
 end
