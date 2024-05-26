@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Subsequent::TrelloClient do
   def api_checklist
     { id: "456", name: "Checklist", pos: 1, check_items: [] }

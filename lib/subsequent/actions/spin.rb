@@ -34,7 +34,7 @@ module Subsequent::Actions::Spin
     "▐  ⠂     ▌",
     "▐ ⠠      ▌",
     "▐ ⡀      ▌",
-    "▐⠠       ▌"
+    "▐⠠       ▌",
   ].cycle
 
   # display a spinner while asynchronously running a block

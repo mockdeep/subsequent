@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 class Subsequent::Models::ChecklistItem
   attr_accessor :card_id, :id, :name, :pos, :state
 
-  def initialize(card_id:, id:, name:, pos:, state:, **item_data)
+  def initialize(card_id:, id:, name:, pos:, state:, **_item_data)
     self.card_id = card_id
     self.id = id
     self.name = name

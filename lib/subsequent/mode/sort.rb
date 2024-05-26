@@ -36,7 +36,7 @@ module Subsequent::Mode::Sort
     {
       f: Subsequent::Sort::First,
       m: Subsequent::Sort::MostUncheckedItems,
-      l: Subsequent::Sort::LeastUncheckedItems
+      l: Subsequent::Sort::LeastUncheckedItems,
     }
   end
 end

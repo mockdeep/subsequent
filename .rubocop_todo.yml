@@ -6,36 +6,6 @@
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
 
-# Offense count: 7
-# Configuration parameters: Include, IgnoredGems, OnlyFor.
-# Include: **/*.gemfile, **/Gemfile, **/gems.rb
-Bundler/GemComment:
-  Exclude:
-    - 'Gemfile'
-
-# Offense count: 7
-# Configuration parameters: Include, AllowedGems.
-# SupportedStyles: required, forbidden
-# Include: **/*.gemfile, **/Gemfile, **/gems.rb
-Bundler/GemVersion:
-  EnforcedStyle: forbidden
-
-# Offense count: 1
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: Severity, Include.
-# Include: **/*.gemspec
-Gemspec/RequireMFA:
-  Exclude:
-    - 'subsequent.gemspec'
-
-# Offense count: 1
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: empty_lines, empty_lines_except_namespace, empty_lines_special, no_empty_lines
-Layout/EmptyLinesAroundModuleBody:
-  Exclude:
-    - 'lib/subsequent/actions/run.rb'
-
 # Offense count: 1
 # This cop supports safe autocorrection (--autocorrect).
 # Configuration parameters: Max, AllowHeredoc, AllowURI, URISchemes, IgnoreCopDirectives, AllowedPatterns.
@@ -52,15 +22,6 @@ Layout/LineLength:
 Layout/MultilineAssignmentLayout:
   Exclude:
     - 'subsequent.gemspec'
-
-# Offense count: 3
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: AutoCorrect, AllowUnusedKeywordArguments, IgnoreEmptyMethods, IgnoreNotImplementedMethods.
-Lint/UnusedMethodArgument:
-  Exclude:
-    - 'lib/subsequent/models/card.rb'
-    - 'lib/subsequent/models/checklist.rb'
-    - 'lib/subsequent/models/checklist_item.rb'
 
 # Offense count: 2
 # Configuration parameters: AllowedMethods, AllowedPatterns, CountRepeatedAttributes, Max.
@@ -132,63 +93,14 @@ Style/DocumentationMethod:
     - 'lib/subsequent/models/checklist_item.rb'
     - 'lib/subsequent/trello_client.rb'
 
-# Offense count: 10
-# This cop supports unsafe autocorrection (--autocorrect-all).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: always, always_true, never
-Style/FrozenStringLiteralComment:
-  Exclude:
-    - 'exe/subsequent'
-    - 'lib/subsequent/actions.rb'
-    - 'lib/subsequent/actions/run.rb'
-    - 'lib/subsequent/models.rb'
-    - 'lib/subsequent/models/card.rb'
-    - 'lib/subsequent/models/checklist.rb'
-    - 'lib/subsequent/models/checklist_item.rb'
-    - 'lib/subsequent/trello_client.rb'
-    - 'spec/subsequent/trello_client_spec.rb'
-    - 'spec/support/webmock.rb'
-
-# Offense count: 4
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: MinBodyLength, AllowConsecutiveConditionals.
-Style/GuardClause:
-  Exclude:
-    - 'lib/subsequent/trello_client.rb'
-
-# Offense count: 3
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: IgnoreMacros, AllowedMethods, AllowedPatterns, IncludedMacros, AllowParenthesesInMultilineCall, AllowParenthesesInChaining, AllowParenthesesInCamelCaseMethod, AllowParenthesesInStringInterpolation, EnforcedStyle.
-# SupportedStyles: require_parentheses, omit_parentheses
-Style/MethodCallWithArgsParentheses:
-  Exclude:
-    - 'spec/spec_helper.rb'
-    - 'subsequent.gemspec'
-
 # Offense count: 2
 Style/MethodCalledOnDoEndBlock:
   Exclude:
     - 'lib/subsequent/models/card.rb'
     - 'lib/subsequent/models/checklist.rb'
 
-# Offense count: 1
-# This cop supports unsafe autocorrection (--autocorrect-all).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: literals, strict
-Style/MutableConstant:
-  Exclude:
-    - 'lib/subsequent/trello_client.rb'
-
 # Offense count: 7
 # This cop supports unsafe autocorrection (--autocorrect-all).
 Style/RequireOrder:
   Exclude:
     - 'lib/subsequent.rb'
-
-# Offense count: 1
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyleForMultiline.
-# SupportedStylesForMultiline: comma, consistent_comma, no_comma
-Style/TrailingCommaInHashLiteral:
-  Exclude:
-    - 'lib/subsequent/trello_client.rb'

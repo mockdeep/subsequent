@@ -1,5 +1,10 @@
+# frozen_string_literal: true
+
 module Subsequent::TrelloClient
-  YAML_LOAD_OPTIONS = { permitted_classes: [Symbol], symbolize_names: true }
+  YAML_LOAD_OPTIONS = {
+    permitted_classes: [Symbol],
+    symbolize_names: true,
+  }.freeze
 
   class << self
     def fetch_cards
@@ -14,27 +19,27 @@ module Subsequent::TrelloClient
       path = "cards/#{checklist_item.card_id}/checkItem/#{checklist_item.id}"
       response = HTTP.put(trello_api_url(path, **params))
 
-      unless response.status.success?
-        raise Subsequent::Error, "Failed to update checklist item"
-      end
+      return if response.status.success?
+
+      raise Subsequent::Error, "Failed to update checklist item"
     end
 
     def update_checklist(checklist, **params)
       path = "checklist/#{checklist.id}"
       response = HTTP.put(trello_api_url(path, **params))
 
-      unless response.status.success?
-        raise Subsequent::Error, "Failed to update checklist"
-      end
+      return if response.status.success?
+
+      raise Subsequent::Error, "Failed to update checklist"
     end
 
     def update_card(card, **params)
       path = "cards/#{card.id}"
       response = HTTP.put(trello_api_url(path, **params))
 
-      unless response.status.success?
-        raise Subsequent::Error, "Failed to update card"
-      end
+      return if response.status.success?
+
+      raise Subsequent::Error, "Failed to update card"
     end
 
     def toggle_checklist_item(item)
@@ -44,9 +49,9 @@ module Subsequent::TrelloClient
 
       response = HTTP.put(trello_api_url(path, state:))
 
-      unless response.status.success?
-        raise Subsequent::Error, "Failed to toggle checklist item"
-      end
+      return if response.status.success?
+
+      raise Subsequent::Error, "Failed to toggle checklist item"
     end
 
     def config_path=(path)

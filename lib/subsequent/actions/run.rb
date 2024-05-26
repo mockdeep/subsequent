@@ -1,5 +1,6 @@
-module Subsequent::Actions::Run
+# frozen_string_literal: true
 
+module Subsequent::Actions::Run
   extend Subsequent::DisplayHelpers
   extend Subsequent::Configuration::Helpers
 

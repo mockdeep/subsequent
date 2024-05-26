@@ -13,7 +13,7 @@ module Subsequent::Mode::Cycle
       "move first",
       checklist_items && "(#{cyan("i")})tem,",
       checklist && "(#{cyan("l")})ist or",
-      "(#{cyan("c")})ard to the end"
+      "(#{cyan("c")})ard to the end",
     ].compact.join(" ")
 
     [string, "(#{cyan("q")}) to cancel"]
