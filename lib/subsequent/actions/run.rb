@@ -39,49 +39,12 @@ module Subsequent::Actions::Run
 
     case mode
     when :normal
-      normal_commands(state)
+      Subsequent::Mode::Normal.commands(state)
     when :cycle
-      cycle_commands(state)
+      Subsequent::Mode::Cycle.commands(state)
     when :sort
-      sort_commands
+      Subsequent::Mode::Sort.commands(state)
     end
-  end
-
-  def self.normal_commands(state)
-    state => { checklist_items:, sort: }
-
-    item_range = (1..checklist_items.size).to_a.map(&method(:cyan)) if checklist_items
-    [
-      "sort by #{gray(sort)}",
-      item_range && "(#{item_range.join(", ")}) toggle task",
-      "(#{cyan("r")})efresh " \
-      "(#{cyan("s")})ort " \
-      "(#{cyan("c")})ycle " \
-      "(#{cyan("o")})pen-links " \
-      "(#{cyan("a")})rchive " \
-      "(#{cyan("q")})uit"
-    ].compact
-  end
-
-  def self.cycle_commands(state)
-    state => { checklist:, checklist_items: }
-
-    string = [
-      "move first",
-      checklist_items && "(#{cyan("i")})tem,",
-      checklist && "(#{cyan("l")})ist or",
-      "(#{cyan("c")})ard to the end",
-    ].compact.join(" ")
-
-    [string, "(#{cyan("q")}) to cancel"]
-  end
-
-  def self.sort_commands
-    string = "sort cards by " \
-             "(#{cyan("f")})irst " \
-             "(#{cyan("l")})east/(#{cyan("m")})ost unchecked items"
-
-    [string, "(#{cyan("q")}) to cancel"]
   end
 
   def self.fetch_data(sort:)
