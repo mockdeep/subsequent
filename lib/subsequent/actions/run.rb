@@ -4,7 +4,8 @@ module Subsequent::Actions::Run
   extend Subsequent::Configuration::Helpers
 
   def self.call
-    state = fetch_data(sort: Subsequent::Sort::First)
+    sort = Subsequent::Sort::First
+    state = show_spinner { Subsequent::Commands::FetchData.call(sort:) }
 
     loop do
       state => { card:, checklist:, checklist_items: }
@@ -43,14 +44,6 @@ module Subsequent::Actions::Run
     end
   end
 
-  def self.fetch_data(sort:)
-    Subsequent::State.format(cards: load_cards, sort:)
-  end
-
-  def self.load_cards
-    show_spinner { Subsequent::TrelloClient.fetch_cards }
-  end
-
   def self.handle_input(state)
     state => { checklist_items:, mode:, sort: }
 
@@ -66,7 +59,7 @@ module Subsequent::Actions::Run
     when ("1"..checklist_items.to_a.size.to_s)
       Subsequent::Commands::ToggleChecklistItem.call(state, char)
     when "r"
-      fetch_data(sort:)
+      show_spinner { Subsequent::Commands::FetchData.call(sort:) }
     when "s"
       Subsequent::State.new(**state.to_h, mode: :sort)
     when "c"
@@ -94,16 +87,24 @@ module Subsequent::Actions::Run
     when "i"
       checklist_item = checklist_items.first
       pos = checklist.items.last.pos + 1
-      Subsequent::TrelloClient.update_checklist_item(checklist_item, pos:)
-      fetch_data(sort:)
+      show_spinner do
+        Subsequent::TrelloClient.update_checklist_item(checklist_item, pos:)
+        Subsequent::Commands::FetchData.call(sort:)
+      end
     when "l"
       pos = card.checklists.last.pos + 1
-      Subsequent::TrelloClient.update_checklist(checklist, pos:)
-      fetch_data(sort:)
+
+      show_spinner do
+        Subsequent::TrelloClient.update_checklist(checklist, pos:)
+        Subsequent::Commands::FetchData.call(sort:)
+      end
     when "c"
       pos = cards.last.pos + 1
-      Subsequent::TrelloClient.update_card(card, pos:)
-      fetch_data(sort:)
+
+      show_spinner do
+        Subsequent::TrelloClient.update_card(card, pos:)
+        Subsequent::Commands::FetchData.call(sort:)
+      end
     else
       state
     end
@@ -137,8 +138,10 @@ module Subsequent::Actions::Run
     char = input.getch
 
     if char == "y"
-      Subsequent::TrelloClient.update_card(card, closed: true)
-      fetch_data(sort:)
+      show_spinner do
+        Subsequent::TrelloClient.update_card(card, closed: true)
+        Subsequent::Commands::FetchData.call(sort:)
+      end
     else
       state
     end
