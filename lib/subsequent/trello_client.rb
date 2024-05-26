@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# module for interacting with the Trello API
 module Subsequent::TrelloClient
   YAML_LOAD_OPTIONS = {
     permitted_classes: [Symbol],
@@ -7,6 +8,7 @@ module Subsequent::TrelloClient
   }.freeze
 
   class << self
+    # Fetches all cards from the Trello list
     def fetch_cards
       path = "lists/#{config.fetch(:trello_list_id)}/cards"
 
@@ -15,6 +17,7 @@ module Subsequent::TrelloClient
       cards_data.map { |data| Subsequent::Models::Card.new(**data) }
     end
 
+    # updates the checklist item on Trello
     def update_checklist_item(checklist_item, **params)
       path = "cards/#{checklist_item.card_id}/checkItem/#{checklist_item.id}"
       response = HTTP.put(trello_api_url(path, **params))
@@ -24,6 +27,7 @@ module Subsequent::TrelloClient
       raise Subsequent::Error, "Failed to update checklist item"
     end
 
+    # updates the checklist on Trello
     def update_checklist(checklist, **params)
       path = "checklist/#{checklist.id}"
       response = HTTP.put(trello_api_url(path, **params))
@@ -33,6 +37,7 @@ module Subsequent::TrelloClient
       raise Subsequent::Error, "Failed to update checklist"
     end
 
+    # updates the card on Trello
     def update_card(card, **params)
       path = "cards/#{card.id}"
       response = HTTP.put(trello_api_url(path, **params))
@@ -42,6 +47,7 @@ module Subsequent::TrelloClient
       raise Subsequent::Error, "Failed to update card"
     end
 
+    # toggles the checklist item completion state on Trello
     def toggle_checklist_item(item)
       state = item.checked? ? "incomplete" : "complete"
       item.state = state
@@ -54,11 +60,13 @@ module Subsequent::TrelloClient
       raise Subsequent::Error, "Failed to toggle checklist item"
     end
 
+    # sets the path to load configuration from
     def config_path=(path)
       @config = nil
       @config_path = path
     end
 
+    # returns the path to load configuration from
     def config_path
       @config_path ||= File.join(Dir.home, ".subsequent/config.yml")
     end

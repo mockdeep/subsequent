@@ -5,6 +5,7 @@ require "http"
 require "io/console"
 require "yaml"
 
+# top-level module for the gem
 module Subsequent; end
 
 class Subsequent::Error < StandardError; end
