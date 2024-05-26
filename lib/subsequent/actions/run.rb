@@ -45,34 +45,13 @@ module Subsequent::Actions::Run
   end
 
   def self.handle_input(state)
-    state => { checklist_items:, mode:, sort: }
-
-    if mode == :cycle
-      return Subsequent::Mode::Cycle.handle_input(state)
-    elsif mode == :sort
-      return Subsequent::Mode::Sort.handle_input(state)
-    end
-
-    char = input.getch
-
-    case char
-    when ("1"..checklist_items.to_a.size.to_s)
-      Subsequent::Commands::ToggleChecklistItem.call(state, char)
-    when "r"
-      show_spinner { Subsequent::Commands::FetchData.call(sort:) }
-    when "s"
-      Subsequent::State.new(**state.to_h, mode: :sort)
-    when "c"
-      Subsequent::State.new(**state.to_h, mode: :cycle)
-    when "o"
-      Subsequent::Commands::OpenLinks.call(state)
-    when "a"
-      Subsequent::Commands::ArchiveCard.call(state)
-    when "q", "\u0004", "\u0003"
-      output.puts yellow("Goodbye!")
-      exit
-    else
-      state
+    case state.mode
+    when :cycle
+      Subsequent::Mode::Cycle.handle_input(state)
+    when :sort
+      Subsequent::Mode::Sort.handle_input(state)
+    when :normal
+      Subsequent::Mode::Normal.handle_input(state)
     end
   end
 end
