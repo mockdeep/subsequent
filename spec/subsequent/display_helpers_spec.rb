@@ -1,4 +1,6 @@
-RSpec.describe Subsequent::TextFormatting do
+# frozen_string_literal: true
+
+RSpec.describe Subsequent::DisplayHelpers do
   include described_class
 
   describe "#linkify" do
@@ -7,6 +9,6 @@ RSpec.describe Subsequent::TextFormatting do
 
       expect(linkify(string))
         .to eq("(#{link("http://example.com")}) is a great website")
-    end 
+    end
   end
 end

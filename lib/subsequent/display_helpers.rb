@@ -1,4 +1,6 @@
-module Subsequent::TextFormatting
+# frozen_string_literal: true
+
+module Subsequent::DisplayHelpers
   def gray(string)
     "\e[94m#{string}\e[0m"
   end

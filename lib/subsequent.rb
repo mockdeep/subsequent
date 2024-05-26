@@ -11,8 +11,8 @@ class Subsequent::Error < StandardError; end
 
 require_relative "subsequent/configuration"
 require_relative "subsequent/configuration/helpers"
+require_relative "subsequent/display_helpers"
 require_relative "subsequent/version"
-require_relative "subsequent/text_formatting"
 require_relative "subsequent/actions"
 require_relative "subsequent/mode"
 require_relative "subsequent/models"

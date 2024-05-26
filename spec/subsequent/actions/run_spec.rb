@@ -2,7 +2,7 @@
 
 RSpec.describe Subsequent::Actions::Run do
   include Subsequent::Configuration::Helpers
-  include Subsequent::TextFormatting
+  include Subsequent::DisplayHelpers
 
   def call
     input.print("q")
