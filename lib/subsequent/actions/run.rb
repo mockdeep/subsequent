@@ -48,7 +48,7 @@ module Subsequent::Actions::Run
     state => { checklist_items:, mode:, sort: }
 
     if mode == :cycle
-      return cycle(state)
+      return Subsequent::Mode::Cycle.handle_input(state)
     elsif mode == :sort
       return Subsequent::Mode::Sort.handle_input(state)
     end
@@ -71,40 +71,6 @@ module Subsequent::Actions::Run
     when "q", "\u0004", "\u0003"
       output.puts yellow("Goodbye!")
       exit
-    else
-      state
-    end
-  end
-
-  def self.cycle(state)
-    state => { cards:, card:, checklist:, checklist_items:, sort: }
-
-    char = input.getch
-
-    case char
-    when "q", "\u0004", "\u0003"
-      Subsequent::State.new(**state.to_h, mode: :normal)
-    when "i"
-      checklist_item = checklist_items.first
-      pos = checklist.items.last.pos + 1
-      show_spinner do
-        Subsequent::TrelloClient.update_checklist_item(checklist_item, pos:)
-        Subsequent::Commands::FetchData.call(sort:)
-      end
-    when "l"
-      pos = card.checklists.last.pos + 1
-
-      show_spinner do
-        Subsequent::TrelloClient.update_checklist(checklist, pos:)
-        Subsequent::Commands::FetchData.call(sort:)
-      end
-    when "c"
-      pos = cards.last.pos + 1
-
-      show_spinner do
-        Subsequent::TrelloClient.update_card(card, pos:)
-        Subsequent::Commands::FetchData.call(sort:)
-      end
     else
       state
     end
