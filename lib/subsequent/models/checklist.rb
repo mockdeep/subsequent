@@ -2,7 +2,7 @@
 
 # class to encapsulate a checklist
 class Subsequent::Models::Checklist
-  attr_accessor :id, :items, :pos
+  attr_accessor :id, :items, :name, :pos
 
   # Create a new array of checklists from the given data
   def self.from_data(checklists_data, card:)
@@ -11,8 +11,9 @@ class Subsequent::Models::Checklist
       .sort
   end
 
-  def initialize(card_id:, id:, check_items:, pos:, **_checklist_data)
+  def initialize(card_id:, id:, check_items:, name:, pos:, **_checklist_data)
     self.id = id
+    self.name = name
     self.pos = pos
     self.items =
       Subsequent::Models::ChecklistItem.from_data(check_items, card_id:)

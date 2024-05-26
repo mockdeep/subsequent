@@ -83,7 +83,7 @@ RSpec.describe Subsequent::Actions::Run do
     call
 
     expected_output = <<~OUTPUT.strip
-      #{card_data[:name]} (#{link(card_data[:short_url])})
+      #{card_data[:name]} - Checklist (#{link(card_data[:short_url])})
       ====
       1. ☐ #{green("Check Item")}
 
@@ -240,7 +240,7 @@ RSpec.describe Subsequent::Actions::Run do
     call
 
     expected_output = <<~OUTPUT.strip
-      #{card_data[:name]} (#{link(card_data[:short_url])})
+      #{card_data[:name]} - Checklist (#{link(card_data[:short_url])})
       ====
       1. ☐ #{green("Check Item")}
 

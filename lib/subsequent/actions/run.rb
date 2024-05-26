@@ -14,7 +14,7 @@ module Subsequent::Actions::Run
       state => { card:, checklist:, checklist_items:, mode: }
 
       output.clear_screen
-      output.puts "#{card.name} (#{link(card.short_url)})"
+      output.puts title(state)
       output.puts "=" * card.name.size
       if checklist
         checklist_items.each_with_index do |item, index|
@@ -31,6 +31,17 @@ module Subsequent::Actions::Run
       output.puts mode.commands(state)
 
       state = mode.handle_input(state)
+    end
+  end
+
+  # title to display
+  def self.title(state)
+    state => { card:, checklist: }
+
+    if checklist
+      "#{card.name} - #{checklist.name} (#{link(card.short_url)})"
+    else
+      "#{card.name} (#{link(card.short_url)})"
     end
   end
 end
