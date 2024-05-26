@@ -12,7 +12,7 @@ class Subsequent::Error < StandardError; end
 require_relative "subsequent/configuration"
 require_relative "subsequent/configuration/helpers"
 require_relative "subsequent/display_helpers"
-require_relative "subsequent/version"
+
 require_relative "subsequent/actions"
 require_relative "subsequent/commands"
 require_relative "subsequent/mode"
@@ -20,3 +20,4 @@ require_relative "subsequent/models"
 require_relative "subsequent/sort"
 require_relative "subsequent/state"
 require_relative "subsequent/trello_client"
+require_relative "subsequent/version"
