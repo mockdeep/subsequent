@@ -4,6 +4,7 @@
 module Subsequent::Commands
 end
 
+require_relative "commands/archive_card"
 require_relative "commands/fetch_data"
 require_relative "commands/open_links"
 require_relative "commands/toggle_checklist_item"

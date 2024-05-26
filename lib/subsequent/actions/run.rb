@@ -67,7 +67,7 @@ module Subsequent::Actions::Run
     when "o"
       Subsequent::Commands::OpenLinks.call(state)
     when "a"
-      archive_card(state)
+      Subsequent::Commands::ArchiveCard.call(state)
     when "q", "\u0004", "\u0003"
       output.puts yellow("Goodbye!")
       exit
@@ -126,22 +126,6 @@ module Subsequent::Actions::Run
       Subsequent::State.format(cards:, sort:)
     when "q", "\u0004", "\u0003"
       Subsequent::State.new(**state.to_h, mode: :normal)
-    else
-      state
-    end
-  end
-
-  def self.archive_card(state)
-    state => { card:, sort: }
-
-    output.print("#{red("Archive this card?")} (y/n) ")
-    char = input.getch
-
-    if char == "y"
-      show_spinner do
-        Subsequent::TrelloClient.update_card(card, closed: true)
-        Subsequent::Commands::FetchData.call(sort:)
-      end
     else
       state
     end
