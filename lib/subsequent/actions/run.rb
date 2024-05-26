@@ -72,7 +72,7 @@ module Subsequent::Actions::Run
     when "c"
       Subsequent::State.new(**state.to_h, mode: :cycle)
     when "o"
-      open_links(state)
+      Subsequent::Commands::OpenLinks.call(state)
     when "a"
       archive_card(state)
     when "q", "\u0004", "\u0003"
@@ -128,26 +128,6 @@ module Subsequent::Actions::Run
     else
       state
     end
-  end
-
-  def self.open_links(state)
-    state => { card:, checklist_items: }
-
-    links =
-      if checklist_items.present?
-        checklist_items.flat_map(&:links)
-      else
-        [card.short_url]
-      end
-
-    links.each do |link|
-      system("open", link)
-
-      # otherwise system can open links in inconsistent order
-      sleep(0.1)
-    end
-
-    state
   end
 
   def self.archive_card(state)
