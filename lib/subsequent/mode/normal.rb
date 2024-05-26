@@ -42,9 +42,9 @@ module Subsequent::Mode::Normal
     when "r"
       show_spinner { Subsequent::Commands::FetchData.call(sort:) }
     when "s"
-      Subsequent::State.new(**state.to_h, mode: :sort)
+      Subsequent::State.new(**state.to_h, mode: Subsequent::Mode::Sort)
     when "c"
-      Subsequent::State.new(**state.to_h, mode: :cycle)
+      Subsequent::State.new(**state.to_h, mode: Subsequent::Mode::Cycle)
     when "o"
       Subsequent::Commands::OpenLinks.call(state)
     when "a"
