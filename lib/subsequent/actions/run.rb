@@ -63,9 +63,7 @@ module Subsequent::Actions::Run
   end
 
   def self.load_cards
-    Subsequent::Actions::Spin.call do
-      Subsequent::TrelloClient.fetch_cards
-    end
+    show_spinner { Subsequent::TrelloClient.fetch_cards }
   end
 
   def self.handle_input(state)
