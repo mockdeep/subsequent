@@ -256,14 +256,14 @@ RSpec.describe Subsequent::Actions::Run do
       [{ pos: 1, name:, id: 5, state: "incomplete" }]
     stub_cards([card_data])
 
-    allow(described_class).to receive(:system).twice
+    allow(Subsequent::Commands::OpenLinks).to receive(:system).twice
 
     input.print("o")
     call
 
-    expect(described_class)
+    expect(Subsequent::Commands::OpenLinks)
       .to have_received(:system).with("open", "https://example.com").ordered
-    expect(described_class)
+    expect(Subsequent::Commands::OpenLinks)
       .to have_received(:system).with("open", "https://example.org").ordered
   end
 
@@ -272,12 +272,12 @@ RSpec.describe Subsequent::Actions::Run do
     card_data[:checklists].first[:check_items] = []
     stub_cards([card_data])
 
-    allow(described_class).to receive(:system)
+    allow(Subsequent::Commands::OpenLinks).to receive(:system)
 
     input.print("o")
     call
 
-    expect(described_class)
+    expect(Subsequent::Commands::OpenLinks)
       .to have_received(:system).with("open", "http://example.com")
   end
 
