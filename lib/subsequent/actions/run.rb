@@ -1,9 +1,11 @@
 # frozen_string_literal: true
 
+# module that runs the application
 module Subsequent::Actions::Run
   extend Subsequent::DisplayHelpers
   extend Subsequent::Configuration::Helpers
 
+  # Run the application
   def self.call
     sort = Subsequent::Sort::First
     state = show_spinner { Subsequent::Commands::FetchData.call(sort:) }

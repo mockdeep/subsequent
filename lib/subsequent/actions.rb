@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# module to encapsulate action modules
 module Subsequent::Actions
 end
 

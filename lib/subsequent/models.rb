@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# module to encapsulate model classes
 module Subsequent::Models
 end
 

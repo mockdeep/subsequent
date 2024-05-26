@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# class to encapsulate a card
 class Subsequent::Models::Card
   attr_accessor :checklists, :id, :name, :pos, :short_url
 
