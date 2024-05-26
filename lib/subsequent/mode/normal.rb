@@ -13,7 +13,7 @@ module Subsequent::Mode::Normal
       "(#{cyan("r")})efresh " \
       "(#{cyan("s")})ort " \
       "(#{cyan("c")})ycle " \
-      "(#{cyan("o")})pen-links " \
+      "(#{cyan("o")})pen " \
       "(#{cyan("a")})rchive " \
       "(#{cyan("q")})uit",
     ].compact
