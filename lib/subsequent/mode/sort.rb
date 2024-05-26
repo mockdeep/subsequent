@@ -2,7 +2,7 @@
 
 # Sort mode functionality
 module Subsequent::Mode::Sort
-  extend Subsequent::TextFormatting
+  extend Subsequent::DisplayHelpers
 
   # sort mode commands
   def self.commands(_state)

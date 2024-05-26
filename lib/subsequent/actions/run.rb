@@ -2,7 +2,7 @@ module Subsequent::Actions::Run
 
   State = Data.define(:cards, :card, :checklist, :checklist_items, :mode, :sort)
 
-  extend Subsequent::TextFormatting
+  extend Subsequent::DisplayHelpers
   extend Subsequent::Configuration::Helpers
 
   DISPLAY_COUNT = 5

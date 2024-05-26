@@ -2,7 +2,7 @@
 
 # Cycle mode functionality
 module Subsequent::Mode::Cycle
-  extend Subsequent::TextFormatting
+  extend Subsequent::DisplayHelpers
 
   # cycle mode commands
   def self.commands(state)

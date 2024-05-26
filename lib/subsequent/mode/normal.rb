@@ -2,7 +2,7 @@
 
 # Normal mode functionality
 module Subsequent::Mode::Normal
-  extend Subsequent::TextFormatting
+  extend Subsequent::DisplayHelpers
 
   # normal mode commands
   def self.commands(state)
