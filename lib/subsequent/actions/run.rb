@@ -84,7 +84,7 @@ module Subsequent::Actions::Run
 
     case char
     when ("1"..checklist_items.to_a.size.to_s)
-      toggle_checklist_item(state, char)
+      Subsequent::Commands::ToggleChecklistItem.call(state, char)
     when "r"
       fetch_data(sort:)
     when "s"
@@ -101,17 +101,6 @@ module Subsequent::Actions::Run
     else
       state
     end
-  end
-
-  def self.toggle_checklist_item(state, char)
-    state => { checklist_items: }
-
-    task_number = Integer(char)
-    item = checklist_items[task_number - 1]
-
-    Subsequent::TrelloClient.toggle_checklist_item(item)
-
-    state
   end
 
   def self.cycle(state)
