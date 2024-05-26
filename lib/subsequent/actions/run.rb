@@ -8,7 +8,7 @@ module Subsequent::Actions::Run
     state = show_spinner { Subsequent::Commands::FetchData.call(sort:) }
 
     loop do
-      state => { card:, checklist:, checklist_items: }
+      state => { card:, checklist:, checklist_items:, mode: }
 
       output.clear_screen
       output.puts "#{card.name} (#{link(card.short_url)})"
@@ -25,33 +25,9 @@ module Subsequent::Actions::Run
       end
 
       output.puts
-      output.puts commands(state)
+      output.puts mode.commands(state)
 
-      state = handle_input(state)
-    end
-  end
-
-  def self.commands(state)
-    state => { mode: }
-
-    case mode
-    when :normal
-      Subsequent::Mode::Normal.commands(state)
-    when :cycle
-      Subsequent::Mode::Cycle.commands(state)
-    when :sort
-      Subsequent::Mode::Sort.commands(state)
-    end
-  end
-
-  def self.handle_input(state)
-    case state.mode
-    when :cycle
-      Subsequent::Mode::Cycle.handle_input(state)
-    when :sort
-      Subsequent::Mode::Sort.handle_input(state)
-    when :normal
-      Subsequent::Mode::Normal.handle_input(state)
+      state = mode.handle_input(state)
     end
   end
 end
