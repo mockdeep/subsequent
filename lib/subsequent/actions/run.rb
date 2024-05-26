@@ -1,7 +1,5 @@
 module Subsequent::Actions::Run
 
-  State = Data.define(:cards, :card, :checklist, :checklist_items, :mode, :sort)
-
   extend Subsequent::DisplayHelpers
   extend Subsequent::Configuration::Helpers
 
@@ -59,7 +57,14 @@ module Subsequent::Actions::Run
     checklist_items =
       checklist && checklist.unchecked_items.first(DISPLAY_COUNT)
 
-    State.new(cards:, card:, checklist:, checklist_items:, sort:, mode: :normal)
+    Subsequent::State.new(
+      cards:,
+      card:,
+      checklist:,
+      checklist_items:,
+      sort:,
+      mode: :normal
+    )
   end
 
   def self.load_cards
@@ -83,9 +88,9 @@ module Subsequent::Actions::Run
     when "r"
       fetch_data(sort:)
     when "s"
-      State.new(**state.to_h, mode: :sort)
+      Subsequent::State.new(**state.to_h, mode: :sort)
     when "c"
-      State.new(**state.to_h, mode: :cycle)
+      Subsequent::State.new(**state.to_h, mode: :cycle)
     when "o"
       open_links(state)
     when "a"
@@ -116,7 +121,7 @@ module Subsequent::Actions::Run
 
     case char
     when "q", "\u0004", "\u0003"
-      State.new(**state.to_h, mode: :normal)
+      Subsequent::State.new(**state.to_h, mode: :normal)
     when "i"
       checklist_item = checklist_items.first
       pos = checklist.items.last.pos + 1
@@ -151,7 +156,7 @@ module Subsequent::Actions::Run
       sort = Subsequent::Sort::LeastUncheckedItems
       format_state(cards:, sort:)
     when "q", "\u0004", "\u0003"
-      State.new(**state.to_h, mode: :normal)
+      Subsequent::State.new(**state.to_h, mode: :normal)
     else
       state
     end
