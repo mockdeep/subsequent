@@ -32,7 +32,7 @@ RSpec.describe Subsequent::Actions::Run do
       (#{cyan("r")})efresh \
       (#{cyan("s")})ort \
       (#{cyan("c")})ycle \
-      (#{cyan("o")})pen-links \
+      (#{cyan("o")})pen \
       (#{cyan("a")})rchive \
       (#{cyan("q")})uit
       #{yellow("Goodbye!")}
@@ -45,7 +45,7 @@ RSpec.describe Subsequent::Actions::Run do
       (#{cyan("r")})efresh \
       (#{cyan("s")})ort \
       (#{cyan("c")})ycle \
-      (#{cyan("o")})pen-links \
+      (#{cyan("o")})pen \
       (#{cyan("a")})rchive \
       (#{cyan("q")})uit
       #{yellow("Goodbye!")}
