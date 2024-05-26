@@ -1,6 +1,6 @@
 module Subsequent::Actions::Run
 
-  State = Data.define(:cards, :card, :checklist, :checklist_items, :mode)
+  State = Data.define(:cards, :card, :checklist, :checklist_items, :mode, :sort)
 
   extend Subsequent::TextFormatting
   extend Subsequent::Configuration::Helpers
@@ -8,7 +8,7 @@ module Subsequent::Actions::Run
   DISPLAY_COUNT = 5
 
   def self.call
-    state = fetch_data
+    state = fetch_data(sort: Subsequent::Sort::First)
 
     loop do
       state => { card:, checklist:, checklist_items: }
@@ -35,38 +35,68 @@ module Subsequent::Actions::Run
   end
 
   def self.commands(state)
-    state => { checklist:, checklist_items:, mode: }
+    state => { mode: }
 
-    if mode == :cycle
-      string = [
-        "move first",
-        checklist_items && "(#{cyan("i")})tem,",
-        checklist && "(#{cyan("l")})ist or",
-        "(#{cyan("c")})ard to the end",
-      ].compact.join(" ")
-
-      [string, "(#{cyan("q")}) to cancel",].compact
-    else
-      item_range = (1..checklist_items.size).to_a.map(&method(:cyan)) if checklist_items
-      [
-        item_range && "(#{item_range.join(", ")}) toggle task",
-        "(#{cyan("r")})efresh " \
-        "(#{cyan("c")})ycle " \
-        "(#{cyan("o")})pen-links " \
-        "(#{cyan("a")})rchive " \
-        "(#{cyan("q")})uit"
-      ].compact
+    case mode
+    when :normal
+      normal_commands(state)
+    when :cycle
+      cycle_commands(state)
+    when :sort
+      sort_commands
     end
   end
 
-  def self.fetch_data
+  def self.normal_commands(state)
+    state => { checklist_items:, sort: }
+
+    item_range = (1..checklist_items.size).to_a.map(&method(:cyan)) if checklist_items
+    [
+      "sort by #{gray(sort)}",
+      item_range && "(#{item_range.join(", ")}) toggle task",
+      "(#{cyan("r")})efresh " \
+      "(#{cyan("s")})ort " \
+      "(#{cyan("c")})ycle " \
+      "(#{cyan("o")})pen-links " \
+      "(#{cyan("a")})rchive " \
+      "(#{cyan("q")})uit"
+    ].compact
+  end
+
+  def self.cycle_commands(state)
+    state => { checklist:, checklist_items: }
+
+    string = [
+      "move first",
+      checklist_items && "(#{cyan("i")})tem,",
+      checklist && "(#{cyan("l")})ist or",
+      "(#{cyan("c")})ard to the end",
+    ].compact.join(" ")
+
+    [string, "(#{cyan("q")}) to cancel"]
+  end
+
+  def self.sort_commands
+    string = "sort cards by " \
+             "(#{cyan("f")})irst " \
+             "(#{cyan("l")})east/(#{cyan("m")})ost unchecked items"
+
+    [string, "(#{cyan("q")}) to cancel"]
+  end
+
+  def self.fetch_data(sort:)
     cards = load_cards
-    card = cards.first
+
+    format_state(cards:, sort:)
+  end
+
+  def self.format_state(cards:, sort:)
+    card = sort.call(cards)
     checklist = card.checklists.find(&:unchecked_items?)
     checklist_items =
       checklist && checklist.unchecked_items.first(DISPLAY_COUNT)
 
-    State.new(cards:, card:, checklist:, checklist_items:, mode: :normal)
+    State.new(cards:, card:, checklist:, checklist_items:, sort:, mode: :normal)
   end
 
   def self.load_cards
@@ -76,10 +106,12 @@ module Subsequent::Actions::Run
   end
 
   def self.handle_input(state)
-    state => { checklist_items:, mode: }
+    state => { checklist_items:, mode:, sort: }
 
     if mode == :cycle
       return cycle(state)
+    elsif mode == :sort
+      return sort(state)
     end
 
     char = input.getch
@@ -88,7 +120,9 @@ module Subsequent::Actions::Run
     when ("1"..checklist_items.to_a.size.to_s)
       toggle_checklist_item(state, char)
     when "r"
-      fetch_data
+      fetch_data(sort:)
+    when "s"
+      State.new(**state.to_h, mode: :sort)
     when "c"
       State.new(**state.to_h, mode: :cycle)
     when "o"
@@ -115,7 +149,7 @@ module Subsequent::Actions::Run
   end
 
   def self.cycle(state)
-    state => { cards:, card:, checklist:, checklist_items: }
+    state => { cards:, card:, checklist:, checklist_items:, sort: }
 
     char = input.getch
 
@@ -126,17 +160,39 @@ module Subsequent::Actions::Run
       checklist_item = checklist_items.first
       pos = checklist.items.last.pos + 1
       Subsequent::TrelloClient.update_checklist_item(checklist_item, pos:)
-      fetch_data
+      fetch_data(sort:)
     when "l"
       pos = card.checklists.last.pos + 1
       Subsequent::TrelloClient.update_checklist(checklist, pos:)
-      fetch_data
+      fetch_data(sort:)
     when "c"
       pos = cards.last.pos + 1
       Subsequent::TrelloClient.update_card(card, pos:)
-      fetch_data
+      fetch_data(sort:)
     else
-      State.new(**state.to_h, mode: :cycle)
+      state
+    end
+  end
+
+  def self.sort(state)
+    state => { cards: }
+
+    char = input.getch
+
+    case char
+    when "f"
+      sort = Subsequent::Sort::First
+      format_state(cards:, sort:)
+    when "m"
+      sort = Subsequent::Sort::MostUncheckedItems
+      format_state(cards:, sort:)
+    when "l"
+      sort = Subsequent::Sort::LeastUncheckedItems
+      format_state(cards:, sort:)
+    when "q", "\u0004", "\u0003"
+      State.new(**state.to_h, mode: :normal)
+    else
+      state
     end
   end
 
@@ -161,14 +217,14 @@ module Subsequent::Actions::Run
   end
 
   def self.archive_card(state)
-    state => { card: }
+    state => { card:, sort: }
 
     output.print("#{red("Archive this card?")} (y/n) ")
     char = input.getch
 
     if char == "y"
       Subsequent::TrelloClient.update_card(card, closed: true)
-      fetch_data
+      fetch_data(sort:)
     else
       state
     end
