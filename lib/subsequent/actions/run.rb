@@ -3,8 +3,6 @@ module Subsequent::Actions::Run
   extend Subsequent::DisplayHelpers
   extend Subsequent::Configuration::Helpers
 
-  DISPLAY_COUNT = 5
-
   def self.call
     state = fetch_data(sort: Subsequent::Sort::First)
 
@@ -46,25 +44,7 @@ module Subsequent::Actions::Run
   end
 
   def self.fetch_data(sort:)
-    cards = load_cards
-
-    format_state(cards:, sort:)
-  end
-
-  def self.format_state(cards:, sort:)
-    card = sort.call(cards)
-    checklist = card.checklists.find(&:unchecked_items?)
-    checklist_items =
-      checklist && checklist.unchecked_items.first(DISPLAY_COUNT)
-
-    Subsequent::State.new(
-      cards:,
-      card:,
-      checklist:,
-      checklist_items:,
-      sort:,
-      mode: :normal
-    )
+    Subsequent::State.format(cards: load_cards, sort:)
   end
 
   def self.load_cards
@@ -136,14 +116,13 @@ module Subsequent::Actions::Run
 
     case char
     when "f"
-      sort = Subsequent::Sort::First
-      format_state(cards:, sort:)
+      Subsequent::State.format(cards:, sort: Subsequent::Sort::First)
     when "m"
       sort = Subsequent::Sort::MostUncheckedItems
-      format_state(cards:, sort:)
+      Subsequent::State.format(cards:, sort:)
     when "l"
       sort = Subsequent::Sort::LeastUncheckedItems
-      format_state(cards:, sort:)
+      Subsequent::State.format(cards:, sort:)
     when "q", "\u0004", "\u0003"
       Subsequent::State.new(**state.to_h, mode: :normal)
     else
