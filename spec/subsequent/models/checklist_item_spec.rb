@@ -8,7 +8,7 @@ RSpec.describe Subsequent::Models::ChecklistItem do
       name: "Some Checklist",
       id: 5,
       state: "incomplete",
-      **overrides
+      **overrides,
     }
   end
 

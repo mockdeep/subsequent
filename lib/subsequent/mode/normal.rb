@@ -15,7 +15,7 @@ module Subsequent::Mode::Normal
       "(#{cyan("c")})ycle " \
       "(#{cyan("o")})pen-links " \
       "(#{cyan("a")})rchive " \
-      "(#{cyan("q")})uit"
+      "(#{cyan("q")})uit",
     ].compact
   end
 
