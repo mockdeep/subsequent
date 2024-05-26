@@ -50,7 +50,7 @@ module Subsequent::Actions::Run
     if mode == :cycle
       return cycle(state)
     elsif mode == :sort
-      return sort(state)
+      return Subsequent::Mode::Sort.handle_input(state)
     end
 
     char = input.getch
@@ -105,27 +105,6 @@ module Subsequent::Actions::Run
         Subsequent::TrelloClient.update_card(card, pos:)
         Subsequent::Commands::FetchData.call(sort:)
       end
-    else
-      state
-    end
-  end
-
-  def self.sort(state)
-    state => { cards: }
-
-    char = input.getch
-
-    case char
-    when "f"
-      Subsequent::State.format(cards:, sort: Subsequent::Sort::First)
-    when "m"
-      sort = Subsequent::Sort::MostUncheckedItems
-      Subsequent::State.format(cards:, sort:)
-    when "l"
-      sort = Subsequent::Sort::LeastUncheckedItems
-      Subsequent::State.format(cards:, sort:)
-    when "q", "\u0004", "\u0003"
-      Subsequent::State.new(**state.to_h, mode: :normal)
     else
       state
     end
