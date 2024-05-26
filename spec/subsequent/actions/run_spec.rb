@@ -27,8 +27,10 @@ RSpec.describe Subsequent::Actions::Run do
 
   def checklist_end_boilerplate
     <<~OUTPUT.strip
+      sort by #{gray("first")}
       (#{cyan("1")}) toggle task
       (#{cyan("r")})efresh \
+      (#{cyan("s")})ort \
       (#{cyan("c")})ycle \
       (#{cyan("o")})pen-links \
       (#{cyan("a")})rchive \
@@ -37,9 +39,11 @@ RSpec.describe Subsequent::Actions::Run do
     OUTPUT
   end
 
-  def end_boilerplate
+  def end_boilerplate(sort:)
     <<~OUTPUT.strip
+      sort by #{gray(sort)}
       (#{cyan("r")})efresh \
+      (#{cyan("s")})ort \
       (#{cyan("c")})ycle \
       (#{cyan("o")})pen-links \
       (#{cyan("a")})rchive \
@@ -52,13 +56,13 @@ RSpec.describe Subsequent::Actions::Run do
     stub_request(:get, test_cards_url).to_return(body: cards.to_json)
   end
 
-  def no_unchecked_items_output(card_data)
+  def no_unchecked_items_output(card_data, sort: "first")
     <<~OUTPUT.strip
       #{card_data[:name]} (#{link(card_data[:short_url])})
       ====
       No unchecked items, finish the card!
 
-      #{end_boilerplate}
+      #{end_boilerplate(sort:)}
     OUTPUT
   end
 
@@ -141,6 +145,45 @@ RSpec.describe Subsequent::Actions::Run do
     call
 
     expect(a_request(:put, /checkItem/)).not_to have_been_made
+  end
+
+  context "when mode is :sort" do
+    it "sorts the cards by first" do
+      card_data = api_card
+      stub_cards([card_data])
+
+      input.print("sf")
+
+      call
+
+      expect(output.string.strip).to eq(no_unchecked_items_output(card_data))
+    end
+
+    it "sorts the cards by most checklist items" do
+      card_data = api_card
+      stub_cards([card_data])
+
+      input.print("sm")
+
+      call
+
+      sort = "most_unchecked_items"
+      expect(output.string.strip)
+        .to eq(no_unchecked_items_output(card_data, sort:))
+    end
+
+    it "sorts the cards by least checklist items" do
+      card_data = api_card
+      stub_cards([card_data])
+
+      input.print("sl")
+
+      call
+
+      sort = "least_unchecked_items"
+      expect(output.string.strip)
+        .to eq(no_unchecked_items_output(card_data, sort:))
+    end
   end
 
   it "cycles the checklist item" do
