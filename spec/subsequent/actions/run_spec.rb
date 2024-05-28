@@ -29,10 +29,11 @@ RSpec.describe Subsequent::Actions::Run do
     <<~OUTPUT.strip
       sort by #{gray("first")}
       (#{cyan("1")}) toggle task
-      (#{cyan("r")})efresh \
       (#{cyan("s")})ort \
-      (#{cyan("c")})ycle \
       (#{cyan("o")})pen \
+      (#{cyan("c")})ycle \
+      (#{cyan("n")})ew
+      (#{cyan("r")})efresh \
       (#{cyan("a")})rchive \
       (#{cyan("q")})uit
       #{yellow("Goodbye!")}
@@ -42,10 +43,11 @@ RSpec.describe Subsequent::Actions::Run do
   def end_boilerplate(sort:)
     <<~OUTPUT.strip
       sort by #{gray(sort)}
-      (#{cyan("r")})efresh \
       (#{cyan("s")})ort \
-      (#{cyan("c")})ycle \
       (#{cyan("o")})pen \
+      (#{cyan("c")})ycle \
+      (#{cyan("n")})ew
+      (#{cyan("r")})efresh \
       (#{cyan("a")})rchive \
       (#{cyan("q")})uit
       #{yellow("Goodbye!")}
@@ -58,9 +60,8 @@ RSpec.describe Subsequent::Actions::Run do
 
   def no_unchecked_items_output(card_data, sort: "first")
     <<~OUTPUT.strip
-      #{card_data[:name]} (#{link(card_data[:short_url])})
+      #{card_data[:name]} - Checklist (#{link(card_data[:short_url])})
       ====
-      No unchecked items, finish the card!
 
       #{end_boilerplate(sort:)}
     OUTPUT
@@ -234,8 +235,7 @@ RSpec.describe Subsequent::Actions::Run do
       [{ pos: 1, name: "Check Item", id: 5, state: "incomplete" }]
     stub_cards([card_data])
 
-    input.print("c")
-    input.print("q")
+    input.print("cq")
 
     call
 
@@ -247,6 +247,61 @@ RSpec.describe Subsequent::Actions::Run do
       #{checklist_end_boilerplate}
     OUTPUT
     expect(output.string.strip).to eq(expected_output)
+  end
+
+  it "creates a new card" do
+    input.print("nc")
+    input.puts("New Card")
+    input.puts("New Checklist")
+    input.puts("New Checklist Item")
+    input.puts("q")
+    stub_cards([api_card])
+
+    card_post_url = "https://api.trello.com/1/cards?idList=test-list-id&key=test-key&name=New%20Card&pos=top&token=test-token"
+    checklist_post_url = "https://api.trello.com/1/checklists?idCard=123&key=test-key&name=New%20Checklist&pos=top&token=test-token"
+    checklist_item_post_url = "https://api.trello.com/1/checklists/456/checkItems?key=test-key&name=New%20Checklist%20Item&pos=top&token=test-token"
+    stub_request(:post, card_post_url)
+    stub_request(:post, checklist_post_url)
+    stub_request(:post, checklist_item_post_url)
+
+    call
+
+    expect(a_request(:post, card_post_url)).to have_been_made
+    expect(a_request(:post, checklist_post_url)).to have_been_made
+    expect(a_request(:post, checklist_item_post_url)).to have_been_made
+  end
+
+  it "creates a new list on the current card" do
+    input.print("nl")
+    input.puts("New Checklist")
+    input.puts("New Checklist Item")
+    input.puts("q")
+    stub_cards([api_card])
+
+    checklist_post_url = "https://api.trello.com/1/checklists?idCard=123&key=test-key&name=New%20Checklist&pos=top&token=test-token"
+    checklist_item_post_url = "https://api.trello.com/1/checklists/456/checkItems?key=test-key&name=New%20Checklist%20Item&pos=top&token=test-token"
+    stub_request(:post, checklist_post_url)
+    stub_request(:post, checklist_item_post_url)
+
+    call
+
+    expect(a_request(:post, checklist_post_url)).to have_been_made
+    expect(a_request(:post, checklist_item_post_url)).to have_been_made
+  end
+
+  it "creates a new checklist item on the current checklist" do
+    stub_cards([api_card])
+
+    input.print("ni")
+    input.puts("New Checklist Item")
+    input.puts("q")
+
+    checklist_item_post_url = "https://api.trello.com/1/checklists/456/checkItems?key=test-key&name=New%20Checklist%20Item&pos=top&token=test-token"
+    stub_request(:post, checklist_item_post_url)
+
+    call
+
+    expect(a_request(:post, checklist_item_post_url)).to have_been_made
   end
 
   it "opens links for checklist items" do

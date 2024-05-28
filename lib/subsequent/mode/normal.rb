@@ -7,23 +7,23 @@ module Subsequent::Mode::Normal
 
   # normal mode commands
   def self.commands(state)
-    [
-      "sort by #{gray(state.sort)}",
-      checklist_item_commands(state),
-      "(#{cyan("r")})efresh " \
+    row1 = "sort by #{gray(state.sort)}"
+    row2 = checklist_item_commands(state)
+    row3 =
       "(#{cyan("s")})ort " \
-      "(#{cyan("c")})ycle " \
       "(#{cyan("o")})pen " \
-      "(#{cyan("a")})rchive " \
-      "(#{cyan("q")})uit",
-    ].compact
+      "(#{cyan("c")})ycle " \
+      "(#{cyan("n")})ew"
+    row4 = "(#{cyan("r")})efresh (#{cyan("a")})rchive (#{cyan("q")})uit"
+
+    [row1, row2, row3, row4].compact
   end
 
   # checklist item commands
   def self.checklist_item_commands(state)
     state => { checklist_items: }
 
-    return unless checklist_items
+    return unless checklist_items.present?
 
     item_range = (1..checklist_items.size).to_a.map(&method(:cyan))
 
@@ -45,6 +45,8 @@ module Subsequent::Mode::Normal
       Subsequent::State.new(**state.to_h, mode: Subsequent::Mode::Sort)
     when "c"
       Subsequent::State.new(**state.to_h, mode: Subsequent::Mode::Cycle)
+    when "n"
+      Subsequent::State.new(**state.to_h, mode: Subsequent::Mode::AddItem)
     when "o"
       Subsequent::Commands::OpenLinks.call(state)
     when "a"
