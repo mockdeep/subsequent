@@ -10,7 +10,7 @@ module Subsequent::TrelloClient
   class << self
     # Fetches all cards from the Trello list
     def fetch_cards
-      path = "lists/#{config.fetch(:trello_list_id)}/cards"
+      path = "lists/#{list_id}/cards"
 
       cards_data = fetch_data(path, checklists: "all")
 
@@ -25,6 +25,28 @@ module Subsequent::TrelloClient
       return if response.status.success?
 
       raise Subsequent::Error, "Failed to update checklist item"
+    end
+
+    # creates a new card on Trello
+    def create_card(name:)
+      path = "cards"
+      response =
+        HTTP.post(trello_api_url(path, name:, idList: list_id, pos: "top"))
+
+      return if response.status.success?
+
+      raise Subsequent::Error, "Failed to create card"
+    end
+
+    # creates a new checklist on Trello
+    def create_checklist(card:, name:)
+      path = "checklists"
+      response =
+        HTTP.post(trello_api_url(path, name:, idCard: card.id, pos: "top"))
+
+      return if response.status.success?
+
+      raise Subsequent::Error, "Failed to create card"
     end
 
     # updates the checklist on Trello
@@ -45,6 +67,16 @@ module Subsequent::TrelloClient
       return if response.status.success?
 
       raise Subsequent::Error, "Failed to update card"
+    end
+
+    # creates a new checklist item on Trello
+    def create_checklist_item(checklist:, name:)
+      path = "checklists/#{checklist.id}/checkItems"
+      response = HTTP.post(trello_api_url(path, name:, pos: "top"))
+
+      return if response.status.success?
+
+      raise Subsequent::Error, "Failed to create checklist item"
     end
 
     # toggles the checklist item completion state on Trello
@@ -78,6 +110,10 @@ module Subsequent::TrelloClient
         key: config.fetch(:trello_key),
         token: config.fetch(:trello_token),
       }
+    end
+
+    def list_id
+      config.fetch(:trello_list_id)
     end
 
     def trello_api_url(path, **params)

@@ -12,4 +12,9 @@ class Subsequent::Models::Card
     self.name = name
     self.short_url = short_url
   end
+
+  # returns true if the cards have the same id
+  def ==(other)
+    id == other.id
+  end
 end
