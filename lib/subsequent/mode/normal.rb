@@ -52,6 +52,7 @@ module Subsequent::Mode::Normal
     when "a"
       Subsequent::Commands::ArchiveCard.call(state)
     when "q", "\u0004", "\u0003"
+      output.puts
       output.puts yellow("Goodbye!")
       exit
     else

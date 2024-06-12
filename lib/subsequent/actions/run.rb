@@ -28,7 +28,7 @@ module Subsequent::Actions::Run
       end
 
       output.puts
-      output.puts mode.commands(state)
+      output.print(mode.commands(state).join("\n"))
 
       state = mode.handle_input(state)
     end
