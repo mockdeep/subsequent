@@ -6,7 +6,7 @@ module Subsequent::Commands::OpenLinks
   def self.call(state)
     state => { card:, checklist_items: }
 
-    links = checklist_items&.flat_map(&:links)
+    links = checklist_items.flat_map(&:links)
     links = [card.short_url] if links.blank?
 
     links.each do |link|

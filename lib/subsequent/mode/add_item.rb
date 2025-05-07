@@ -10,7 +10,7 @@ module Subsequent::Mode::AddItem
     state => { checklist: }
 
     string =
-      if checklist
+      if checklist.present?
         "add new (#{cyan("c")})ard, check(#{cyan("l")})ist or (#{cyan("i")})tem"
       else
         "add new (#{cyan("c")})ard or check(#{cyan("l")})ist"
