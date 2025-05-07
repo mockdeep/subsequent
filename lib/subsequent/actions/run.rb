@@ -16,7 +16,7 @@ module Subsequent::Actions::Run
       output.clear_screen
       output.puts title(state)
       output.puts "=" * card.name.size
-      if checklist
+      if checklist.present?
         checklist_items.each_with_index do |item, index|
           icon = item.checked? ? "✔" : "☐"
           item_name = linkify(item.name)
@@ -38,7 +38,7 @@ module Subsequent::Actions::Run
   def self.title(state)
     state => { card:, checklist: }
 
-    if checklist
+    if checklist.present?
       "#{card.name} - #{checklist.name} (#{link(card.short_url)})"
     else
       "#{card.name} (#{link(card.short_url)})"

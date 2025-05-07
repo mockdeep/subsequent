@@ -7,7 +7,8 @@ Subsequent::State =
       card = sort.call(cards)
       checklist = card.checklists.find(&:unchecked_items?)
       checklist ||= card.checklists.first
-      checklist_items = checklist&.unchecked_items&.first(5)
+      checklist ||= Subsequent::Models::NullChecklist.new
+      checklist_items = checklist.unchecked_items.first(5)
       mode = Subsequent::Mode::Normal
 
       Subsequent::State
