@@ -16,4 +16,9 @@ class Subsequent::Models::NullChecklist
   def present?
     false
   end
+
+  # return true if the object is a null checklist
+  def ==(other)
+    other.is_a?(self.class)
+  end
 end

@@ -1,12 +1,13 @@
 # frozen_string_literal: true
 
 require_relative "support/coverage"
+
+require_relative "../lib/subsequent"
+
 require_relative "support/fixtures"
 require_relative "support/io"
 require_relative "support/system_exit"
 require_relative "support/webmock"
-
-require_relative "../lib/subsequent"
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
