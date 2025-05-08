@@ -13,6 +13,10 @@ RSpec.describe Subsequent::Actions::Run do
     # prevent exiting prematurely
   end
 
+  def api_checklist_item
+    { id: "5", name: "Check Item", pos: 1, state: "incomplete" }
+  end
+
   def api_checklist
     { id: "456", name: "Checklist", pos: 1, check_items: [] }
   end
@@ -60,8 +64,9 @@ RSpec.describe Subsequent::Actions::Run do
 
   def no_unchecked_items_output(card_data, sort: "first")
     <<~OUTPUT.strip
-      #{card_data[:name]} - Checklist (#{link(card_data[:short_url])})
+      #{card_data[:name]} (#{link(card_data[:short_url])})
       ====
+      No unchecked items, finish the card!
 
       #{end_boilerplate(sort:)}
     OUTPUT
@@ -96,8 +101,7 @@ RSpec.describe Subsequent::Actions::Run do
 
   it "marks a checklist item as complete" do
     card_data = api_card
-    card_data[:checklists].first[:check_items] =
-      [{ pos: 1, name: "Check Item", id: 5, state: "incomplete" }]
+    card_data[:checklists].first[:check_items] = [api_checklist_item]
     stub_cards([card_data])
     put_url = "https://api.trello.com/1/cards/123/checkItem/5?key=test-key&state=complete&token=test-token"
     stub_request(:put, put_url).to_return(body: "{}")
@@ -290,7 +294,9 @@ RSpec.describe Subsequent::Actions::Run do
   end
 
   it "creates a new checklist item on the current checklist" do
-    stub_cards([api_card])
+    card_data = api_card
+    card_data[:checklists].first[:check_items] = [api_checklist_item]
+    stub_cards([card_data])
 
     input.print("ni")
     input.puts("New Checklist Item")
