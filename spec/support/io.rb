@@ -6,7 +6,18 @@ class StringIO
   end
 end
 
+module IOHelpers
+  include Subsequent::Configuration::Helpers
+
+  def mock_input(chars)
+    input.print(chars)
+    input.rewind
+  end
+end
+
 RSpec.configure do |config|
+  config.include(IOHelpers)
+
   config.before do
     Subsequent::Configuration.input = StringIO.new
     Subsequent::Configuration.output = StringIO.new
