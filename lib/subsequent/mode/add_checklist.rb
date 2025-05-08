@@ -16,7 +16,7 @@ module Subsequent::Mode::AddChecklist
 
     case text
     when "", "q", "\u0004", "\u0003"
-      Subsequent::State.new(**state.to_h, mode: Subsequent::Mode::Normal)
+      state.with(mode: Subsequent::Mode::Normal)
     else
       Subsequent::Commands::CreateChecklist.call(state, text)
     end

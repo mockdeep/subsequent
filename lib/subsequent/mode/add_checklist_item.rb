@@ -17,12 +17,12 @@ module Subsequent::Mode::AddChecklistItem
 
     case text
     when "", "q", "\u0004", "\u0003"
-      Subsequent::State.new(**state.to_h, mode: Subsequent::Mode::Normal)
+      state.with(mode: Subsequent::Mode::Normal)
     else
       Subsequent::TrelloClient.create_checklist_item(checklist:, name: text)
 
       state = Subsequent::Commands::FetchData.call(sort:)
-      Subsequent::State.new(**state.to_h, mode: self)
+      state.with(mode: self)
     end
   end
 end

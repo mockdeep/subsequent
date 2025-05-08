@@ -23,7 +23,7 @@ module Subsequent::Mode::Cycle
   def self.handle_input(state)
     case input.getch
     when "q", "\u0004", "\u0003"
-      Subsequent::State.new(**state.to_h, mode: Subsequent::Mode::Normal)
+      state.with(mode: Subsequent::Mode::Normal)
     when "i"
       cycle_checklist_item(state)
     when "l"

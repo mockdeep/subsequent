@@ -16,13 +16,12 @@ module Subsequent::Mode::AddCard
 
     case text
     when "", "q", "\u0004", "\u0003"
-      Subsequent::State.new(**state.to_h, mode: Subsequent::Mode::Normal)
+      state.with(mode: Subsequent::Mode::Normal)
     else
       Subsequent::TrelloClient.create_card(name: text)
-      mode = Subsequent::Mode::AddChecklist
       state = Subsequent::Commands::FetchData.call(sort: state.sort)
 
-      Subsequent::State.new(**state.to_h, mode:)
+      state.with(mode: Subsequent::Mode::AddChecklist)
     end
   end
 end
