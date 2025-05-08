@@ -55,12 +55,20 @@ RSpec.describe Subsequent::Mode::AddItem do
     end
 
     it "returns state with mode AddChecklistItem when input is i" do
-      state = make_state
+      state = make_state(checklist: true)
       input.print("i")
       input.rewind
 
       expect(described_class.handle_input(state))
         .to eq(state.with(mode: Subsequent::Mode::AddChecklistItem))
+    end
+
+    it "returns state unchanged when no items and input is i" do
+      state = make_state
+      input.print("i")
+      input.rewind
+
+      expect(described_class.handle_input(state)).to eq(state)
     end
 
     it "returns state with mode Normal when input is q" do
