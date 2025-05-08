@@ -23,16 +23,15 @@ module Subsequent::Mode::AddItem
   def self.handle_input(state)
     case input.getch
     when "q", "\u0004", "\u0003"
-      Subsequent::State.new(**state.to_h, mode: Subsequent::Mode::Normal)
+      state.with(mode: Subsequent::Mode::Normal)
     when "c"
-      Subsequent::State.new(**state.to_h, mode: Subsequent::Mode::AddCard)
+      state.with(mode: Subsequent::Mode::AddCard)
     when "l"
-      Subsequent::State.new(**state.to_h, mode: Subsequent::Mode::AddChecklist)
+      state.with(mode: Subsequent::Mode::AddChecklist)
     when "i"
       return state unless state.checklist.present?
 
-      mode = Subsequent::Mode::AddChecklistItem
-      Subsequent::State.new(**state.to_h, mode:)
+      state.with(mode: Subsequent::Mode::AddChecklistItem)
     else
       state
     end

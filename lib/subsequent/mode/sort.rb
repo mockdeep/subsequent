@@ -23,7 +23,7 @@ module Subsequent::Mode::Sort
 
     case char
     when "q", "\u0004", "\u0003"
-      Subsequent::State.new(**state.to_h, mode: Subsequent::Mode::Normal)
+      state.with(mode: Subsequent::Mode::Normal)
     when "f", "l", "m"
       Subsequent::State.format(cards:, sort: sort_modes.fetch(char.to_sym))
     else

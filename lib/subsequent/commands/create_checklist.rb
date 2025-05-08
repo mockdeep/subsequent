@@ -7,11 +7,9 @@ module Subsequent::Commands::CreateChecklist
     Subsequent::TrelloClient.create_checklist(card: state.card, name:)
 
     state = Subsequent::Commands::FetchData.call(sort: state.sort)
-
     checklist = state.card.checklists.first
-    checklist_items = checklist.items
     mode = Subsequent::Mode::AddChecklistItem
 
-    Subsequent::State.new(**state.to_h, checklist:, checklist_items:, mode:)
+    state.with(checklist:, checklist_items: checklist.items, mode:)
   end
 end
