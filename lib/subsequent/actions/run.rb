@@ -11,12 +11,12 @@ module Subsequent::Actions::Run
     state = show_spinner { Subsequent::Commands::FetchData.call(sort:) }
 
     loop do
-      state => { card:, checklist:, checklist_items:, mode: }
+      state => { card:, checklist_items:, mode: }
 
       output.clear_screen
       output.puts title(state)
       output.puts "=" * card.name.size
-      if checklist.present?
+      if checklist_items.any?
         checklist_items.each_with_index do |item, index|
           icon = item.checked? ? "✔" : "☐"
           item_name = linkify(item.name)
@@ -38,10 +38,6 @@ module Subsequent::Actions::Run
   def self.title(state)
     state => { card:, checklist: }
 
-    if checklist.present?
-      "#{card.name} - #{checklist.name} (#{link(card.short_url)})"
-    else
-      "#{card.name} (#{link(card.short_url)})"
-    end
+    "#{card.name} - #{checklist.name} (#{link(card.short_url)})"
   end
 end

@@ -23,7 +23,7 @@ module Subsequent::Mode::Normal
   def self.checklist_item_commands(state)
     state => { checklist_items: }
 
-    return unless checklist_items.present?
+    return if checklist_items.empty?
 
     item_range = (1..checklist_items.size).to_a.map(&method(:cyan))
 
