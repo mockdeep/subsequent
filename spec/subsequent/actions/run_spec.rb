@@ -64,7 +64,7 @@ RSpec.describe Subsequent::Actions::Run do
 
   def no_unchecked_items_output(card_data, sort: "first")
     <<~OUTPUT.strip
-      #{card_data[:name]} (#{link(card_data[:short_url])})
+      #{card_data[:name]} - <no checklist> (#{link(card_data[:short_url])})
       ====
       No unchecked items, finish the card!
 
