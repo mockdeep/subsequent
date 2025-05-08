@@ -29,6 +29,8 @@ module Subsequent::Mode::AddItem
     when "l"
       Subsequent::State.new(**state.to_h, mode: Subsequent::Mode::AddChecklist)
     when "i"
+      return state unless state.checklist.present?
+
       mode = Subsequent::Mode::AddChecklistItem
       Subsequent::State.new(**state.to_h, mode:)
     else
