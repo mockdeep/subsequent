@@ -13,18 +13,6 @@ RSpec.describe Subsequent::Actions::Run do
     # prevent exiting prematurely
   end
 
-  def api_checklist_item
-    { id: "5", name: "Check Item", pos: 1, state: "incomplete" }
-  end
-
-  def api_checklist
-    { id: "456", name: "Checklist", pos: 1, check_items: [] }
-  end
-
-  def api_card
-    { id: "123", name: "blah", pos: 5, short_url: "http://example.com", checklists: [api_checklist] }
-  end
-
   def test_cards_url
     "https://api.trello.com/1/lists/test-list-id/cards?checklists=all&key=test-key&token=test-token"
   end
@@ -224,7 +212,7 @@ RSpec.describe Subsequent::Actions::Run do
     card_data[:checklists].first[:check_items] =
       [{ pos: 1, name: "Check Item", id: 5, state: "incomplete" }]
     stub_cards([card_data])
-    put_url = "https://api.trello.com/1/cards/123?key=test-key&pos=6&token=test-token"
+    put_url = "https://api.trello.com/1/cards/123?key=test-key&pos=2&token=test-token"
     stub_request(:put, put_url).to_return(body: "{}")
 
     input.print("cc")

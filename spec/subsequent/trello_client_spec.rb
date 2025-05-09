@@ -1,49 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe Subsequent::TrelloClient do
-  def make_card(**overrides)
-    Subsequent::Models::Card.new(
-      id: 1,
-      name: "Card Name",
-      pos: 1,
-      description: "Card Description",
-      checklists: [],
-      short_url: "http://example.com",
-      **overrides,
-    )
-  end
-
-  def make_checklist(**overrides)
-    Subsequent::Models::Checklist.new(
-      card_id: 1,
-      check_items: [],
-      id: "456",
-      name: "Checklist",
-      pos: 1,
-      items: [],
-      **overrides,
-    )
-  end
-
-  def make_checklist_item(**overrides)
-    Subsequent::Models::ChecklistItem.new(
-      id: 1,
-      name: "Item",
-      state: "incomplete",
-      card_id: 1,
-      pos: 1,
-      **overrides,
-    )
-  end
-
-  def api_checklist
-    { id: "456", name: "Checklist", pos: 1, check_items: [] }
-  end
-
-  def api_card
-    { id: "123", name: "blah", pos: 1, short_url: "http://example.com", checklists: [api_checklist] }
-  end
-
   def test_cards_url
     "https://api.trello.com/1/lists/test-list-id/cards?checklists=all&key=test-key&token=test-token"
   end

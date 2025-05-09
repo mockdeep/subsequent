@@ -1,31 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe Subsequent::Mode::Sort do
-  def make_card(**overrides)
-    Subsequent::Models::Card.new(
-      id: 1,
-      name: "Card Name",
-      pos: 1,
-      description: "Card Description",
-      checklists: [],
-      short_url: "http://example.com",
-      **overrides,
-    )
-  end
-
-  def make_state(**overrides)
-    card = make_card
-    Subsequent::State.new(
-      card:,
-      cards: [card],
-      checklist: Subsequent::Models::NullChecklist.new,
-      checklist_items: [],
-      mode: Subsequent::Mode::Sort,
-      sort: Subsequent::Sort::First,
-      **overrides,
-    )
-  end
-
   describe ".handle_input" do
     it "returns state with mode Normal when input is q" do
       state = make_state
