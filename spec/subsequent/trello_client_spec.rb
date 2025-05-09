@@ -25,6 +25,17 @@ RSpec.describe Subsequent::TrelloClient do
     )
   end
 
+  def make_checklist_item(**overrides)
+    Subsequent::Models::ChecklistItem.new(
+      id: 1,
+      name: "Item",
+      state: "incomplete",
+      card_id: 1,
+      pos: 1,
+      **overrides,
+    )
+  end
+
   def api_checklist
     { id: "456", name: "Checklist", pos: 1, check_items: [] }
   end
@@ -49,6 +60,28 @@ RSpec.describe Subsequent::TrelloClient do
       expect(card.name).to eq("blah")
       expect(card.checklists.size).to eq(1)
       expect(card.checklists.first.items).to eq([])
+    end
+  end
+
+  describe ".update_checklist_item" do
+    it "returns when the request is successful" do
+      checklist_item = make_checklist_item
+
+      path = "cards/#{checklist_item.card_id}/checkItem/#{checklist_item.id}"
+      stub_request(:put, /#{path}/).to_return(status: 200)
+
+      expect { described_class.update_checklist_item(checklist_item, pos: 4) }
+        .not_to raise_error
+    end
+
+    it "raises an error when the request fails" do
+      checklist_item = make_checklist_item
+
+      path = "cards/#{checklist_item.card_id}/checkItem/#{checklist_item.id}"
+      stub_request(:put, /#{path}/).to_return(status: 400)
+
+      expect { described_class.update_checklist_item(checklist_item, pos: 4) }
+        .to raise_error(Subsequent::Error, "Failed to update checklist item")
     end
   end
 
