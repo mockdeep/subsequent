@@ -4,18 +4,6 @@ RSpec.describe Subsequent::Mode::AddItem do
   include Subsequent::DisplayHelpers
   include Subsequent::Configuration::Helpers
 
-  def make_state(**overrides)
-    Subsequent::State.new(
-      card: nil,
-      cards: [],
-      checklist: nil,
-      checklist_items: [],
-      mode: Subsequent::Mode::AddItem,
-      sort: Subsequent::Sort::First,
-      **overrides,
-    )
-  end
-
   describe ".commands" do
     it "returns command to add item when checklist is present" do
       state = { checklist: true }

@@ -4,6 +4,7 @@ require_relative "support/coverage"
 
 require_relative "../lib/subsequent"
 
+require_relative "support/factories"
 require_relative "support/fixtures"
 require_relative "support/io"
 require_relative "support/system_exit"
