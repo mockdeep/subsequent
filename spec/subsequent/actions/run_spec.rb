@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe Subsequent::Actions::Run do
-  include Subsequent::Configuration::Helpers
   include Subsequent::DisplayHelpers
 
   def call

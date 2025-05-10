@@ -2,7 +2,6 @@
 
 RSpec.describe Subsequent::Mode::AddItem do
   include Subsequent::DisplayHelpers
-  include Subsequent::Configuration::Helpers
 
   describe ".commands" do
     it "returns command to add item when checklist is present" do
