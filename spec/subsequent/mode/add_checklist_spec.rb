@@ -2,7 +2,6 @@
 
 RSpec.describe Subsequent::Mode::AddChecklist do
   include Subsequent::DisplayHelpers
-  include Subsequent::Configuration::Helpers
 
   describe ".commands" do
     it "returns the command array" do

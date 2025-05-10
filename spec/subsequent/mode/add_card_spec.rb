@@ -1,9 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe Subsequent::Mode::AddCard do
-  include Subsequent::DisplayHelpers
-  include Subsequent::Configuration::Helpers
-
   it "returns state to normal mode with the same card" do
     input.puts("Card Name")
     input.puts("q")
