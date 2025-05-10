@@ -24,16 +24,11 @@ RSpec.describe Subsequent::Mode::AddChecklist do
     end
 
     it "creates a checklist with the input text" do
-      post_url =
-        api_url("checklists", idCard: "1", name: "new checklist", pos: "top")
-      get_url = api_url("lists/test-list-id/cards", checklists: "all")
-      stub_request(:post, post_url)
-      stub_request(:get, get_url).to_return(body: [api_card].to_json)
-      state = make_state
-      input.puts("new checklist")
-      input.rewind
+      stub_request(:post, /checklists/)
+      stub_request(:get, /cards/).to_return(body: [api_card].to_json)
+      mock_input("new checklist")
 
-      result = described_class.handle_input(state)
+      result = described_class.handle_input(make_state)
 
       expect(result.checklist.name).to eq("Checklist")
     end
