@@ -42,7 +42,6 @@ Metrics/ParameterLists:
 RSpec/ExampleLength:
   Exclude:
     - 'spec/subsequent/actions/run_spec.rb'
-    - 'spec/subsequent/mode/add_checklist_spec.rb'
     - 'spec/subsequent/trello_client_spec.rb'
 
 # Offense count: 4
