@@ -103,6 +103,13 @@ module Subsequent::TrelloClient
       @config_path ||= File.join(Dir.home, ".subsequent/config.yml")
     end
 
+    # returns the Trello API URL for a given path and params
+    def trello_api_url(path, **params)
+      params.merge!(auth_params)
+
+      "https://api.trello.com/1/#{path}?#{params.to_query}"
+    end
+
     private
 
     def auth_params
@@ -114,12 +121,6 @@ module Subsequent::TrelloClient
 
     def list_id
       config.fetch(:trello_list_id)
-    end
-
-    def trello_api_url(path, **params)
-      params.merge!(auth_params)
-
-      "https://api.trello.com/1/#{path}?#{params.to_query}"
     end
 
     def fetch_data(path, **params)

@@ -24,8 +24,9 @@ RSpec.describe Subsequent::Mode::AddChecklist do
     end
 
     it "creates a checklist with the input text" do
-      post_url = "https://api.trello.com/1/checklists?idCard=1&key=test-key&name=new%20checklist&pos=top&token=test-token"
-      get_url = "https://api.trello.com/1/lists/test-list-id/cards?checklists=all&key=test-key&token=test-token"
+      post_url =
+        api_url("checklists", idCard: "1", name: "new checklist", pos: "top")
+      get_url = api_url("lists/test-list-id/cards", checklists: "all")
       stub_request(:post, post_url)
       stub_request(:get, get_url).to_return(body: [api_card].to_json)
       state = make_state

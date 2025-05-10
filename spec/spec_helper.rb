@@ -8,6 +8,7 @@ require_relative "support/factories"
 require_relative "support/fixtures"
 require_relative "support/io"
 require_relative "support/system_exit"
+require_relative "support/trello"
 require_relative "support/webmock"
 
 RSpec.configure do |config|

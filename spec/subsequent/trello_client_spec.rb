@@ -2,7 +2,7 @@
 
 RSpec.describe Subsequent::TrelloClient do
   def test_cards_url
-    "https://api.trello.com/1/lists/test-list-id/cards?checklists=all&key=test-key&token=test-token"
+    api_url("lists/test-list-id/cards", checklists: "all")
   end
 
   describe ".fetch_cards" do
@@ -44,8 +44,9 @@ RSpec.describe Subsequent::TrelloClient do
 
   describe ".create_card" do
     it "raises an error when the request fails" do
-      stub_request(:post, "https://api.trello.com/1/cards?idList=test-list-id&key=test-key&name=New%20Card&pos=top&token=test-token")
-        .to_return(status: 400)
+      post_url =
+        api_url("cards", idList: "test-list-id", name: "New Card", pos: "top")
+      stub_request(:post, post_url).to_return(status: 400)
 
       expect { described_class.create_card(name: "New Card") }
         .to raise_error(Subsequent::Error, "Failed to create card")
@@ -54,9 +55,9 @@ RSpec.describe Subsequent::TrelloClient do
 
   describe ".create_checklist" do
     it "raises an error when the request fails" do
-      post_url = "https://api.trello.com/1/checklists?idCard=1&key=test-key&name=new%20checklist&pos=top&token=test-token"
-      stub_request(:post, post_url).to_return(status: 400)
       name = "new checklist"
+      post_url = api_url("checklists", idCard: "1", name:, pos: "top")
+      stub_request(:post, post_url).to_return(status: 400)
 
       expect { described_class.create_checklist(card: make_card, name:) }
         .to raise_error(Subsequent::Error, "Failed to create card")
@@ -68,7 +69,8 @@ RSpec.describe Subsequent::TrelloClient do
       checklist = make_checklist
       name = "new item"
 
-      post_url = "https://api.trello.com/1/checklists/456/checkItems?key=test-key&name=new%20item&pos=top&token=test-token"
+      post_url =
+        api_url("checklists/#{checklist.id}/checkItems", name:, pos: "top")
       stub_request(:post, post_url).to_return(status: 400)
 
       expect { described_class.create_checklist_item(checklist:, name:) }

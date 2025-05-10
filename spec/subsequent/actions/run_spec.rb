@@ -12,10 +12,6 @@ RSpec.describe Subsequent::Actions::Run do
     # prevent exiting prematurely
   end
 
-  def test_cards_url
-    "https://api.trello.com/1/lists/test-list-id/cards?checklists=all&key=test-key&token=test-token"
-  end
-
   def checklist_end_boilerplate
     <<~OUTPUT.strip
       sort by #{gray("first")}
@@ -46,7 +42,8 @@ RSpec.describe Subsequent::Actions::Run do
   end
 
   def stub_cards(cards)
-    stub_request(:get, test_cards_url).to_return(body: cards.to_json)
+    test_url = api_url("lists/test-list-id/cards", checklists: "all")
+    stub_request(:get, test_url).to_return(body: cards.to_json)
   end
 
   def no_unchecked_items_output(card_data, sort: "first")
@@ -90,7 +87,7 @@ RSpec.describe Subsequent::Actions::Run do
     card_data = api_card
     card_data[:checklists].first[:check_items] = [api_checklist_item]
     stub_cards([card_data])
-    put_url = "https://api.trello.com/1/cards/123/checkItem/5?key=test-key&state=complete&token=test-token"
+    put_url = api_url("cards/123/checkItem/5", state: "complete")
     stub_request(:put, put_url).to_return(body: "{}")
 
     input.print("1")
@@ -183,7 +180,7 @@ RSpec.describe Subsequent::Actions::Run do
     card_data[:checklists].first[:check_items] =
       [{ pos: 1, name: "Check Item", id: 5, state: "incomplete" }]
     stub_cards([card_data])
-    put_url = "https://api.trello.com/1/cards/123/checkItem/5?key=test-key&pos=2&token=test-token"
+    put_url = api_url("cards/123/checkItem/5", pos: 2)
     stub_request(:put, put_url).to_return(body: "{}")
 
     input.print("ci")
@@ -197,7 +194,7 @@ RSpec.describe Subsequent::Actions::Run do
     card_data[:checklists].first[:check_items] =
       [{ pos: 1, name: "Check Item", id: 5, state: "incomplete" }]
     stub_cards([card_data])
-    put_url = "https://api.trello.com/1/checklist/456?key=test-key&pos=2&token=test-token"
+    put_url = api_url("checklist/456", pos: 2)
     stub_request(:put, put_url).to_return(body: "{}")
 
     input.print("cl")
@@ -211,7 +208,7 @@ RSpec.describe Subsequent::Actions::Run do
     card_data[:checklists].first[:check_items] =
       [{ pos: 1, name: "Check Item", id: 5, state: "incomplete" }]
     stub_cards([card_data])
-    put_url = "https://api.trello.com/1/cards/123?key=test-key&pos=2&token=test-token"
+    put_url = api_url("cards/123", pos: 2)
     stub_request(:put, put_url).to_return(body: "{}")
 
     input.print("cc")
@@ -244,13 +241,16 @@ RSpec.describe Subsequent::Actions::Run do
     input.print("nc")
     input.puts("New Card")
     input.puts("New Checklist")
-    input.puts("New Checklist Item")
+    input.puts("New Item")
     input.puts("q")
     stub_cards([api_card])
 
-    card_post_url = "https://api.trello.com/1/cards?idList=test-list-id&key=test-key&name=New%20Card&pos=top&token=test-token"
-    checklist_post_url = "https://api.trello.com/1/checklists?idCard=123&key=test-key&name=New%20Checklist&pos=top&token=test-token"
-    checklist_item_post_url = "https://api.trello.com/1/checklists/456/checkItems?key=test-key&name=New%20Checklist%20Item&pos=top&token=test-token"
+    card_post_url =
+      api_url("cards", idList: "test-list-id", name: "New Card", pos: "top")
+    checklist_post_url =
+      api_url("checklists", idCard: "123", name: "New Checklist", pos: "top")
+    checklist_item_post_url =
+      api_url("checklists/456/checkItems", name: "New Item", pos: "top")
     stub_request(:post, card_post_url)
     stub_request(:post, checklist_post_url)
     stub_request(:post, checklist_item_post_url)
@@ -265,12 +265,14 @@ RSpec.describe Subsequent::Actions::Run do
   it "creates a new list on the current card" do
     input.print("nl")
     input.puts("New Checklist")
-    input.puts("New Checklist Item")
+    input.puts("New Item")
     input.puts("q")
     stub_cards([api_card])
 
-    checklist_post_url = "https://api.trello.com/1/checklists?idCard=123&key=test-key&name=New%20Checklist&pos=top&token=test-token"
-    checklist_item_post_url = "https://api.trello.com/1/checklists/456/checkItems?key=test-key&name=New%20Checklist%20Item&pos=top&token=test-token"
+    checklist_post_url =
+      api_url("checklists", idCard: "123", name: "New Checklist", pos: "top")
+    checklist_item_post_url =
+      api_url("checklists/456/checkItems", name: "New Item", pos: "top")
     stub_request(:post, checklist_post_url)
     stub_request(:post, checklist_item_post_url)
 
@@ -286,10 +288,11 @@ RSpec.describe Subsequent::Actions::Run do
     stub_cards([card_data])
 
     input.print("ni")
-    input.puts("New Checklist Item")
+    input.puts("New Item")
     input.puts("q")
 
-    checklist_item_post_url = "https://api.trello.com/1/checklists/456/checkItems?key=test-key&name=New%20Checklist%20Item&pos=top&token=test-token"
+    checklist_item_post_url =
+      api_url("checklists/456/checkItems", name: "New Item", pos: "top")
     stub_request(:post, checklist_item_post_url)
 
     call
@@ -332,7 +335,7 @@ RSpec.describe Subsequent::Actions::Run do
   it "archives the card" do
     card_data = api_card
     stub_cards([card_data])
-    put_url = "https://api.trello.com/1/cards/123?key=test-key&closed=true&token=test-token"
+    put_url = api_url("cards/123", closed: true)
     stub_request(:put, put_url).to_return(body: "{}")
 
     input.print("ay")
@@ -344,7 +347,7 @@ RSpec.describe Subsequent::Actions::Run do
   it "does not archive the card when user cancels" do
     card_data = api_card
     stub_cards([card_data])
-    put_url = "https://api.trello.com/1/cards/123?key=test-key&closed=true&token=test-token"
+    put_url = api_url("cards/123", closed: true)
     stub_request(:put, put_url).to_return(body: "{}")
 
     input.print("an")
