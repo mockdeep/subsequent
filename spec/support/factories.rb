@@ -5,11 +5,11 @@ module Factories
     { id: "123", name: "blah", pos: 1, short_url: "http://example.com", checklists: [api_checklist] }
   end
 
-  def api_checklist
-    { id: "456", name: "Checklist", pos: 1, check_items: [] }
+  def api_checklist(**overrides)
+    { id: "456", name: "Checklist", pos: 1, check_items: [], **overrides }
   end
 
-  def api_checklist_item
+  def api_item
     { id: "5", name: "Check Item", pos: 1, state: "incomplete" }
   end
 
@@ -50,15 +50,11 @@ module Factories
 
   def make_state(**overrides)
     card = make_card
-    Subsequent::State.new(
-      card:,
+    Subsequent::State.format(
       cards: [card],
-      checklist: Subsequent::Models::NullChecklist.new,
-      checklist_items: [],
-      mode: Subsequent::Mode::Sort,
+      filter: Subsequent::Filter::None,
       sort: Subsequent::Sort::First,
-      **overrides,
-    )
+    ).with(**overrides)
   end
 end
 

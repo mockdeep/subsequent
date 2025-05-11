@@ -17,7 +17,7 @@ module Subsequent::Mode::Sort
 
   # handle input for sort mode
   def self.handle_input(state)
-    state => { cards: }
+    state => { cards:, filter: }
 
     char = input.getch
 
@@ -25,18 +25,18 @@ module Subsequent::Mode::Sort
     when "q", "\u0004", "\u0003"
       state.with(mode: Subsequent::Mode::Normal)
     when "f", "l", "m"
-      Subsequent::State.format(cards:, sort: sort_modes.fetch(char.to_sym))
+      Subsequent::State.format(cards:, filter:, sort: sort_mode(char))
     else
       state
     end
   end
 
   # map character pressed to sort mode
-  def self.sort_modes
+  def self.sort_mode(char)
     {
       f: Subsequent::Sort::First,
       m: Subsequent::Sort::MostUncheckedItems,
       l: Subsequent::Sort::LeastUncheckedItems,
-    }
+    }.fetch(char.to_sym)
   end
 end

@@ -8,12 +8,16 @@ module Subsequent::Actions::Run
   # Run the application
   def self.call
     sort = Subsequent::Sort::First
-    state = show_spinner { Subsequent::Commands::FetchData.call(sort:) }
+    filter = Subsequent::Filter::None
+    state =
+      show_spinner do
+        Subsequent::Commands::FetchData.call(filter:, sort:)
+      end
 
     loop do
       state => { card:, checklist_items:, mode: }
 
-      output.clear_screen
+      output.clear_screen unless ENV["DEBUG"]
       output.puts title(state)
       output.puts "=" * card.name.size
       if checklist_items.any?

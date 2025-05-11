@@ -16,6 +16,7 @@ RSpec.describe Subsequent::Actions::Run do
     <<~OUTPUT.strip
       sort by #{gray("first")}
       (#{cyan("1")}) toggle task
+      (#{cyan("f")})ilter \
       (#{cyan("s")})ort \
       (#{cyan("o")})pen \
       (#{cyan("c")})ycle \
@@ -30,6 +31,7 @@ RSpec.describe Subsequent::Actions::Run do
   def end_boilerplate(sort:)
     <<~OUTPUT.strip
       sort by #{gray(sort)}
+      (#{cyan("f")})ilter \
       (#{cyan("s")})ort \
       (#{cyan("o")})pen \
       (#{cyan("c")})ycle \
@@ -85,7 +87,7 @@ RSpec.describe Subsequent::Actions::Run do
 
   it "marks a checklist item as complete" do
     card_data = api_card
-    card_data[:checklists].first[:check_items] = [api_checklist_item]
+    card_data[:checklists].first[:check_items] = [api_item]
     stub_cards([card_data])
     put_url = api_url("cards/123/checkItem/5", state: "complete")
     stub_request(:put, put_url).to_return(body: "{}")
@@ -284,7 +286,7 @@ RSpec.describe Subsequent::Actions::Run do
 
   it "creates a new checklist item on the current checklist" do
     card_data = api_card
-    card_data[:checklists].first[:check_items] = [api_checklist_item]
+    card_data[:checklists].first[:check_items] = [api_item]
     stub_cards([card_data])
 
     input.print("ni")

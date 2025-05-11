@@ -10,6 +10,7 @@ module Subsequent::Mode::Normal
     row1 = "sort by #{gray(state.sort)}"
     row2 = checklist_item_commands(state)
     row3 =
+      "(#{cyan("f")})ilter " \
       "(#{cyan("s")})ort " \
       "(#{cyan("o")})pen " \
       "(#{cyan("c")})ycle " \
@@ -32,7 +33,7 @@ module Subsequent::Mode::Normal
 
   # handle input for normal mode
   def self.handle_input(state)
-    state => { checklist_items:, sort: }
+    state => { checklist_items:, filter:, sort: }
 
     char = input.getch
 
@@ -40,7 +41,9 @@ module Subsequent::Mode::Normal
     when ("1"..checklist_items.to_a.size.to_s)
       Subsequent::Commands::ToggleChecklistItem.call(state, char)
     when "r"
-      show_spinner { Subsequent::Commands::FetchData.call(sort:) }
+      show_spinner { Subsequent::Commands::FetchData.call(filter:, sort:) }
+    when "f"
+      state.with(mode: Subsequent::Mode::Filter)
     when "s"
       state.with(mode: Subsequent::Mode::Sort)
     when "c"
