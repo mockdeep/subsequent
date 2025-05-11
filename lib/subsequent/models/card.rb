@@ -17,4 +17,9 @@ class Subsequent::Models::Card
   def ==(other)
     id == other.id
   end
+
+  # return a unique list of tags from all checklists
+  def tags
+    checklists.select(&:unchecked_items?).map(&:tags).flatten.uniq
+  end
 end

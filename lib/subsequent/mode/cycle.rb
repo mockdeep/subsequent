@@ -37,37 +37,37 @@ module Subsequent::Mode::Cycle
 
   # cycle checklist item to the end
   def self.cycle_checklist_item(state)
-    state => { checklist:, checklist_items:, sort: }
+    state => { checklist:, checklist_items:, filter:, sort: }
 
     checklist_item = checklist_items.first
     pos = checklist.items.last.pos + 1
     show_spinner do
       Subsequent::TrelloClient.update_checklist_item(checklist_item, pos:)
-      Subsequent::Commands::FetchData.call(sort:)
+      Subsequent::Commands::FetchData.call(filter:, sort:)
     end
   end
 
   # cycle checklist to the end
   def self.cycle_checklist(state)
-    state => { card:, checklist:, sort: }
+    state => { card:, checklist:, filter:, sort: }
 
     pos = card.checklists.last.pos + 1
 
     show_spinner do
       Subsequent::TrelloClient.update_checklist(checklist, pos:)
-      Subsequent::Commands::FetchData.call(sort:)
+      Subsequent::Commands::FetchData.call(filter:, sort:)
     end
   end
 
   # cycle card to the end
   def self.cycle_card(state)
-    state => { cards:, card:, sort: }
+    state => { cards:, card:, filter:, sort: }
 
     pos = cards.last.pos + 1
 
     show_spinner do
       Subsequent::TrelloClient.update_card(card, pos:)
-      Subsequent::Commands::FetchData.call(sort:)
+      Subsequent::Commands::FetchData.call(filter:, sort:)
     end
   end
 end

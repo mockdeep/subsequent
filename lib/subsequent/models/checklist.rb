@@ -33,4 +33,11 @@ class Subsequent::Models::Checklist
   def unchecked_items
     items.reject(&:checked?)
   end
+
+  # return a list of tags from the checklist name
+  def tags
+    tags = name.split.select { |tag| tag.start_with?("@") }
+
+    tags.any? ? tags : ["<no tag>"]
+  end
 end

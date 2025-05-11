@@ -13,7 +13,7 @@ module Subsequent::Mode::AddChecklistItem
   # handle input for add checklist item mode
   def self.handle_input(state)
     text = input.gets.to_s.squish
-    state => { checklist:, sort: }
+    state => { checklist:, filter:, sort: }
 
     case text
     when "", "q", "\u0004", "\u0003"
@@ -21,7 +21,7 @@ module Subsequent::Mode::AddChecklistItem
     else
       Subsequent::TrelloClient.create_checklist_item(checklist:, name: text)
 
-      state = Subsequent::Commands::FetchData.call(sort:)
+      state = Subsequent::Commands::FetchData.call(filter:, sort:)
       state.with(mode: self)
     end
   end

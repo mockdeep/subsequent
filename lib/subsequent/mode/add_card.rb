@@ -18,8 +18,9 @@ module Subsequent::Mode::AddCard
     when "", "q", "\u0004", "\u0003"
       state.with(mode: Subsequent::Mode::Normal)
     else
+      state => { filter:, sort: }
       Subsequent::TrelloClient.create_card(name: text)
-      state = Subsequent::Commands::FetchData.call(sort: state.sort)
+      state = Subsequent::Commands::FetchData.call(filter:, sort:)
 
       state.with(mode: Subsequent::Mode::AddChecklist)
     end

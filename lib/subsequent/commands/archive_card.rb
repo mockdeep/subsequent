@@ -7,7 +7,7 @@ module Subsequent::Commands::ArchiveCard
 
   # archive card and re-fetch data
   def self.call(state)
-    state => { card:, sort: }
+    state => { card:, filter:, sort: }
 
     output.print("#{red("Archive this card?")} (y/n) ")
     char = input.getch
@@ -16,7 +16,7 @@ module Subsequent::Commands::ArchiveCard
 
     show_spinner do
       Subsequent::TrelloClient.update_card(card, closed: true)
-      Subsequent::Commands::FetchData.call(sort:)
+      Subsequent::Commands::FetchData.call(filter:, sort:)
     end
   end
 end
