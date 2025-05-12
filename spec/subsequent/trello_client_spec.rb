@@ -18,6 +18,13 @@ RSpec.describe Subsequent::TrelloClient do
       expect(card.checklists.size).to eq(1)
       expect(card.checklists.first.items).to eq([])
     end
+
+    it "raises an error when the request fails" do
+      stub_request(:get, test_cards_url).to_return(status: 400)
+
+      expect { described_class.fetch_cards }
+        .to raise_error(Subsequent::Error, "Failed to fetch data from Trello")
+    end
   end
 
   describe ".update_checklist_item" do
@@ -64,6 +71,46 @@ RSpec.describe Subsequent::TrelloClient do
     end
   end
 
+  describe ".update_checklist" do
+    it "returns when the request is successful" do
+      checklist = make_checklist
+      path = "checklist/#{checklist.id}"
+      stub_request(:put, /#{path}/).to_return(status: 200)
+
+      expect { described_class.update_checklist(checklist, name: "new name") }
+        .not_to raise_error
+    end
+
+    it "raises an error when the request fails" do
+      checklist = make_checklist
+      path = "checklist/#{checklist.id}"
+      stub_request(:put, /#{path}/).to_return(status: 400)
+
+      expect { described_class.update_checklist(checklist, name: "new name") }
+        .to raise_error(Subsequent::Error, "Failed to update checklist")
+    end
+  end
+
+  describe ".update_card" do
+    it "returns when the request is successful" do
+      card = make_card
+      path = "cards/#{card.id}"
+      stub_request(:put, /#{path}/).to_return(status: 200)
+
+      expect { described_class.update_card(card, name: "new name") }
+        .not_to raise_error
+    end
+
+    it "raises an error when the request fails" do
+      card = make_card
+      path = "cards/#{card.id}"
+      stub_request(:put, /#{path}/).to_return(status: 400)
+
+      expect { described_class.update_card(card, name: "new name") }
+        .to raise_error(Subsequent::Error, "Failed to update card")
+    end
+  end
+
   describe ".create_checklist_item" do
     it "raises an error when the request fails" do
       checklist = make_checklist
@@ -75,6 +122,36 @@ RSpec.describe Subsequent::TrelloClient do
 
       expect { described_class.create_checklist_item(checklist:, name:) }
         .to raise_error(Subsequent::Error, "Failed to create checklist item")
+    end
+  end
+
+  describe ".toggle_checklist_item" do
+    it "returns when the request is successful" do
+      checklist_item = make_checklist_item
+      path = "cards/#{checklist_item.card_id}/checkItem/#{checklist_item.id}"
+      stub_request(:put, /#{path}/).to_return(status: 200)
+
+      expect { described_class.toggle_checklist_item(checklist_item) }
+        .not_to raise_error
+    end
+
+    it "toggles the item to incomplete when it is complete" do
+      checklist_item = make_checklist_item(state: "complete")
+      path = "cards/#{checklist_item.card_id}/checkItem/#{checklist_item.id}"
+      stub_request(:put, /#{path}/).to_return(status: 200)
+
+      described_class.toggle_checklist_item(checklist_item)
+
+      expect(checklist_item.checked?).to be(false)
+    end
+
+    it "raises an error when the request fails" do
+      checklist_item = make_checklist_item
+      path = "cards/#{checklist_item.card_id}/checkItem/#{checklist_item.id}"
+      stub_request(:put, /#{path}/).to_return(status: 400)
+
+      expect { described_class.toggle_checklist_item(checklist_item) }
+        .to raise_error(Subsequent::Error, "Failed to toggle checklist item")
     end
   end
 end
