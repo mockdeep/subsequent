@@ -358,4 +358,17 @@ RSpec.describe Subsequent::Actions::Run do
 
     expect(a_request(:put, put_url)).not_to have_been_made
   end
+
+  it "does not clear screen when DEBUG is set" do
+    ENV["DEBUG"] = "true"
+    card_data = api_card
+    stub_cards([card_data])
+    allow(output).to receive(:clear_screen)
+
+    call
+
+    expect(output).not_to have_received(:clear_screen)
+  ensure
+    ENV.delete("DEBUG")
+  end
 end
