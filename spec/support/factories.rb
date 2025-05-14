@@ -48,10 +48,18 @@ module Factories
     )
   end
 
-  def make_state(**overrides)
+  def make_card_with_item
     card = make_card
+    checklist = make_checklist
+    checklist_item = make_checklist_item
+    card.checklists << checklist
+    checklist.items << checklist_item
+    card
+  end
+
+  def make_state(cards: [make_card], **overrides)
     Subsequent::State.format(
-      cards: [card],
+      cards:,
       filter: Subsequent::Filter::None,
       sort: Subsequent::Sort::First,
     ).with(**overrides)

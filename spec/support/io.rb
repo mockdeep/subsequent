@@ -19,6 +19,7 @@ RSpec.configure do |config|
   config.include(IOHelpers)
 
   config.before do
+    Subsequent::Actions::Spin::SPINNER.rewind
     Subsequent::Configuration.input = StringIO.new
     Subsequent::Configuration.output = StringIO.new
   end
