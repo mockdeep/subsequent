@@ -17,7 +17,7 @@ module Subsequent::Actions::Run
     loop do
       state => { card:, checklist_items:, mode: }
 
-      output.clear_screen unless ENV["DEBUG"]
+      output.clear_screen unless debug?
       output.puts title(state)
       output.puts "=" * card.name.size
       if checklist_items.any?

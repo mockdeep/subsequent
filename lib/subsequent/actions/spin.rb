@@ -38,9 +38,9 @@ module Subsequent::Actions::Spin
   ].cycle
 
   # display a spinner while asynchronously running a block
-  # if the DEBUG environment variable is set, the block is run synchronously
+  # if the debug is enabled, the block is run synchronously
   def self.call(&)
-    return yield if ENV["DEBUG"]
+    return yield if debug?
 
     thread = Thread.new(&)
 

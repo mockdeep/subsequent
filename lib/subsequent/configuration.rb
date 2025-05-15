@@ -2,6 +2,17 @@
 
 # module to allow configuring various Subsequent settings
 module Subsequent::Configuration
+  # return the debug setting
+  def self.debug?
+    @debug = ENV["DEBUG"].present? if @debug.nil?
+    @debug
+  end
+
+  # allow setting the debug setting
+  def self.debug=(debug)
+    @debug = debug
+  end
+
   # return the input stream, $stdin by default
   def self.input
     @input ||= $stdin
