@@ -6,6 +6,8 @@ RSpec.describe Subsequent::Configuration do
       described_class.parse(["--debug"])
 
       expect(described_class.debug?).to be(true)
+    ensure
+      described_class.debug = false
     end
 
     it "raises an error for unknown arguments" do

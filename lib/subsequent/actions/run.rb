@@ -9,7 +9,7 @@ module Subsequent::Actions::Run
   def self.call(*args)
     Subsequent::Configuration.parse(args)
     sort = Subsequent::Sort::First
-    filter = Subsequent::Filter::None
+    filter = Subsequent::Filters::None
     state =
       show_spinner do
         Subsequent::Commands::FetchData.call(filter:, sort:)

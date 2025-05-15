@@ -16,7 +16,7 @@ require_relative "subsequent/display_helpers"
 
 require_relative "subsequent/actions"
 require_relative "subsequent/commands"
-require_relative "subsequent/filter"
+require_relative "subsequent/filters"
 require_relative "subsequent/mode"
 require_relative "subsequent/models"
 require_relative "subsequent/sort"

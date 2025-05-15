@@ -60,7 +60,7 @@ module Factories
   def make_state(cards: [make_card], **overrides)
     Subsequent::State.format(
       cards:,
-      filter: Subsequent::Filter::None,
+      filter: Subsequent::Filters::None,
       sort: Subsequent::Sort::First,
     ).with(**overrides)
   end
