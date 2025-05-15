@@ -4,8 +4,7 @@
 module Subsequent::Configuration
   # return the debug setting
   def self.debug?
-    @debug = ENV["DEBUG"].present? if @debug.nil?
-    @debug
+    @debug ||= false
   end
 
   # allow setting the debug setting
@@ -31,5 +30,17 @@ module Subsequent::Configuration
   # allow setting the output stream, useful in tests
   def self.output=(output)
     @output = output
+  end
+
+  # parse command line arguments
+  def self.parse(args)
+    args.each do |arg|
+      case arg
+      when "--debug"
+        @debug = true
+      else
+        raise ArgumentError, "Unknown argument: #{arg}"
+      end
+    end
   end
 end

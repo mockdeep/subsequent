@@ -6,7 +6,8 @@ module Subsequent::Actions::Run
   extend Subsequent::Configuration::Helpers
 
   # Run the application
-  def self.call
+  def self.call(*args)
+    Subsequent::Configuration.parse(args)
     sort = Subsequent::Sort::First
     filter = Subsequent::Filter::None
     state =
