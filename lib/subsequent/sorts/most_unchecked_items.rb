@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # sort by most unchecked items
-module Subsequent::Sort::MostUncheckedItems
+module Subsequent::Sorts::MostUncheckedItems
   # name of the sort
   def self.to_s
     "most_unchecked_items"

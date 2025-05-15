@@ -8,7 +8,7 @@ module Subsequent::Actions::Run
   # Run the application
   def self.call(*args)
     Subsequent::Configuration.parse(args)
-    sort = Subsequent::Sort::First
+    sort = Subsequent::Sorts::First
     filter = Subsequent::Filters::None
     state =
       show_spinner do

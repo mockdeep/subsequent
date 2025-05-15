@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # sort by least unchecked items
-module Subsequent::Sort::LeastUncheckedItems
+module Subsequent::Sorts::LeastUncheckedItems
   # name of the sort
   def self.to_s
     "least_unchecked_items"
