@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # filter by tag
-class Subsequent::Filter::Tag
+class Subsequent::Filters::Tag
   attr_accessor :tag
 
   def initialize(tag)

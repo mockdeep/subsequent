@@ -28,9 +28,9 @@ module Subsequent::Mode::Filter
     process_input(state) do |char|
       case char
       when "n"
-        fetch(Subsequent::Filter::None, state)
+        fetch(Subsequent::Filters::None, state)
       when *("1"..tags.size.to_s).to_a
-        fetch(Subsequent::Filter::Tag.new(tags[Integer(char) - 1]), state)
+        fetch(Subsequent::Filters::Tag.new(tags[Integer(char) - 1]), state)
       end
     end
   end

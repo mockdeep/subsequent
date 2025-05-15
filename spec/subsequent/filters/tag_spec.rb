@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Subsequent::Filter::Tag do
+RSpec.describe Subsequent::Filters::Tag do
   describe "#call" do
     it "returns cards with checklists that have the tag" do
       tag = "@tag1"
