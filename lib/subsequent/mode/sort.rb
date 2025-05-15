@@ -34,9 +34,9 @@ module Subsequent::Mode::Sort
   # map character pressed to sort mode
   def self.sort_mode(char)
     {
-      f: Subsequent::Sort::First,
-      m: Subsequent::Sort::MostUncheckedItems,
-      l: Subsequent::Sort::LeastUncheckedItems,
+      f: Subsequent::Sorts::First,
+      m: Subsequent::Sorts::MostUncheckedItems,
+      l: Subsequent::Sorts::LeastUncheckedItems,
     }.fetch(char.to_sym)
   end
 end

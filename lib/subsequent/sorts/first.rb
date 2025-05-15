@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # sort by first card
-module Subsequent::Sort::First
+module Subsequent::Sorts::First
   # name of the sort
   def self.to_s
     "first"

@@ -61,7 +61,7 @@ module Factories
     Subsequent::State.format(
       cards:,
       filter: Subsequent::Filters::None,
-      sort: Subsequent::Sort::First,
+      sort: Subsequent::Sorts::First,
     ).with(**overrides)
   end
 end

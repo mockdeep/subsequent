@@ -21,7 +21,7 @@ RSpec.describe Subsequent::Mode::Sort do
       state = make_state
       mock_input("m")
 
-      new_sort = Subsequent::Sort::MostUncheckedItems
+      new_sort = Subsequent::Sorts::MostUncheckedItems
 
       expect(described_class.handle_input(state))
         .to eq(state.with(sort: new_sort, mode: Subsequent::Mode::Normal))
