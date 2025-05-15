@@ -359,8 +359,8 @@ RSpec.describe Subsequent::Actions::Run do
     expect(a_request(:put, put_url)).not_to have_been_made
   end
 
-  it "does not clear screen when DEBUG is set" do
-    ENV["DEBUG"] = "true"
+  it "does not clear screen when debug is enabled" do
+    Subsequent::Configuration.debug = true
     card_data = api_card
     stub_cards([card_data])
     allow(output).to receive(:clear_screen)
@@ -369,6 +369,6 @@ RSpec.describe Subsequent::Actions::Run do
 
     expect(output).not_to have_received(:clear_screen)
   ensure
-    ENV.delete("DEBUG")
+    Subsequent::Configuration.debug = false
   end
 end

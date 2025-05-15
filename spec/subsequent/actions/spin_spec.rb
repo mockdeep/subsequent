@@ -16,11 +16,11 @@ RSpec.describe Subsequent::Actions::Spin do
   end
 
   it "runs the block synchronously if DEBUG is set" do
-    ENV["DEBUG"] = "true"
+    Subsequent::Configuration.debug = true
     result = described_class.call { 5 }
 
     expect(result).to eq(5)
   ensure
-    ENV.delete("DEBUG")
+    Subsequent::Configuration.debug = false
   end
 end
