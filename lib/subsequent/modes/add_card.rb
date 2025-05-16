@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Add card mode functionality
-module Subsequent::Mode::AddCard
+module Subsequent::Modes::AddCard
   extend Subsequent::DisplayHelpers
   extend Subsequent::Configuration::Helpers
 
@@ -16,13 +16,13 @@ module Subsequent::Mode::AddCard
 
     case text
     when "", "q", "\u0004", "\u0003"
-      state.with(mode: Subsequent::Mode::Normal)
+      state.with(mode: Subsequent::Modes::Normal)
     else
       state => { filter:, sort: }
       Subsequent::TrelloClient.create_card(name: text)
       state = Subsequent::Commands::FetchData.call(filter:, sort:)
 
-      state.with(mode: Subsequent::Mode::AddChecklist)
+      state.with(mode: Subsequent::Modes::AddChecklist)
     end
   end
 end

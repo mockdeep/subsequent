@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Subsequent::Mode::AddItem do
+RSpec.describe Subsequent::Modes::AddItem do
   include Subsequent::DisplayHelpers
 
   describe ".commands" do
@@ -29,7 +29,7 @@ RSpec.describe Subsequent::Mode::AddItem do
       input.rewind
 
       expect(described_class.handle_input(state))
-        .to eq(state.with(mode: Subsequent::Mode::AddCard))
+        .to eq(state.with(mode: Subsequent::Modes::AddCard))
     end
 
     it "returns state with mode AddChecklist when input is l" do
@@ -38,7 +38,7 @@ RSpec.describe Subsequent::Mode::AddItem do
       input.rewind
 
       expect(described_class.handle_input(state))
-        .to eq(state.with(mode: Subsequent::Mode::AddChecklist))
+        .to eq(state.with(mode: Subsequent::Modes::AddChecklist))
     end
 
     it "returns state with mode AddChecklistItem when input is i" do
@@ -47,7 +47,7 @@ RSpec.describe Subsequent::Mode::AddItem do
       input.rewind
 
       expect(described_class.handle_input(state))
-        .to eq(state.with(mode: Subsequent::Mode::AddChecklistItem))
+        .to eq(state.with(mode: Subsequent::Modes::AddChecklistItem))
     end
 
     it "returns state unchanged when no items and input is i" do
@@ -64,7 +64,7 @@ RSpec.describe Subsequent::Mode::AddItem do
       input.rewind
 
       expect(described_class.handle_input(state))
-        .to eq(state.with(mode: Subsequent::Mode::Normal))
+        .to eq(state.with(mode: Subsequent::Modes::Normal))
     end
 
     it "returns state unchanged when input is something else" do

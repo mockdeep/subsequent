@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Subsequent::Mode::AddChecklist do
+RSpec.describe Subsequent::Modes::AddChecklist do
   include Subsequent::DisplayHelpers
 
   describe ".commands" do
@@ -13,14 +13,14 @@ RSpec.describe Subsequent::Mode::AddChecklist do
   describe ".handle_input" do
     it "returns state with mode Normal when input is empty" do
       expect(described_class.handle_input(make_state))
-        .to eq(make_state(mode: Subsequent::Mode::Normal))
+        .to eq(make_state(mode: Subsequent::Modes::Normal))
     end
 
     it "returns state with mode Normal when input is q" do
       input.puts("q")
 
       expect(described_class.handle_input(make_state))
-        .to eq(make_state(mode: Subsequent::Mode::Normal))
+        .to eq(make_state(mode: Subsequent::Modes::Normal))
     end
 
     it "creates a checklist with the input text" do

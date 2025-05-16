@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-RSpec.describe Subsequent::Mode::Sort do
+RSpec.describe Subsequent::Modes::Sort do
   describe ".handle_input" do
     it "returns state with mode Normal when input is q" do
       state = make_state
       mock_input("q")
 
       expect(described_class.handle_input(state))
-        .to eq(state.with(mode: Subsequent::Mode::Normal))
+        .to eq(state.with(mode: Subsequent::Modes::Normal))
     end
 
     it "returns state unchanged when input is something else" do
@@ -24,7 +24,7 @@ RSpec.describe Subsequent::Mode::Sort do
       new_sort = Subsequent::Sorts::MostUncheckedItems
 
       expect(described_class.handle_input(state))
-        .to eq(state.with(sort: new_sort, mode: Subsequent::Mode::Normal))
+        .to eq(state.with(sort: new_sort, mode: Subsequent::Modes::Normal))
     end
   end
 end

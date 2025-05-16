@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Add item mode functionality
-module Subsequent::Mode::AddItem
+module Subsequent::Modes::AddItem
   extend Subsequent::DisplayHelpers
   extend Subsequent::Configuration::Helpers
 
@@ -23,15 +23,15 @@ module Subsequent::Mode::AddItem
   def self.handle_input(state)
     case input.getch
     when "q", "\u0004", "\u0003"
-      state.with(mode: Subsequent::Mode::Normal)
+      state.with(mode: Subsequent::Modes::Normal)
     when "c"
-      state.with(mode: Subsequent::Mode::AddCard)
+      state.with(mode: Subsequent::Modes::AddCard)
     when "l"
-      state.with(mode: Subsequent::Mode::AddChecklist)
+      state.with(mode: Subsequent::Modes::AddChecklist)
     when "i"
       return state unless state.checklist.present?
 
-      state.with(mode: Subsequent::Mode::AddChecklistItem)
+      state.with(mode: Subsequent::Modes::AddChecklistItem)
     else
       state
     end

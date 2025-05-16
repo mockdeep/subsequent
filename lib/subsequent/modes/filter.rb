@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # filter to return cards with a specific tag
-module Subsequent::Mode::Filter
+module Subsequent::Modes::Filter
   extend Subsequent::DisplayHelpers
   extend Subsequent::Configuration::Helpers
 
@@ -50,7 +50,7 @@ module Subsequent::Mode::Filter
 
     case char
     when "q", "\u0004", "\u0003"
-      state.with(mode: Subsequent::Mode::Normal)
+      state.with(mode: Subsequent::Modes::Normal)
     else
       state
     end

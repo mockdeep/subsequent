@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Subsequent::Mode::Filter do
+RSpec.describe Subsequent::Modes::Filter do
   include Subsequent::DisplayHelpers
 
   describe ".commands" do
@@ -19,7 +19,7 @@ RSpec.describe Subsequent::Mode::Filter do
       mock_input("q")
 
       expect(described_class.handle_input(state))
-        .to eq(state.with(mode: Subsequent::Mode::Normal))
+        .to eq(state.with(mode: Subsequent::Modes::Normal))
     end
 
     it "returns state unchanged when input is something else" do

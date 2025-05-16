@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Cycle mode functionality
-module Subsequent::Mode::Cycle
+module Subsequent::Modes::Cycle
   extend Subsequent::DisplayHelpers
   extend Subsequent::Configuration::Helpers
 
@@ -23,7 +23,7 @@ module Subsequent::Mode::Cycle
   def self.handle_input(state)
     case input.getch
     when "q", "\u0004", "\u0003"
-      state.with(mode: Subsequent::Mode::Normal)
+      state.with(mode: Subsequent::Modes::Normal)
     when "i"
       cycle_checklist_item(state)
     when "l"
