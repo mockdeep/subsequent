@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Subsequent::Mode::Normal do
+RSpec.describe Subsequent::Modes::Normal do
   describe ".handle_input" do
     it "refreshes the data when input is r" do
       state = make_state
@@ -17,7 +17,7 @@ RSpec.describe Subsequent::Mode::Normal do
       mock_input("f")
 
       expect(described_class.handle_input(state))
-        .to eq(state.with(mode: Subsequent::Mode::Filter))
+        .to eq(state.with(mode: Subsequent::Modes::Filter))
     end
   end
 end

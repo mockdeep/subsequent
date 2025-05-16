@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Sort mode functionality
-module Subsequent::Mode::Sort
+module Subsequent::Modes::Sort
   extend Subsequent::DisplayHelpers
   extend Subsequent::Configuration::Helpers
 
@@ -23,7 +23,7 @@ module Subsequent::Mode::Sort
 
     case char
     when "q", "\u0004", "\u0003"
-      state.with(mode: Subsequent::Mode::Normal)
+      state.with(mode: Subsequent::Modes::Normal)
     when "f", "l", "m"
       Subsequent::State.format(cards:, filter:, sort: sort_mode(char))
     else

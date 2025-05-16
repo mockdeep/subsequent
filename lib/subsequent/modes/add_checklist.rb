@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Add checklist mode functionality
-module Subsequent::Mode::AddChecklist
+module Subsequent::Modes::AddChecklist
   extend Subsequent::DisplayHelpers
   extend Subsequent::Configuration::Helpers
 
@@ -16,7 +16,7 @@ module Subsequent::Mode::AddChecklist
 
     case text
     when "", "q", "\u0004", "\u0003"
-      state.with(mode: Subsequent::Mode::Normal)
+      state.with(mode: Subsequent::Modes::Normal)
     else
       Subsequent::Commands::CreateChecklist.call(state, text)
     end

@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-RSpec.describe Subsequent::Mode::Cycle do
+RSpec.describe Subsequent::Modes::Cycle do
   describe ".handle_input" do
     it "returns the state with normal mode when input is q" do
       state = make_state
       mock_input("q")
 
       expect(described_class.handle_input(state))
-        .to eq(state.with(mode: Subsequent::Mode::Normal))
+        .to eq(state.with(mode: Subsequent::Modes::Normal))
     end
 
     it "cycles the checklist item to the end when input is i" do

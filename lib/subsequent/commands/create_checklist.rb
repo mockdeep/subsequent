@@ -9,7 +9,7 @@ module Subsequent::Commands::CreateChecklist
 
     state = Subsequent::Commands::FetchData.call(filter:, sort:)
     checklist = state.card.checklists.first
-    mode = Subsequent::Mode::AddChecklistItem
+    mode = Subsequent::Modes::AddChecklistItem
 
     state.with(checklist:, checklist_items: checklist.items, mode:)
   end

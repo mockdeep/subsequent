@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Add checklist item mode functionality
-module Subsequent::Mode::AddChecklistItem
+module Subsequent::Modes::AddChecklistItem
   extend Subsequent::DisplayHelpers
   extend Subsequent::Configuration::Helpers
 
@@ -17,7 +17,7 @@ module Subsequent::Mode::AddChecklistItem
 
     case text
     when "", "q", "\u0004", "\u0003"
-      state.with(mode: Subsequent::Mode::Normal)
+      state.with(mode: Subsequent::Modes::Normal)
     else
       Subsequent::TrelloClient.create_checklist_item(checklist:, name: text)
 

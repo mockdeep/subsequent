@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Normal mode functionality
-module Subsequent::Mode::Normal
+module Subsequent::Modes::Normal
   extend Subsequent::DisplayHelpers
   extend Subsequent::Configuration::Helpers
 
@@ -43,13 +43,13 @@ module Subsequent::Mode::Normal
     when "r"
       show_spinner { Subsequent::Commands::FetchData.call(filter:, sort:) }
     when "f"
-      state.with(mode: Subsequent::Mode::Filter)
+      state.with(mode: Subsequent::Modes::Filter)
     when "s"
-      state.with(mode: Subsequent::Mode::Sort)
+      state.with(mode: Subsequent::Modes::Sort)
     when "c"
-      state.with(mode: Subsequent::Mode::Cycle)
+      state.with(mode: Subsequent::Modes::Cycle)
     when "n"
-      state.with(mode: Subsequent::Mode::AddItem)
+      state.with(mode: Subsequent::Modes::AddItem)
     when "o"
       Subsequent::Commands::OpenLinks.call(state)
     when "a"
