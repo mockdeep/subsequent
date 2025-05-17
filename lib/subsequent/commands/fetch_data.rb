@@ -6,6 +6,6 @@ module Subsequent::Commands::FetchData
   def self.call(filter:, sort:)
     cards = Subsequent::TrelloClient.fetch_cards
 
-    Subsequent::State.format(cards:, filter:, sort:)
+    Subsequent::State.new(cards:, filter:, sort:)
   end
 end
