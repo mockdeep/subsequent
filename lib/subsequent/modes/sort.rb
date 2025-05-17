@@ -25,7 +25,7 @@ module Subsequent::Modes::Sort
     when "q", "\u0004", "\u0003"
       state.with(mode: Subsequent::Modes::Normal)
     when "f", "l", "m"
-      Subsequent::State.format(cards:, filter:, sort: sort_mode(char))
+      Subsequent::State.new(cards:, filter:, sort: sort_mode(char))
     else
       state
     end

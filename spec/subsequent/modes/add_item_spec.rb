@@ -42,7 +42,7 @@ RSpec.describe Subsequent::Modes::AddItem do
     end
 
     it "returns state with mode AddChecklistItem when input is i" do
-      state = make_state(checklist: true)
+      state = make_state(checklist: make_checklist)
       input.print("i")
       input.rewind
 

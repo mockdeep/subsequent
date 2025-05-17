@@ -58,11 +58,12 @@ module Factories
   end
 
   def make_state(cards: [make_card], **overrides)
-    Subsequent::State.format(
+    Subsequent::State.new(
       cards:,
       filter: Subsequent::Filters::None,
       sort: Subsequent::Sorts::First,
-    ).with(**overrides)
+      **overrides,
+    )
   end
 end
 
