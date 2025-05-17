@@ -13,8 +13,9 @@ Subsequent::State =
 
 # class to handle state of the application
 class Subsequent::State
-  def initialize(cards:, sort:, filter:, **args)
-    mode = args.fetch(:mode) { Subsequent::Modes::Normal }
+  DEFAULT_MODE = Subsequent::Modes::Normal
+
+  def initialize(cards:, sort:, filter:, mode: DEFAULT_MODE, **args)
     cards = filter.call(cards)
     card = sort.call(cards) || Subsequent::Models::NullCard.new
     checklist =
