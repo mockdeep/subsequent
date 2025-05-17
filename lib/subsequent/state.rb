@@ -11,13 +11,14 @@ Subsequent::State =
     :sort,
   ) do
     def initialize(cards:, sort:, filter:, **args)
-      mode = args.fetch(:mode, Subsequent::Modes::Normal)
+      mode = args.fetch(:mode) { Subsequent::Modes::Normal }
       cards = filter.call(cards)
       card = sort.call(cards) || Subsequent::Models::NullCard.new
-      checklist = card.checklists.find(&:unchecked_items?)
+      checklist =
+        args.fetch(:checklist) { card.checklists.find(&:unchecked_items?) }
       checklist ||= Subsequent::Models::NullChecklist.new
       checklist_items =
-        args.fetch(:checklist_items, checklist.unchecked_items.first(5))
+        args.fetch(:checklist_items) { checklist.unchecked_items.first(5) }
 
       super(
         cards:,
@@ -27,7 +28,6 @@ Subsequent::State =
         checklist:,
         checklist_items:,
         mode:,
-        **args,
       )
     end
   end
