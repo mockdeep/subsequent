@@ -27,7 +27,6 @@ Metrics/MethodLength:
     - 'lib/subsequent/modes/add_item.rb'
     - 'lib/subsequent/modes/cycle.rb'
     - 'lib/subsequent/modes/normal.rb'
-    - 'spec/subsequent/actions/run_spec.rb'
 
 # Offense count: 3
 # Configuration parameters: Max, CountKeywordArgs, MaxOptionalParameters.
