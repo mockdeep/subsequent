@@ -16,14 +16,9 @@ RSpec.describe Subsequent::Actions::Run do
     <<~OUTPUT.strip
       sort by #{gray("first")}
       (#{cyan("1")}) toggle task
-      (#{cyan("f")})ilter \
-      (#{cyan("s")})ort \
-      (#{cyan("o")})pen \
-      (#{cyan("c")})ycle \
-      (#{cyan("n")})ew
-      (#{cyan("r")})efresh \
-      (#{cyan("a")})rchive \
-      (#{cyan("q")})uit
+      (#{cyan("f")})ilter (#{cyan("s")})ort (#{cyan("o")})pen \
+      (#{cyan("c")})ycle (#{cyan("n")})ew
+      (#{cyan("r")})efresh (#{cyan("a")})rchive (#{cyan("q")})uit
       #{yellow("Goodbye!")}
     OUTPUT
   end
@@ -31,14 +26,9 @@ RSpec.describe Subsequent::Actions::Run do
   def end_boilerplate(sort:)
     <<~OUTPUT.strip
       sort by #{gray(sort)}
-      (#{cyan("f")})ilter \
-      (#{cyan("s")})ort \
-      (#{cyan("o")})pen \
-      (#{cyan("c")})ycle \
-      (#{cyan("n")})ew
-      (#{cyan("r")})efresh \
-      (#{cyan("a")})rchive \
-      (#{cyan("q")})uit
+      (#{cyan("f")})ilter (#{cyan("s")})ort (#{cyan("o")})pen \
+      (#{cyan("c")})ycle (#{cyan("n")})ew
+      (#{cyan("r")})efresh (#{cyan("a")})rchive (#{cyan("q")})uit
       #{yellow("Goodbye!")}
     OUTPUT
   end
