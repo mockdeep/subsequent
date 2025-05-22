@@ -8,7 +8,7 @@ module Subsequent::Options::Cancel
   end
 
   # return state with mode set to normal
-  def self.call(_text, state)
+  def self.call(state, _text)
     state.with(mode: Subsequent::Modes::Normal)
   end
 end
