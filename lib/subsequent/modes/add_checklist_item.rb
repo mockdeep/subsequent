@@ -19,6 +19,6 @@ module Subsequent::Modes::AddChecklistItem
   def self.handle_input(state)
     text = input.gets.to_s.squish
 
-    OPTIONS.find { |option| option.match?(text) }.call(state, text)
+    OPTIONS.find { |option| option.match?(state, text) }.call(state, text)
   end
 end
