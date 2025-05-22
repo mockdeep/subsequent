@@ -5,10 +5,15 @@ module Subsequent::Modes::Filter
   extend Subsequent::DisplayHelpers
   extend Subsequent::Configuration::Helpers
 
+  OPTIONS = [
+    Subsequent::Options::Cancel,
+    Subsequent::Options::RemoveFilters,
+    Subsequent::Options::AddFilter,
+    Subsequent::Options::Noop,
+  ].freeze
+
   # filter mode commands
   def self.commands(state)
-    state => { cards: }
-
     [
       "select tag to filter by",
       "(#{cyan("n")})one",
@@ -21,36 +26,8 @@ module Subsequent::Modes::Filter
 
   # handle input for filter mode
   def self.handle_input(state)
-    tags = state.tags
+    text = input.getch
 
-    process_input(state) do |char|
-      case char
-      when "n"
-        fetch(Subsequent::Filters::None, state)
-      when *("1"..tags.size.to_s).to_a
-        fetch(Subsequent::Filters::Tag.new(tags[Integer(char) - 1]), state)
-      end
-    end
-  end
-
-  # fetch cards based on the filter and sort
-  def self.fetch(filter, state)
-    Subsequent::Commands::FetchData.call(filter:, sort: state.sort)
-  end
-
-  # process input for filter mode
-  def self.process_input(state)
-    char = input.getch
-
-    result = yield(char)
-
-    return result if result
-
-    case char
-    when "q", "\u0004", "\u0003"
-      Subsequent::Options::Cancel.call(state, char)
-    else
-      Subsequent::Options::Noop.call(state, char)
-    end
+    OPTIONS.find { |option| option.match?(state, text) }.call(state, text)
   end
 end
