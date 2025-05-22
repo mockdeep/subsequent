@@ -26,4 +26,9 @@ class Subsequent::State
 
     super(cards:, filter:, sort:, card:, checklist:, checklist_items:, mode:)
   end
+
+  # return tags for all cards
+  def tags
+    cards.flat_map(&:tags).uniq.sort
+  end
 end

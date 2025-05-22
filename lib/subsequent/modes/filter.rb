@@ -9,12 +9,10 @@ module Subsequent::Modes::Filter
   def self.commands(state)
     state => { cards: }
 
-    tags = cards.flat_map(&:tags).uniq.sort
-
     [
       "select tag to filter by",
       "(#{cyan("n")})one",
-      *tags.each_with_index.map do |tag, index|
+      *state.tags.each_with_index.map do |tag, index|
         "(#{cyan(index + 1)}) #{tag}"
       end,
       "(#{cyan("q")}) to cancel",
@@ -23,7 +21,7 @@ module Subsequent::Modes::Filter
 
   # handle input for filter mode
   def self.handle_input(state)
-    tags = state.cards.flat_map(&:tags).uniq.sort
+    tags = state.tags
 
     process_input(state) do |char|
       case char
@@ -50,9 +48,9 @@ module Subsequent::Modes::Filter
 
     case char
     when "q", "\u0004", "\u0003"
-      state.with(mode: Subsequent::Modes::Normal)
+      Subsequent::Options::Cancel.call(state, char)
     else
-      state
+      Subsequent::Options::Noop.call(state, char)
     end
   end
 end
