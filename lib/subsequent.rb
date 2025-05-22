@@ -18,10 +18,11 @@ require_relative "subsequent/actions"
 require_relative "subsequent/commands"
 require_relative "subsequent/filters"
 require_relative "subsequent/models"
+require_relative "subsequent/sorts"
+
 require_relative "subsequent/options"
 
 require_relative "subsequent/modes"
-require_relative "subsequent/sorts"
 require_relative "subsequent/state"
 require_relative "subsequent/trello_client"
 require_relative "subsequent/version"

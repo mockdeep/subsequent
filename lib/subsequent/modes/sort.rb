@@ -5,6 +5,12 @@ module Subsequent::Modes::Sort
   extend Subsequent::DisplayHelpers
   extend Subsequent::Configuration::Helpers
 
+  OPTIONS = [
+    Subsequent::Options::Cancel,
+    Subsequent::Options::Sort,
+    Subsequent::Options::Noop,
+  ].freeze
+
   # sort mode commands
   def self.commands(_state)
     string = "sort cards by " \
@@ -17,26 +23,8 @@ module Subsequent::Modes::Sort
 
   # handle input for sort mode
   def self.handle_input(state)
-    state => { cards:, filter: }
+    text = input.getch
 
-    char = input.getch
-
-    case char
-    when "q", "\u0004", "\u0003"
-      state.with(mode: Subsequent::Modes::Normal)
-    when "f", "l", "m"
-      Subsequent::State.new(cards:, filter:, sort: sort_mode(char))
-    else
-      state
-    end
-  end
-
-  # map character pressed to sort mode
-  def self.sort_mode(char)
-    {
-      f: Subsequent::Sorts::First,
-      m: Subsequent::Sorts::MostUncheckedItems,
-      l: Subsequent::Sorts::LeastUncheckedItems,
-    }.fetch(char.to_sym)
+    OPTIONS.find { |option| option.match?(state, text) }.call(state, text)
   end
 end
