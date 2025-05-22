@@ -5,6 +5,19 @@ module Subsequent::Modes::Normal
   extend Subsequent::DisplayHelpers
   extend Subsequent::Configuration::Helpers
 
+  OPTIONS = [
+    Subsequent::Options::ToggleChecklistItem,
+    Subsequent::Options::Refresh,
+    Subsequent::Options::FilterMode,
+    Subsequent::Options::SortMode,
+    Subsequent::Options::CycleMode,
+    Subsequent::Options::AddItemMode,
+    Subsequent::Options::OpenLinks,
+    Subsequent::Options::ArchiveCard,
+    Subsequent::Options::Exit,
+    Subsequent::Options::Noop,
+  ].freeze
+
   # normal mode commands
   def self.commands(state)
     row1 = "sort by #{gray(state.sort)}"
@@ -33,33 +46,8 @@ module Subsequent::Modes::Normal
 
   # handle input for normal mode
   def self.handle_input(state)
-    state => { checklist_items:, filter:, sort: }
+    text = input.getch
 
-    char = input.getch
-
-    case char
-    when ("1"..checklist_items.to_a.size.to_s)
-      Subsequent::Commands::ToggleChecklistItem.call(state, char)
-    when "r"
-      show_spinner { Subsequent::Commands::FetchData.call(filter:, sort:) }
-    when "f"
-      state.with(mode: Subsequent::Modes::Filter)
-    when "s"
-      state.with(mode: Subsequent::Modes::Sort)
-    when "c"
-      state.with(mode: Subsequent::Modes::Cycle)
-    when "n"
-      state.with(mode: Subsequent::Modes::AddItem)
-    when "o"
-      Subsequent::Commands::OpenLinks.call(state)
-    when "a"
-      Subsequent::Commands::ArchiveCard.call(state)
-    when "q", "\u0004", "\u0003"
-      output.puts
-      output.puts yellow("Goodbye!")
-      exit
-    else
-      state
-    end
+    OPTIONS.find { |option| option.match?(state, text) }.call(state, text)
   end
 end
