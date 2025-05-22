@@ -8,7 +8,7 @@ module Subsequent::Options::CreateCard
   end
 
   # create a new card in Trello and re-fetch data
-  def self.call(text, state)
+  def self.call(state, text)
     state => { filter:, sort: }
     Subsequent::TrelloClient.create_card(name: text)
     state = Subsequent::Commands::FetchData.call(filter:, sort:)

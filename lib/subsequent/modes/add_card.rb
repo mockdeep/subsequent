@@ -19,6 +19,6 @@ module Subsequent::Modes::AddCard
   def self.handle_input(state)
     text = input.gets.to_s.squish
 
-    OPTIONS.find { |option| option.match?(text) }.call(text, state)
+    OPTIONS.find { |option| option.match?(text) }.call(state, text)
   end
 end

@@ -5,6 +5,11 @@ module Subsequent::Modes::AddChecklist
   extend Subsequent::DisplayHelpers
   extend Subsequent::Configuration::Helpers
 
+  OPTIONS = [
+    Subsequent::Options::Cancel,
+    Subsequent::Options::CreateChecklist,
+  ].freeze
+
   # add checklist mode commands
   def self.commands(_state)
     ["enter checklist name (#{cyan("q")}) to cancel: "]
@@ -14,11 +19,6 @@ module Subsequent::Modes::AddChecklist
   def self.handle_input(state)
     text = input.gets.to_s.squish
 
-    case text
-    when "", "q", "\u0004", "\u0003"
-      state.with(mode: Subsequent::Modes::Normal)
-    else
-      Subsequent::Commands::CreateChecklist.call(state, text)
-    end
+    OPTIONS.find { |option| option.match?(text) }.call(state, text)
   end
 end
