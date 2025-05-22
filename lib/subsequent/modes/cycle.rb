@@ -5,6 +5,14 @@ module Subsequent::Modes::Cycle
   extend Subsequent::DisplayHelpers
   extend Subsequent::Configuration::Helpers
 
+  OPTIONS = [
+    Subsequent::Options::Cancel,
+    Subsequent::Options::CycleCard,
+    Subsequent::Options::CycleChecklist,
+    Subsequent::Options::CycleChecklistItem,
+    Subsequent::Options::Noop,
+  ].freeze
+
   # cycle mode commands
   def self.commands(state)
     state => { checklist:, checklist_items: }
@@ -21,53 +29,8 @@ module Subsequent::Modes::Cycle
 
   # handle input for cycle mode
   def self.handle_input(state)
-    case input.getch
-    when "q", "\u0004", "\u0003"
-      state.with(mode: Subsequent::Modes::Normal)
-    when "i"
-      cycle_checklist_item(state)
-    when "l"
-      cycle_checklist(state)
-    when "c"
-      cycle_card(state)
-    else
-      state
-    end
-  end
+    text = input.getch
 
-  # cycle checklist item to the end
-  def self.cycle_checklist_item(state)
-    state => { checklist:, checklist_items:, filter:, sort: }
-
-    checklist_item = checklist_items.first
-    pos = checklist.items.last.pos + 1
-    show_spinner do
-      Subsequent::TrelloClient.update_checklist_item(checklist_item, pos:)
-      Subsequent::Commands::FetchData.call(filter:, sort:)
-    end
-  end
-
-  # cycle checklist to the end
-  def self.cycle_checklist(state)
-    state => { card:, checklist:, filter:, sort: }
-
-    pos = card.checklists.last.pos + 1
-
-    show_spinner do
-      Subsequent::TrelloClient.update_checklist(checklist, pos:)
-      Subsequent::Commands::FetchData.call(filter:, sort:)
-    end
-  end
-
-  # cycle card to the end
-  def self.cycle_card(state)
-    state => { cards:, card:, filter:, sort: }
-
-    pos = cards.last.pos + 1
-
-    show_spinner do
-      Subsequent::TrelloClient.update_card(card, pos:)
-      Subsequent::Commands::FetchData.call(filter:, sort:)
-    end
+    OPTIONS.find { |option| option.match?(state, text) }.call(state, text)
   end
 end
