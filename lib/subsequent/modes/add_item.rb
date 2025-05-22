@@ -5,6 +5,14 @@ module Subsequent::Modes::AddItem
   extend Subsequent::DisplayHelpers
   extend Subsequent::Configuration::Helpers
 
+  OPTIONS = [
+    Subsequent::Options::Cancel,
+    Subsequent::Options::AddCard,
+    Subsequent::Options::AddChecklist,
+    Subsequent::Options::AddChecklistItem,
+    Subsequent::Options::Noop,
+  ].freeze
+
   # add item mode commands
   def self.commands(state)
     state => { checklist: }
@@ -21,19 +29,8 @@ module Subsequent::Modes::AddItem
 
   # handle input for add item mode
   def self.handle_input(state)
-    case input.getch
-    when "q", "\u0004", "\u0003"
-      state.with(mode: Subsequent::Modes::Normal)
-    when "c"
-      state.with(mode: Subsequent::Modes::AddCard)
-    when "l"
-      state.with(mode: Subsequent::Modes::AddChecklist)
-    when "i"
-      return state unless state.checklist.present?
+    text = input.getch
 
-      state.with(mode: Subsequent::Modes::AddChecklistItem)
-    else
-      state
-    end
+    OPTIONS.find { |option| option.match?(state, text) }.call(state, text)
   end
 end
