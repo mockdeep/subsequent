@@ -5,6 +5,11 @@ module Subsequent::Modes::AddChecklistItem
   extend Subsequent::DisplayHelpers
   extend Subsequent::Configuration::Helpers
 
+  OPTIONS = [
+    Subsequent::Options::Cancel,
+    Subsequent::Options::CreateChecklistItem,
+  ].freeze
+
   # add checklist item mode commands
   def self.commands(_state)
     ["enter checklist item name (#{cyan("q")}) to cancel: "]
@@ -13,16 +18,7 @@ module Subsequent::Modes::AddChecklistItem
   # handle input for add checklist item mode
   def self.handle_input(state)
     text = input.gets.to_s.squish
-    state => { checklist:, filter:, sort: }
 
-    case text
-    when "", "q", "\u0004", "\u0003"
-      state.with(mode: Subsequent::Modes::Normal)
-    else
-      Subsequent::TrelloClient.create_checklist_item(checklist:, name: text)
-
-      state = Subsequent::Commands::FetchData.call(filter:, sort:)
-      state.with(mode: self)
-    end
+    OPTIONS.find { |option| option.match?(text) }.call(state, text)
   end
 end
