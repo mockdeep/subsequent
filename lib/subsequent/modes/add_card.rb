@@ -5,6 +5,11 @@ module Subsequent::Modes::AddCard
   extend Subsequent::DisplayHelpers
   extend Subsequent::Configuration::Helpers
 
+  OPTIONS = [
+    Subsequent::Options::Cancel,
+    Subsequent::Options::CreateCard,
+  ].freeze
+
   # add card mode commands
   def self.commands(_state)
     ["enter card name (#{cyan("q")}) to cancel: "]
@@ -14,15 +19,6 @@ module Subsequent::Modes::AddCard
   def self.handle_input(state)
     text = input.gets.to_s.squish
 
-    case text
-    when "", "q", "\u0004", "\u0003"
-      state.with(mode: Subsequent::Modes::Normal)
-    else
-      state => { filter:, sort: }
-      Subsequent::TrelloClient.create_card(name: text)
-      state = Subsequent::Commands::FetchData.call(filter:, sort:)
-
-      state.with(mode: Subsequent::Modes::AddChecklist)
-    end
+    OPTIONS.find { |option| option.match?(text) }.call(text, state)
   end
 end
