@@ -9,16 +9,17 @@ module Subsequent::Modes::AddCard
     Subsequent::Options::Cancel,
     Subsequent::Options::CreateCard,
   ].freeze
+  class << self
+    # add card mode commands
+    def commands(_state)
+      ["enter card name (#{cyan("q")}) to cancel: "]
+    end
 
-  # add card mode commands
-  def self.commands(_state)
-    ["enter card name (#{cyan("q")}) to cancel: "]
-  end
+    # handle input for add card mode
+    def handle_input(state)
+      text = input.gets.to_s.squish
 
-  # handle input for add card mode
-  def self.handle_input(state)
-    text = input.gets.to_s.squish
-
-    OPTIONS.find { |option| option.match?(state, text) }.call(state, text)
+      OPTIONS.find { |option| option.match?(state, text) }.call(state, text)
+    end
   end
 end

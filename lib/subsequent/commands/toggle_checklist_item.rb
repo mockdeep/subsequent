@@ -2,15 +2,17 @@
 
 # Toggle a checklist item
 module Subsequent::Commands::ToggleChecklistItem
-  # Toggle a checklist item
-  def self.call(state, char)
-    state => { checklist_items: }
+  class << self
+    # Toggle a checklist item
+    def call(state, char)
+      state => { checklist_items: }
 
-    task_number = Integer(char)
-    item = checklist_items[task_number - 1]
+      task_number = Integer(char)
+      item = checklist_items[task_number - 1]
 
-    Subsequent::TrelloClient.toggle_checklist_item(item)
+      Subsequent::TrelloClient.toggle_checklist_item(item)
 
-    state
+      state
+    end
   end
 end

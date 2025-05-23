@@ -2,13 +2,15 @@
 
 # switch to cycle mode
 module Subsequent::Options::CycleMode
-  # return true if the text is "c"
-  def self.match?(_state, text)
-    text == "c"
-  end
+  class << self
+    # return true if the text is "c"
+    def match?(_state, text)
+      text == "c"
+    end
 
-  # return state with mode set to cycle
-  def self.call(state, _text)
-    state.with(mode: Subsequent::Modes::Cycle)
+    # return state with mode set to cycle
+    def call(state, _text)
+      state.with(mode: Subsequent::Modes::Cycle)
+    end
   end
 end

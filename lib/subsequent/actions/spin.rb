@@ -38,19 +38,21 @@ module Subsequent::Actions::Spin
   ].cycle
 
   # display a spinner while asynchronously running a block
-  # if the debug is enabled, the block is run synchronously
-  def self.call(&)
-    return yield if debug?
+  class << self
+    # if the debug is enabled, the block is run synchronously
+    def call(&)
+      return yield if debug?
 
-    thread = Thread.new(&)
+      thread = Thread.new(&)
 
-    while thread.alive?
+      while thread.alive?
+        output.clear_screen
+        output.print(SPINNER.next)
+        sleep(0.1)
+      end
       output.clear_screen
-      output.print(SPINNER.next)
-      sleep(0.1)
-    end
-    output.clear_screen
 
-    thread.value
+      thread.value
+    end
   end
 end

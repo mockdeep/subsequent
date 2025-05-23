@@ -2,44 +2,40 @@
 
 # module to allow configuring various Subsequent settings
 module Subsequent::Configuration
-  # return the debug setting
-  def self.debug?
-    @debug ||= false
-  end
+  class << self
+    # return the debug setting
+    def debug?
+      @debug ||= false
+    end
 
-  # allow setting the debug setting
-  def self.debug=(debug)
-    @debug = debug
-  end
+    # allow setting the debug setting
+    attr_writer :debug
 
-  # return the input stream, $stdin by default
-  def self.input
-    @input ||= $stdin
-  end
+    # return the input stream, $stdin by def ault
+    def input
+      @input ||= $stdin
+    end
 
-  # allow setting the input stream, useful in tests
-  def self.input=(input)
-    @input = input
-  end
+    # allow setting the input stream, useful in tests
+    attr_writer :input
 
-  # return the output stream, $stdout by default
-  def self.output
-    @output ||= $stdout
-  end
+    # return the output stream, $stdout by def ault
+    def output
+      @output ||= $stdout
+    end
 
-  # allow setting the output stream, useful in tests
-  def self.output=(output)
-    @output = output
-  end
+    # allow setting the output stream, useful in tests
+    attr_writer :output
 
-  # parse command line arguments
-  def self.parse(args)
-    args.each do |arg|
-      case arg
-      when "--debug"
-        @debug = true
-      else
-        raise ArgumentError, "Unknown argument: #{arg}"
+    # parse command line arguments
+    def parse(args)
+      args.each do |arg|
+        case arg
+        when "--debug"
+          @debug = true
+        else
+          raise ArgumentError, "Unknown argument: #{arg}"
+        end
       end
     end
   end

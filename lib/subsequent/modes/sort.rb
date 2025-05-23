@@ -10,21 +10,22 @@ module Subsequent::Modes::Sort
     Subsequent::Options::Sort,
     Subsequent::Options::Noop,
   ].freeze
+  class << self
+    # sort mode commands
+    def commands(_state)
+      string = "sort cards by " \
+               "(#{cyan("f")})irst " \
+               "(#{cyan("l")})east/" \
+               "(#{cyan("m")})ost unchecked items"
 
-  # sort mode commands
-  def self.commands(_state)
-    string = "sort cards by " \
-             "(#{cyan("f")})irst " \
-             "(#{cyan("l")})east/" \
-             "(#{cyan("m")})ost unchecked items"
+      [string, "(#{cyan("q")}) to cancel"]
+    end
 
-    [string, "(#{cyan("q")}) to cancel"]
-  end
+    # handle input for sort mode
+    def handle_input(state)
+      text = input.getch
 
-  # handle input for sort mode
-  def self.handle_input(state)
-    text = input.getch
-
-    OPTIONS.find { |option| option.match?(state, text) }.call(state, text)
+      OPTIONS.find { |option| option.match?(state, text) }.call(state, text)
+    end
   end
 end

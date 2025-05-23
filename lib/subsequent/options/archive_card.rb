@@ -2,13 +2,15 @@
 
 # archive card
 module Subsequent::Options::ArchiveCard
-  # return true if the text is "a"
-  def self.match?(_state, text)
-    text == "a"
-  end
+  class << self
+    # return true if the text is "a"
+    def match?(_state, text)
+      text == "a"
+    end
 
-  # archive the card
-  def self.call(state, _text)
-    Subsequent::Commands::ArchiveCard.call(state)
+    # archive the card
+    def call(state, _text)
+      Subsequent::Commands::ArchiveCard.call(state)
+    end
   end
 end

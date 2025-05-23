@@ -2,13 +2,15 @@
 
 # sort by first card
 module Subsequent::Sorts::First
-  # name of the sort
-  def self.to_s
-    "first"
-  end
+  class << self
+    # name of the sort
+    def to_s
+      "first"
+    end
 
-  # return the first card
-  def self.call(cards)
-    cards.first
+    # return the first card
+    def call(cards)
+      cards.first
+    end
   end
 end
