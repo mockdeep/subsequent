@@ -4,6 +4,8 @@
 module Subsequent::Modes
 end
 
+require_relative "modes/base"
+
 require_relative "modes/add_card"
 require_relative "modes/add_checklist"
 require_relative "modes/add_checklist_item"
