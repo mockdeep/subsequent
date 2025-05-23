@@ -2,13 +2,15 @@
 
 # switch to add card mode
 module Subsequent::Options::AddCard
-  # return true if the text is "c"
-  def self.match?(_state, text)
-    text == "c"
-  end
+  class << self
+    # return true if the text is "c"
+    def match?(_state, text)
+      text == "c"
+    end
 
-  # return state with mode set to add card
-  def self.call(state, _text)
-    state.with(mode: Subsequent::Modes::AddCard)
+    # return state with mode set to add card
+    def call(state, _text)
+      state.with(mode: Subsequent::Modes::AddCard)
+    end
   end
 end

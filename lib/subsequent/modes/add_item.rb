@@ -12,25 +12,27 @@ module Subsequent::Modes::AddItem
     Subsequent::Options::AddChecklistItem,
     Subsequent::Options::Noop,
   ].freeze
+  class << self
+    # add item mode commands
+    def commands(state)
+      state => { checklist: }
 
-  # add item mode commands
-  def self.commands(state)
-    state => { checklist: }
+      string =
+        if checklist.present?
+          "add new (#{cyan("c")})ard, check(#{cyan("l")})ist " \
+            "or (#{cyan("i")})tem"
+        else
+          "add new (#{cyan("c")})ard or check(#{cyan("l")})ist"
+        end
 
-    string =
-      if checklist.present?
-        "add new (#{cyan("c")})ard, check(#{cyan("l")})ist or (#{cyan("i")})tem"
-      else
-        "add new (#{cyan("c")})ard or check(#{cyan("l")})ist"
-      end
+      [string, "(#{cyan("q")}) to cancel"]
+    end
 
-    [string, "(#{cyan("q")}) to cancel"]
-  end
+    # handle input for add item mode
+    def handle_input(state)
+      text = input.getch
 
-  # handle input for add item mode
-  def self.handle_input(state)
-    text = input.getch
-
-    OPTIONS.find { |option| option.match?(state, text) }.call(state, text)
+      OPTIONS.find { |option| option.match?(state, text) }.call(state, text)
+    end
   end
 end

@@ -2,13 +2,15 @@
 
 # create a new checklist in Trello
 module Subsequent::Options::CreateChecklist
-  # return true, default to this when no other option matches
-  def self.match?(*)
-    true
-  end
+  class << self
+    # return true, def ault to this when no other option matches
+    def match?(*)
+      true
+    end
 
-  # create a new checklist in Trello and re-fetch data
-  def self.call(state, text)
-    Subsequent::Commands::CreateChecklist.call(state, text)
+    # create a new checklist in Trello and re-fetch data
+    def call(state, text)
+      Subsequent::Commands::CreateChecklist.call(state, text)
+    end
   end
 end

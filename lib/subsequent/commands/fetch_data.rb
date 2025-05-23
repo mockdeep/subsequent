@@ -2,10 +2,12 @@
 
 # fetch data from the Trello API
 module Subsequent::Commands::FetchData
-  # fetch data from the Trello API
-  def self.call(filter:, sort:)
-    cards = Subsequent::TrelloClient.fetch_cards
+  class << self
+    # fetch data from the Trello API
+    def call(filter:, sort:)
+      cards = Subsequent::TrelloClient.fetch_cards
 
-    Subsequent::State.new(cards:, filter:, sort:)
+      Subsequent::State.new(cards:, filter:, sort:)
+    end
   end
 end

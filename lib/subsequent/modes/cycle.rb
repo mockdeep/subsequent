@@ -12,25 +12,26 @@ module Subsequent::Modes::Cycle
     Subsequent::Options::CycleChecklistItem,
     Subsequent::Options::Noop,
   ].freeze
+  class << self
+    # cycle mode commands
+    def commands(state)
+      state => { checklist:, checklist_items: }
 
-  # cycle mode commands
-  def self.commands(state)
-    state => { checklist:, checklist_items: }
+      string = [
+        "move first",
+        checklist_items && "(#{cyan("i")})tem,",
+        checklist && "(#{cyan("l")})ist or",
+        "(#{cyan("c")})ard to end",
+      ].compact.join(" ")
 
-    string = [
-      "move first",
-      checklist_items && "(#{cyan("i")})tem,",
-      checklist && "(#{cyan("l")})ist or",
-      "(#{cyan("c")})ard to end",
-    ].compact.join(" ")
+      [string, "(#{cyan("q")}) to cancel"]
+    end
 
-    [string, "(#{cyan("q")}) to cancel"]
-  end
+    # handle input for cycle mode
+    def handle_input(state)
+      text = input.getch
 
-  # handle input for cycle mode
-  def self.handle_input(state)
-    text = input.getch
-
-    OPTIONS.find { |option| option.match?(state, text) }.call(state, text)
+      OPTIONS.find { |option| option.match?(state, text) }.call(state, text)
+    end
   end
 end

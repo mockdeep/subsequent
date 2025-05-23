@@ -2,8 +2,10 @@
 
 # filter to return all cards unfiltered
 module Subsequent::Filters::None
-  # return all cards unfiltered
-  def self.call(cards)
-    cards
+  class << self
+    # return all cards unfiltered
+    def call(cards)
+      cards
+    end
   end
 end

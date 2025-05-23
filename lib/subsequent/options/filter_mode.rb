@@ -2,13 +2,15 @@
 
 # switch to filter mode
 module Subsequent::Options::FilterMode
-  # return true if the text is "f"
-  def self.match?(_state, text)
-    text == "f"
-  end
+  class << self
+    # return true if the text is "f"
+    def match?(_state, text)
+      text == "f"
+    end
 
-  # return state with mode set to filter
-  def self.call(state, _text)
-    state.with(mode: Subsequent::Modes::Filter)
+    # return state with mode set to filter
+    def call(state, _text)
+      state.with(mode: Subsequent::Modes::Filter)
+    end
   end
 end

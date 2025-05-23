@@ -9,16 +9,17 @@ module Subsequent::Modes::AddChecklist
     Subsequent::Options::Cancel,
     Subsequent::Options::CreateChecklist,
   ].freeze
+  class << self
+    # add checklist mode commands
+    def commands(_state)
+      ["enter checklist name (#{cyan("q")}) to cancel: "]
+    end
 
-  # add checklist mode commands
-  def self.commands(_state)
-    ["enter checklist name (#{cyan("q")}) to cancel: "]
-  end
+    # handle input for add checklist mode
+    def handle_input(state)
+      text = input.gets.to_s.squish
 
-  # handle input for add checklist mode
-  def self.handle_input(state)
-    text = input.gets.to_s.squish
-
-    OPTIONS.find { |option| option.match?(state, text) }.call(state, text)
+      OPTIONS.find { |option| option.match?(state, text) }.call(state, text)
+    end
   end
 end

@@ -4,11 +4,13 @@
 class Subsequent::Models::Checklist
   attr_accessor :id, :items, :name, :pos
 
-  # Create a new array of checklists from the given data
-  def self.from_data(checklists_data, card:)
-    checklists_data
-      .map { |checklist_data| new(card_id: card.id, **checklist_data) }
-      .sort
+  class << self
+    # Create a new array of checklists from the given data
+    def from_data(checklists_data, card:)
+      checklists_data
+        .map { |checklist_data| new(card_id: card.id, **checklist_data) }
+        .sort
+    end
   end
 
   def initialize(card_id:, id:, check_items:, name:, pos:, **_checklist_data)

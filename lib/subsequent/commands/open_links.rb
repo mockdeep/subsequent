@@ -2,20 +2,22 @@
 
 # Open links from card or checklist items
 module Subsequent::Commands::OpenLinks
-  # Open links
-  def self.call(state)
-    state => { card:, checklist_items: }
+  class << self
+    # Open links
+    def call(state)
+      state => { card:, checklist_items: }
 
-    links = checklist_items.flat_map(&:links)
-    links = [card.short_url] if links.blank?
+      links = checklist_items.flat_map(&:links)
+      links = [card.short_url] if links.blank?
 
-    links.each do |link|
-      system("open", link)
+      links.each do |link|
+        system("open", link)
 
-      # otherwise system can open links in inconsistent order
-      sleep(0.1)
+        # otherwise system can open links in inconsistent order
+        sleep(0.1)
+      end
+
+      state
     end
-
-    state
   end
 end

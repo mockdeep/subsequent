@@ -2,13 +2,15 @@
 
 # cancel and return to normal mode
 module Subsequent::Options::Cancel
-  # return true if the text matches any of the cancel options
-  def self.match?(_state, text)
-    ["", "q", "\u0004", "\u0003"].include?(text)
-  end
+  class << self
+    # return true if the text matches any of the cancel options
+    def match?(_state, text)
+      ["", "q", "\u0004", "\u0003"].include?(text)
+    end
 
-  # return state with mode set to normal
-  def self.call(state, _text)
-    state.with(mode: Subsequent::Modes::Normal)
+    # return state with mode set to normal
+    def call(state, _text)
+      state.with(mode: Subsequent::Modes::Normal)
+    end
   end
 end
