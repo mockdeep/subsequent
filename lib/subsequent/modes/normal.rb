@@ -23,17 +23,13 @@ module Subsequent::Modes::Normal
   class << self
     # normal mode commands
     def commands(state)
-      row1 = "sort by #{gray(state.sort)}"
-      row2 = checklist_item_commands(state)
-      row3 =
-        "(#{cyan("f")})ilter " \
-        "(#{cyan("s")})ort " \
-        "(#{cyan("o")})pen " \
-        "(#{cyan("c")})ycle " \
-        "(#{cyan("n")})ew"
-      row4 = "(#{cyan("r")})efresh (#{cyan("a")})rchive (#{cyan("q")})uit"
-
-      [row1, row2, row3, row4].compact.join("\n")
+      <<~COMMANDS.strip
+        sort by #{gray(state.sort)}
+        #{checklist_item_commands(state)}
+        (#{cyan("f")})ilter (#{cyan("s")})ort (#{cyan("o")})pen \
+        (#{cyan("c")})ycle (#{cyan("n")})ew
+        (#{cyan("r")})efresh (#{cyan("a")})rchive (#{cyan("q")})uit
+      COMMANDS
     end
 
     # checklist item commands

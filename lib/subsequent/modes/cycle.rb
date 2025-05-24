@@ -27,7 +27,10 @@ module Subsequent::Modes::Cycle
         "(#{cyan("c")})ard to end",
       ].compact.join(" ")
 
-      [string, "(#{cyan("q")}) to cancel"].join("\n")
+      <<~COMMANDS.strip
+        #{string}
+        (#{cyan("q")}) to cancel
+      COMMANDS
     end
   end
 end

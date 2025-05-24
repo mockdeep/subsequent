@@ -13,17 +13,18 @@ module Subsequent::Modes::AddItem
   class << self
     # add item mode commands
     def commands(state)
-      state => { checklist: }
-
       string =
-        if checklist.present?
+        if state.checklist.present?
           "add new (#{cyan("c")})ard, check(#{cyan("l")})ist " \
             "or (#{cyan("i")})tem"
         else
           "add new (#{cyan("c")})ard or check(#{cyan("l")})ist"
         end
 
-      [string, "(#{cyan("q")}) to cancel"].join("\n")
+      <<~COMMANDS.strip
+        #{string}
+        (#{cyan("q")}) to cancel
+      COMMANDS
     end
   end
 end
