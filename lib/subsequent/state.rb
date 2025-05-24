@@ -13,6 +13,8 @@ Subsequent::State =
 
 # class to handle state of the application
 class Subsequent::State
+  include Subsequent::DisplayHelpers
+
   DEFAULT_MODE = Subsequent::Modes::Normal
 
   def initialize(cards:, sort:, filter:, mode: DEFAULT_MODE, **args)
@@ -30,5 +32,20 @@ class Subsequent::State
   # return tags for all cards
   def tags
     cards.flat_map(&:tags).uniq.sort
+  end
+
+  # return the card name formatted
+  def title
+    "#{card.name} - #{checklist.name} (#{link(card.short_url)})"
+  end
+
+  # return the checklist content formatted
+  def checklist_string
+    if checklist_items.any?
+      checklist_items
+        .map.with_index { |item, index| "#{index + 1}. #{item}" }.join("\n")
+    else
+      "No unchecked items, finish the card!"
+    end
   end
 end

@@ -26,7 +26,7 @@ module Subsequent::Modes::AddItem
           "add new (#{cyan("c")})ard or check(#{cyan("l")})ist"
         end
 
-      [string, "(#{cyan("q")}) to cancel"]
+      [string, "(#{cyan("q")}) to cancel"].join("\n")
     end
 
     # handle input for add item mode

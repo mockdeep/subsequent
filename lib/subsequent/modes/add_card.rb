@@ -13,7 +13,7 @@ module Subsequent::Modes::AddCard
   class << self
     # add card mode commands
     def commands(_state)
-      ["enter card name (#{cyan("q")}) to cancel: "]
+      "enter card name (#{cyan("q")}) to cancel: "
     end
 
     # handle input for add card mode

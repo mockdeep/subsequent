@@ -46,11 +46,11 @@ module Subsequent::Actions::Spin
       thread = Thread.new(&)
 
       while thread.alive?
-        output.clear_screen
+        clear_screen
         output.print(SPINNER.next)
         sleep(0.1)
       end
-      output.clear_screen
+      clear_screen
 
       thread.value
     end

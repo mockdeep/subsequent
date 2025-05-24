@@ -6,7 +6,7 @@ RSpec.describe Subsequent::Modes::AddChecklist do
   describe ".commands" do
     it "returns the command array" do
       expect(described_class.commands(nil))
-        .to eq(["enter checklist name (#{cyan("q")}) to cancel: "])
+        .to eq("enter checklist name (#{cyan("q")}) to cancel: ")
     end
   end
 

@@ -10,7 +10,7 @@ RSpec.describe Subsequent::Modes::AddItem do
               "check(#{cyan("l")})ist or (#{cyan("i")})tem"
       text2 = "(#{cyan("q")}) to cancel"
 
-      expect(described_class.commands(state)).to eq([text1, text2])
+      expect(described_class.commands(state)).to eq("#{text1}\n#{text2}")
     end
 
     it "returns commands to add card or checklist when checklist not present" do
@@ -18,7 +18,7 @@ RSpec.describe Subsequent::Modes::AddItem do
       text1 = "add new (#{cyan("c")})ard or check(#{cyan("l")})ist"
       text2 = "(#{cyan("q")}) to cancel"
 
-      expect(described_class.commands(state)).to eq([text1, text2])
+      expect(described_class.commands(state)).to eq("#{text1}\n#{text2}")
     end
   end
 
