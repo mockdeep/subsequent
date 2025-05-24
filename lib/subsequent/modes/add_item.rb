@@ -8,13 +8,7 @@ module Subsequent::Modes::AddItem
 
   INPUT_METHOD = :getch
 
-  OPTIONS = [
-    :cancel,
-    :add_card,
-    :add_checklist,
-    :add_checklist_item,
-    :noop,
-  ].freeze
+  OPTIONS = [:cancel, :add_card, :add_checklist, :add_checklist_item].freeze
 
   class << self
     # add item mode commands

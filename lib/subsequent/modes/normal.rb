@@ -18,7 +18,6 @@ module Subsequent::Modes::Normal
     :open_links,
     :archive_card,
     :exit,
-    :noop,
   ].freeze
 
   class << self
