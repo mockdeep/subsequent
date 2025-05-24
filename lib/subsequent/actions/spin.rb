@@ -37,8 +37,8 @@ module Subsequent::Actions::Spin
     "▐⠠       ▌",
   ].cycle
 
-  # display a spinner while asynchronously running a block
   class << self
+    # display a spinner while asynchronously running a block
     # if the debug is enabled, the block is run synchronously
     def call(&)
       return yield if debug?

@@ -12,6 +12,7 @@ module Subsequent::Modes::Cycle
     Subsequent::Options::CycleChecklistItem,
     Subsequent::Options::Noop,
   ].freeze
+
   class << self
     # cycle mode commands
     def commands(state)

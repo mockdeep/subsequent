@@ -9,6 +9,7 @@ module Subsequent::Modes::AddChecklist
     Subsequent::Options::Cancel,
     Subsequent::Options::CreateChecklist,
   ].freeze
+
   class << self
     # add checklist mode commands
     def commands(_state)
