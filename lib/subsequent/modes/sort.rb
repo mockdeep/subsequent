@@ -2,8 +2,11 @@
 
 # Sort mode functionality
 module Subsequent::Modes::Sort
+  extend Subsequent::Modes::Base
   extend Subsequent::DisplayHelpers
   extend Subsequent::Configuration::Helpers
+
+  INPUT_METHOD = :getch
 
   OPTIONS = [
     Subsequent::Options::Cancel,
@@ -20,13 +23,6 @@ module Subsequent::Modes::Sort
                "(#{cyan("m")})ost unchecked items"
 
       [string, "(#{cyan("q")}) to cancel"].join("\n")
-    end
-
-    # handle input for sort mode
-    def handle_input(state)
-      text = input.getch
-
-      OPTIONS.find { |option| option.match?(state, text) }.call(state, text)
     end
   end
 end

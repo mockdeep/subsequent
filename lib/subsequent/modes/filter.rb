@@ -6,6 +6,8 @@ module Subsequent::Modes::Filter
   extend Subsequent::DisplayHelpers
   extend Subsequent::Configuration::Helpers
 
+  INPUT_METHOD = :getch
+
   OPTIONS = [
     Subsequent::Options::Cancel,
     Subsequent::Options::RemoveFilters,
@@ -23,12 +25,6 @@ module Subsequent::Modes::Filter
         end,
         "(#{cyan("q")}) to cancel",
       ].join("\n")
-    end
-
-    private
-
-    def user_input
-      input.getch
     end
   end
 end
