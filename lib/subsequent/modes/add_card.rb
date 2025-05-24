@@ -8,10 +8,7 @@ module Subsequent::Modes::AddCard
 
   INPUT_METHOD = :gets
 
-  OPTIONS = [
-    Subsequent::Options::Cancel,
-    Subsequent::Options::CreateCard,
-  ].freeze
+  OPTIONS = [:cancel, :create_card].freeze
 
   class << self
     # add card mode commands

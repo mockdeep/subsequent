@@ -9,11 +9,11 @@ module Subsequent::Modes::Cycle
   INPUT_METHOD = :getch
 
   OPTIONS = [
-    Subsequent::Options::Cancel,
-    Subsequent::Options::CycleCard,
-    Subsequent::Options::CycleChecklist,
-    Subsequent::Options::CycleChecklistItem,
-    Subsequent::Options::Noop,
+    :cancel,
+    :cycle_card,
+    :cycle_checklist,
+    :cycle_checklist_item,
+    :noop,
   ].freeze
 
   class << self

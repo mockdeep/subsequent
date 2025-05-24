@@ -2,7 +2,10 @@
 
 # add filter to the current state
 module Subsequent::Options::AddFilter
+  Subsequent::Options.register(self, :add_filter)
+
   extend Subsequent::DisplayHelpers
+
   class << self
     # return true if the text is a number between 1 and the number of tags
     def match?(state, text)

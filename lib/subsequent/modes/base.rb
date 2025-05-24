@@ -8,7 +8,10 @@ module Subsequent::Modes::Base
 
     text = input.public_send(self::INPUT_METHOD).to_s.squish
 
-    option = self::OPTIONS.find { |option| option.match?(state, text) }
+    option =
+      Subsequent::Options.fetch(*self::OPTIONS).find do |option|
+        option.match?(state, text)
+      end
     option ? option.call(state, text) : state
   end
 end

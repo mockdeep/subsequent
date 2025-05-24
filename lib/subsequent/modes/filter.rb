@@ -8,11 +8,7 @@ module Subsequent::Modes::Filter
 
   INPUT_METHOD = :getch
 
-  OPTIONS = [
-    Subsequent::Options::Cancel,
-    Subsequent::Options::RemoveFilters,
-    Subsequent::Options::AddFilter,
-  ].freeze
+  OPTIONS = [:cancel, :remove_filters, :add_filter].freeze
 
   class << self
     # filter mode commands

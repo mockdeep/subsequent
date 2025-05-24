@@ -2,6 +2,8 @@
 
 # open links
 module Subsequent::Options::OpenLinks
+  Subsequent::Options.register(self, :open_links)
+
   class << self
     # return true if the text is "o"
     def match?(_state, text)

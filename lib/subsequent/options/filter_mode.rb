@@ -2,6 +2,8 @@
 
 # switch to filter mode
 module Subsequent::Options::FilterMode
+  Subsequent::Options.register(self, :filter_mode)
+
   class << self
     # return true if the text is "f"
     def match?(_state, text)

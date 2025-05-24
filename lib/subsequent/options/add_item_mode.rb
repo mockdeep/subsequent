@@ -2,6 +2,8 @@
 
 # switch to add item mode
 module Subsequent::Options::AddItemMode
+  Subsequent::Options.register(self, :add_item_mode)
+
   class << self
     # return true if the text is "n"
     def match?(_state, text)
