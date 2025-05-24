@@ -9,16 +9,16 @@ module Subsequent::Modes::Normal
   INPUT_METHOD = :getch
 
   OPTIONS = [
-    Subsequent::Options::ToggleChecklistItem,
-    Subsequent::Options::Refresh,
-    Subsequent::Options::FilterMode,
-    Subsequent::Options::SortMode,
-    Subsequent::Options::CycleMode,
-    Subsequent::Options::AddItemMode,
-    Subsequent::Options::OpenLinks,
-    Subsequent::Options::ArchiveCard,
-    Subsequent::Options::Exit,
-    Subsequent::Options::Noop,
+    :toggle_checklist_item,
+    :refresh,
+    :filter_mode,
+    :sort_mode,
+    :cycle_mode,
+    :add_item_mode,
+    :open_links,
+    :archive_card,
+    :exit,
+    :noop,
   ].freeze
 
   class << self

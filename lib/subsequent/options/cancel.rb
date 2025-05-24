@@ -2,6 +2,8 @@
 
 # cancel and return to normal mode
 module Subsequent::Options::Cancel
+  Subsequent::Options.register(self, :cancel)
+
   class << self
     # return true if the text matches any of the cancel options
     def match?(_state, text)

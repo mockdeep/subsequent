@@ -2,6 +2,8 @@
 
 # exit the program
 module Subsequent::Options::Exit
+  Subsequent::Options.register(self, :exit)
+
   extend Subsequent::DisplayHelpers
   extend Subsequent::Configuration::Helpers
 

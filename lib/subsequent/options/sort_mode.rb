@@ -2,6 +2,8 @@
 
 # switch to sort mode
 module Subsequent::Options::SortMode
+  Subsequent::Options.register(self, :sort_mode)
+
   class << self
     # return true if the text is "s"
     def match?(_state, text)

@@ -2,6 +2,8 @@
 
 # create a new card in Trello
 module Subsequent::Options::CreateCard
+  Subsequent::Options.register(self, :create_card)
+
   class << self
     # return true, def ault to this when no other option matches
     def match?(*)

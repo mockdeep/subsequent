@@ -8,10 +8,7 @@ module Subsequent::Modes::AddChecklist
 
   INPUT_METHOD = :gets
 
-  OPTIONS = [
-    Subsequent::Options::Cancel,
-    Subsequent::Options::CreateChecklist,
-  ].freeze
+  OPTIONS = [:cancel, :create_checklist].freeze
 
   class << self
     # add checklist mode commands

@@ -2,6 +2,8 @@
 
 # create a new checklist item in Trello
 module Subsequent::Options::CreateChecklistItem
+  Subsequent::Options.register(self, :create_checklist_item)
+
   class << self
     # return true, def ault to this when no other option matches
     def match?(*)

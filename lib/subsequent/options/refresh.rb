@@ -2,7 +2,10 @@
 
 # refresh the data
 module Subsequent::Options::Refresh
+  Subsequent::Options.register(self, :refresh)
+
   extend Subsequent::DisplayHelpers
+
   class << self
     # return true if the text is "r"
     def match?(_state, text)

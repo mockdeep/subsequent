@@ -2,6 +2,8 @@
 
 # archive card
 module Subsequent::Options::ArchiveCard
+  Subsequent::Options.register(self, :archive_card)
+
   class << self
     # return true if the text is "a"
     def match?(_state, text)

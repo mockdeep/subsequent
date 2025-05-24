@@ -2,6 +2,8 @@
 
 # cycle checklist to the end
 module Subsequent::Options::CycleChecklist
+  Subsequent::Options.register(self, :cycle_checklist)
+
   extend Subsequent::DisplayHelpers
 
   class << self

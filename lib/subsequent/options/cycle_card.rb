@@ -2,7 +2,10 @@
 
 # cycle card to the end
 module Subsequent::Options::CycleCard
+  Subsequent::Options.register(self, :cycle_card)
+
   extend Subsequent::DisplayHelpers
+
   class << self
     # return true if the text is "c"
     def match?(_state, text)

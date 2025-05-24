@@ -2,6 +2,8 @@
 
 # toggle checklist item
 module Subsequent::Options::ToggleChecklistItem
+  Subsequent::Options.register(self, :toggle_checklist_item)
+
   class << self
     # return true if the text is a number between 1 and the number of items
     def match?(state, text)

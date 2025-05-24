@@ -2,7 +2,10 @@
 
 # cycle checklist item to the end
 module Subsequent::Options::CycleChecklistItem
+  Subsequent::Options.register(self, :cycle_checklist_item)
+
   extend Subsequent::DisplayHelpers
+
   class << self
     # return true if the text is "i"
     def match?(_state, text)

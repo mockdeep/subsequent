@@ -2,6 +2,18 @@
 
 # module to encapsulate options
 module Subsequent::Options
+  class << self
+    # add option to the list of registered options
+    def register(option, symbol)
+      @registered_options ||= {}
+      @registered_options[symbol] = option
+    end
+
+    # return array of registered options based on the given symbols
+    def fetch(*symbols)
+      symbols.map { |symbol| @registered_options.fetch(symbol) }
+    end
+  end
 end
 
 require_relative "options/add_card"

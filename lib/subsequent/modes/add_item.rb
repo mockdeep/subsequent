@@ -9,11 +9,11 @@ module Subsequent::Modes::AddItem
   INPUT_METHOD = :getch
 
   OPTIONS = [
-    Subsequent::Options::Cancel,
-    Subsequent::Options::AddCard,
-    Subsequent::Options::AddChecklist,
-    Subsequent::Options::AddChecklistItem,
-    Subsequent::Options::Noop,
+    :cancel,
+    :add_card,
+    :add_checklist,
+    :add_checklist_item,
+    :noop,
   ].freeze
 
   class << self

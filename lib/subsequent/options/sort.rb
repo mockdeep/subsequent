@@ -2,6 +2,8 @@
 
 # sort and return to normal mode
 module Subsequent::Options::Sort
+  Subsequent::Options.register(self, :sort)
+
   MODES = {
     f: Subsequent::Sorts::First,
     m: Subsequent::Sorts::MostUncheckedItems,

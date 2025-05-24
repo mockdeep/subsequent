@@ -2,6 +2,8 @@
 
 # switch to add card mode
 module Subsequent::Options::AddCard
+  Subsequent::Options.register(self, :add_card)
+
   class << self
     # return true if the text is "c"
     def match?(_state, text)
