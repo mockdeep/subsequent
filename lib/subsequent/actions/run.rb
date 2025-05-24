@@ -24,7 +24,6 @@ module Subsequent::Actions::Run
         output.puts state.checklist_string
 
         output.puts
-        output.print(mode.commands(state))
 
         state = mode.handle_input(state)
       end
