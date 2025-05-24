@@ -8,7 +8,7 @@ module Subsequent::Modes::Sort
 
   INPUT_METHOD = :getch
 
-  OPTIONS = [:cancel, :sort, :noop].freeze
+  OPTIONS = [:cancel, :sort].freeze
 
   class << self
     # sort mode commands

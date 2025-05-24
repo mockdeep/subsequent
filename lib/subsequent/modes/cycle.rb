@@ -13,7 +13,6 @@ module Subsequent::Modes::Cycle
     :cycle_card,
     :cycle_checklist,
     :cycle_checklist_item,
-    :noop,
   ].freeze
 
   class << self
