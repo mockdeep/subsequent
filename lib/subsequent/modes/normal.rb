@@ -31,7 +31,7 @@ module Subsequent::Modes::Normal
         "(#{cyan("n")})ew"
       row4 = "(#{cyan("r")})efresh (#{cyan("a")})rchive (#{cyan("q")})uit"
 
-      [row1, row2, row3, row4].compact
+      [row1, row2, row3, row4].compact.join("\n")
     end
 
     # checklist item commands

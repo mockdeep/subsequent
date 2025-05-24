@@ -9,42 +9,31 @@ module Subsequent::Actions::Run
     # Run the application
     def call(*args)
       Subsequent::Configuration.parse(args)
-      sort = Subsequent::Sorts::First
-      filter = Subsequent::Filters::None
-      state =
-        show_spinner do
-          Subsequent::Commands::FetchData.call(filter:, sort:)
-        end
+      start_loop(initial_state)
+    end
 
+    private
+
+    def start_loop(state)
       loop do
-        state => { card:, checklist_items:, mode: }
+        state => { card:, mode: }
 
-        output.clear_screen unless debug?
-        output.puts title(state)
+        clear_screen
+        output.puts state.title
         output.puts "=" * card.name.size
-        if checklist_items.any?
-          checklist_items.each_with_index do |item, index|
-            icon = item.checked? ? "✔" : "☐"
-            item_name = linkify(item.name)
-            name = item.checked? ? gray(item_name) : green(item_name)
-            output.puts "#{index + 1}. #{icon} #{name}"
-          end
-        else
-          output.puts "No unchecked items, finish the card!"
-        end
+        output.puts state.checklist_string
 
         output.puts
-        output.print(mode.commands(state).join("\n"))
+        output.print(mode.commands(state))
 
         state = mode.handle_input(state)
       end
     end
 
-    # title to display
-    def title(state)
-      state => { card:, checklist: }
-
-      "#{card.name} - #{checklist.name} (#{link(card.short_url)})"
+    def initial_state
+      sort = Subsequent::Sorts::First
+      filter = Subsequent::Filters::None
+      show_spinner { Subsequent::Commands::FetchData.call(filter:, sort:) }
     end
   end
 end

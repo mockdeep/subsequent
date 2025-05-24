@@ -13,7 +13,7 @@ module Subsequent::Modes::AddChecklist
   class << self
     # add checklist mode commands
     def commands(_state)
-      ["enter checklist name (#{cyan("q")}) to cancel: "]
+      "enter checklist name (#{cyan("q")}) to cancel: "
     end
 
     # handle input for add checklist mode

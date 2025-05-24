@@ -22,7 +22,7 @@ module Subsequent::Modes::Filter
           "(#{cyan(index + 1)}) #{tag}"
         end,
         "(#{cyan("q")}) to cancel",
-      ]
+      ].join("\n")
     end
 
     private

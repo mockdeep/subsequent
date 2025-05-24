@@ -2,6 +2,8 @@
 
 # class to encapsulate a checklist item
 class Subsequent::Models::ChecklistItem
+  include Subsequent::DisplayHelpers
+
   attr_accessor :card_id, :id, :name, :pos, :state
 
   class << self
@@ -29,8 +31,24 @@ class Subsequent::Models::ChecklistItem
     state == "complete"
   end
 
+  # return the icon for the checklist item
+  def icon
+    checked? ? "✔" : "☐"
+  end
+
   # return the links in the checklist item name
   def links
     name.scan(%r{https?://\S+})
+  end
+
+  # return the name linkified and colored
+  def formatted_name
+    linked_name = linkify(name)
+    checked? ? gray(linked_name) : green(linked_name)
+  end
+
+  # return a formatted string representation of the checklist item
+  def to_s
+    "#{icon} #{formatted_name}"
   end
 end

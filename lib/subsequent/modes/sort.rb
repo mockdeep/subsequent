@@ -19,7 +19,7 @@ module Subsequent::Modes::Sort
                "(#{cyan("l")})east/" \
                "(#{cyan("m")})ost unchecked items"
 
-      [string, "(#{cyan("q")}) to cancel"]
+      [string, "(#{cyan("q")}) to cancel"].join("\n")
     end
 
     # handle input for sort mode

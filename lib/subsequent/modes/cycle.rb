@@ -25,7 +25,7 @@ module Subsequent::Modes::Cycle
         "(#{cyan("c")})ard to end",
       ].compact.join(" ")
 
-      [string, "(#{cyan("q")}) to cancel"]
+      [string, "(#{cyan("q")}) to cancel"].join("\n")
     end
 
     # handle input for cycle mode
