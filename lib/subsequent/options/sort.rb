@@ -7,6 +7,7 @@ module Subsequent::Options::Sort
     m: Subsequent::Sorts::MostUncheckedItems,
     l: Subsequent::Sorts::LeastUncheckedItems,
   }.freeze
+
   class << self
     # return true, def ault to this when no other option matches
     def match?(_state, text)

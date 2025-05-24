@@ -9,6 +9,7 @@ module Subsequent::Modes::AddCard
     Subsequent::Options::Cancel,
     Subsequent::Options::CreateCard,
   ].freeze
+
   class << self
     # add card mode commands
     def commands(_state)

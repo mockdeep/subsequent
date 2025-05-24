@@ -12,6 +12,7 @@ module Subsequent::Modes::AddItem
     Subsequent::Options::AddChecklistItem,
     Subsequent::Options::Noop,
   ].freeze
+
   class << self
     # add item mode commands
     def commands(state)

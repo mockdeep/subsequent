@@ -17,6 +17,7 @@ module Subsequent::Modes::Normal
     Subsequent::Options::Exit,
     Subsequent::Options::Noop,
   ].freeze
+
   class << self
     # normal mode commands
     def commands(state)

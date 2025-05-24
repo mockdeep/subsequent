@@ -10,6 +10,7 @@ module Subsequent::Modes::Sort
     Subsequent::Options::Sort,
     Subsequent::Options::Noop,
   ].freeze
+
   class << self
     # sort mode commands
     def commands(_state)
