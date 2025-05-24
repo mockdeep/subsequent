@@ -48,4 +48,10 @@ class Subsequent::State
       "No unchecked items, finish the card!"
     end
   end
+
+  # return the tags formatted
+  def tag_string
+    tags.map.with_index { |tag, index| "(#{cyan(index + 1)}) #{tag}" }
+        .join("\n")
+  end
 end

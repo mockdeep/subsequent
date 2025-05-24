@@ -13,14 +13,12 @@ module Subsequent::Modes::Filter
   class << self
     # filter mode commands
     def commands(state)
-      [
-        "select tag to filter by",
-        "(#{cyan("n")})one",
-        *state.tags.each_with_index.map do |tag, index|
-          "(#{cyan(index + 1)}) #{tag}"
-        end,
-        "(#{cyan("q")}) to cancel",
-      ].join("\n")
+      <<~COMMANDS.strip
+        select tag to filter by
+        (#{cyan("n")})one
+        #{state.tag_string}
+        (#{cyan("q")}) to cancel
+      COMMANDS
     end
   end
 end
