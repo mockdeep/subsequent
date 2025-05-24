@@ -2,8 +2,11 @@
 
 # Normal mode functionality
 module Subsequent::Modes::Normal
+  extend Subsequent::Modes::Base
   extend Subsequent::DisplayHelpers
   extend Subsequent::Configuration::Helpers
+
+  INPUT_METHOD = :getch
 
   OPTIONS = [
     Subsequent::Options::ToggleChecklistItem,
@@ -43,13 +46,6 @@ module Subsequent::Modes::Normal
       item_range = (1..checklist_items.size).to_a.map(&method(:cyan))
 
       "(#{item_range.join(", ")}) toggle task"
-    end
-
-    # handle input for normal mode
-    def handle_input(state)
-      text = input.getch
-
-      OPTIONS.find { |option| option.match?(state, text) }.call(state, text)
     end
   end
 end

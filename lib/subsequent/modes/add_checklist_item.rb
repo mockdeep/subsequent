@@ -2,8 +2,11 @@
 
 # Add checklist item mode functionality
 module Subsequent::Modes::AddChecklistItem
+  extend Subsequent::Modes::Base
   extend Subsequent::DisplayHelpers
   extend Subsequent::Configuration::Helpers
+
+  INPUT_METHOD = :gets
 
   OPTIONS = [
     Subsequent::Options::Cancel,
@@ -14,13 +17,6 @@ module Subsequent::Modes::AddChecklistItem
     # add checklist item mode commands
     def commands(_state)
       "enter checklist item name (#{cyan("q")}) to cancel: "
-    end
-
-    # handle input for add checklist item mode
-    def handle_input(state)
-      text = input.gets.to_s.squish
-
-      OPTIONS.find { |option| option.match?(state, text) }.call(state, text)
     end
   end
 end

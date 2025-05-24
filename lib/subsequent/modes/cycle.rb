@@ -2,8 +2,11 @@
 
 # Cycle mode functionality
 module Subsequent::Modes::Cycle
+  extend Subsequent::Modes::Base
   extend Subsequent::DisplayHelpers
   extend Subsequent::Configuration::Helpers
+
+  INPUT_METHOD = :getch
 
   OPTIONS = [
     Subsequent::Options::Cancel,
@@ -26,13 +29,6 @@ module Subsequent::Modes::Cycle
       ].compact.join(" ")
 
       [string, "(#{cyan("q")}) to cancel"].join("\n")
-    end
-
-    # handle input for cycle mode
-    def handle_input(state)
-      text = input.getch
-
-      OPTIONS.find { |option| option.match?(state, text) }.call(state, text)
     end
   end
 end
