@@ -9,9 +9,9 @@ module Subsequent::Options
       @registered_options[symbol] = option
     end
 
-    # return array of registered options based on the given symbols
-    def fetch(*symbols)
-      symbols.map { |symbol| @registered_options.fetch(symbol) }
+    # return the registered option based on the given symbol
+    def fetch(symbol)
+      @registered_options.fetch(symbol)
     end
   end
 end
