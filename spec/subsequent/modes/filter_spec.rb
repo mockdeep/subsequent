@@ -30,7 +30,7 @@ RSpec.describe Subsequent::Modes::Filter do
     end
 
     it "returns state with filter None when input is n" do
-      state = make_state(filter: Subsequent::Filters::Tag.new("@tag"))
+      state = make_state(filter: Subsequent::Filters::Tag.new(make_tag))
       mock_input("n")
       stub_request(:get, /cards/).to_return(body: "{}")
 

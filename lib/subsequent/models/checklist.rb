@@ -2,23 +2,22 @@
 
 # class to encapsulate a checklist
 class Subsequent::Models::Checklist
-  attr_accessor :id, :items, :name, :pos
+  attr_accessor :card, :id, :items, :name, :pos
 
   class << self
     # Create a new array of checklists from the given data
     def from_data(checklists_data, card:)
-      checklists_data
-        .map { |checklist_data| new(card_id: card.id, **checklist_data) }
-        .sort
+      checklists_data.map { |checklist_data| new(card:, **checklist_data) }.sort
     end
   end
 
-  def initialize(card_id:, id:, check_items:, name:, pos:, **_checklist_data)
+  def initialize(card:, id:, check_items:, name:, pos:, **_checklist_data)
+    self.card = card
     self.id = id
     self.name = name
     self.pos = pos
     self.items =
-      Subsequent::Models::ChecklistItem.from_data(check_items, card_id:)
+      Subsequent::Models::ChecklistItem.from_data(check_items, card_id: card.id)
   end
 
   # compare the position of this checklist with another
@@ -36,10 +35,25 @@ class Subsequent::Models::Checklist
     items.reject(&:checked?)
   end
 
+  # return true if the checklist has the same id as another checklist
+  def eql?(other)
+    id == other.id
+  end
+
+  # return the hash of the checklist id
+  def hash
+    id.hash
+  end
+
   # return a list of tags from the checklist name
   def tags
-    tags = name.split.select { |tag| tag.start_with?("@") }
+    tag_names = name.split.select { |word| word.start_with?("@") }
+    tag_names << "<no tag>" if tag_names.empty?
 
-    tags.any? ? tags : ["<no tag>"]
+    tag_names.map do |tag_name|
+      tag = Subsequent::Models::Tag.find_or_create(tag_name)
+      tag.add_checklist(self)
+      tag
+    end
   end
 end

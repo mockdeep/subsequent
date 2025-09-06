@@ -8,9 +8,10 @@ RSpec.describe Subsequent::Models::Checklist do
 
     it "sorts the check items by position" do
       check_items = [check_item_data(pos: 52), check_item_data(pos: 31)]
+      card = make_card
 
       checklist =
-        described_class.new(id: 1, card_id: 1, name: "fo", pos: 1, check_items:)
+        described_class.new(id: 1, card:, name: "fo", pos: 1, check_items:)
 
       expect(checklist.items.map(&:pos)).to eq([31, 52])
     end
@@ -22,6 +23,22 @@ RSpec.describe Subsequent::Models::Checklist do
       checklist2 = make_checklist(pos: 1)
 
       expect([checklist1, checklist2].sort).to eq([checklist2, checklist1])
+    end
+  end
+
+  describe "#eql?" do
+    it "returns true if the checklists have the same id" do
+      checklist1 = make_checklist(id: "abc")
+      checklist2 = make_checklist(id: "abc")
+
+      expect(checklist1.eql?(checklist2)).to be(true)
+    end
+
+    it "returns false if the checklists have different ids" do
+      checklist1 = make_checklist(id: "abc")
+      checklist2 = make_checklist(id: "def")
+
+      expect(checklist1.eql?(checklist2)).to be(false)
     end
   end
 
