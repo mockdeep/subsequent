@@ -27,7 +27,7 @@ module Factories
 
   def make_checklist(**overrides)
     Subsequent::Models::Checklist.new(
-      card_id: 1,
+      card: make_card,
       check_items: [],
       id: "456",
       name: "Checklist",
@@ -64,6 +64,10 @@ module Factories
       sort: Subsequent::Sorts::First,
       **overrides,
     )
+  end
+
+  def make_tag(tag_name = "@tag")
+    Subsequent::Models::Tag.new(tag_name)
   end
 end
 

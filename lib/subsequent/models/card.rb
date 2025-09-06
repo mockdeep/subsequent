@@ -20,6 +20,6 @@ class Subsequent::Models::Card
 
   # return a unique list of tags from all checklists
   def tags
-    checklists.select(&:unchecked_items?).map(&:tags).flatten.uniq
+    checklists.select(&:unchecked_items?).flat_map(&:tags).uniq
   end
 end

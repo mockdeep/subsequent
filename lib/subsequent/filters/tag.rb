@@ -9,15 +9,13 @@ class Subsequent::Filters::Tag
   end
 
   # returns a list of cards with checklists that have the tag
-  def call(cards)
-    cards.each do |card|
-      card.checklists =
-        card.checklists.select do |checklist|
-          checklist.unchecked_items? && checklist.tags.include?(tag)
-        end
-    end
-
-    cards.select { |card| card.checklists.any? }
+  def call(_cards)
+    tag.checklists
+       .select(&:unchecked_items?)
+       .group_by(&:card)
+       .each { |card, checklists| card.checklists = checklists }
+       .keys
+       .uniq
   end
 
   # returns true if the tag is the same as another tag
