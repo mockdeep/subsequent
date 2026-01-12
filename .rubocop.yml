@@ -10,6 +10,7 @@ AllCops:
   TargetRubyVersion: 3.3
 
 Layout/LineLength: { Max: 80 }
+RSpec/Output: { Exclude: ['spec/support/system_exit.rb'] }
 Style/ClassAndModuleChildren: { EnforcedStyle: compact }
 Style/ClassMethodsDefinitions: { EnforcedStyle: self_class }
 Style/MethodCallWithArgsParentheses:
