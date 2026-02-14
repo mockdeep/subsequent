@@ -46,7 +46,7 @@ module Subsequent::TrelloClient
 
       return if response.status.success?
 
-      raise Subsequent::Error, "Failed to create card"
+      raise Subsequent::Error, "Failed to create checklist"
     end
 
     # updates the checklist on Trello

@@ -67,7 +67,7 @@ RSpec.describe Subsequent::TrelloClient do
       stub_request(:post, post_url).to_return(status: 400)
 
       expect { described_class.create_checklist(card: make_card, name:) }
-        .to raise_error(Subsequent::Error, "Failed to create card")
+        .to raise_error(Subsequent::Error, "Failed to create checklist")
     end
   end
 
