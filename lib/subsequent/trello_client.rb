@@ -20,75 +20,43 @@ module Subsequent::TrelloClient
     # updates the checklist item on Trello
     def update_checklist_item(checklist_item, **params)
       path = "cards/#{checklist_item.card_id}/checkItem/#{checklist_item.id}"
-      response = HTTP.put(trello_api_url(path, **params))
-
-      return if response.status.success?
-
-      raise Subsequent::Error, "Failed to update checklist item"
+      request(:put, path, "update checklist item", **params)
     end
 
     # creates a new card on Trello
     def create_card(name:)
-      path = "cards"
-      response =
-        HTTP.post(trello_api_url(path, name:, idList: list_id, pos: "top"))
-
-      return if response.status.success?
-
-      raise Subsequent::Error, "Failed to create card"
+      params = { name:, idList: list_id, pos: "top" }
+      request(:post, "cards", "create card", **params)
     end
 
     # creates a new checklist on Trello
     def create_checklist(card:, name:)
-      path = "checklists"
-      response =
-        HTTP.post(trello_api_url(path, name:, idCard: card.id, pos: "top"))
-
-      return if response.status.success?
-
-      raise Subsequent::Error, "Failed to create checklist"
+      params = { name:, idCard: card.id, pos: "top" }
+      request(:post, "checklists", "create checklist", **params)
     end
 
     # updates the checklist on Trello
     def update_checklist(checklist, **params)
       path = "checklist/#{checklist.id}"
-      response = HTTP.put(trello_api_url(path, **params))
-
-      return if response.status.success?
-
-      raise Subsequent::Error, "Failed to update checklist"
+      request(:put, path, "update checklist", **params)
     end
 
     # updates the card on Trello
     def update_card(card, **params)
-      path = "cards/#{card.id}"
-      response = HTTP.put(trello_api_url(path, **params))
-
-      return if response.status.success?
-
-      raise Subsequent::Error, "Failed to update card"
+      request(:put, "cards/#{card.id}", "update card", **params)
     end
 
     # creates a new checklist item on Trello
     def create_checklist_item(checklist:, name:)
       path = "checklists/#{checklist.id}/checkItems"
-      response = HTTP.post(trello_api_url(path, name:, pos: "top"))
-
-      return if response.status.success?
-
-      raise Subsequent::Error, "Failed to create checklist item"
+      request(:post, path, "create checklist item", name:, pos: "top")
     end
 
     # toggles the checklist item completion state on Trello
     def toggle_checklist_item(item)
       new_state = item.checked? ? "incomplete" : "complete"
       path = "cards/#{item.card_id}/checkItem/#{item.id}"
-
-      response = HTTP.put(trello_api_url(path, state: new_state))
-
-      return if response.status.success?
-
-      raise Subsequent::Error, "Failed to toggle checklist item"
+      request(:put, path, "toggle checklist item", state: new_state)
     end
 
     # sets the path to load configuration from
@@ -110,6 +78,14 @@ module Subsequent::TrelloClient
     end
 
     private
+
+    def request(method, path, action, **params)
+      response = HTTP.public_send(method, trello_api_url(path, **params))
+
+      return if response.status.success?
+
+      raise Subsequent::Error, "Failed to #{action}"
+    end
 
     def auth_params
       {
