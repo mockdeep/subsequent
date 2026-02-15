@@ -8,11 +8,15 @@ RSpec.describe Subsequent::Commands::OpenLinks do
     end
 
     it "opens links found in checklist items" do
-      card = make_card
-      checklist = make_checklist
-      item = make_checklist_item(name: "visit https://example.com")
-      card.checklists << checklist
-      checklist.items << item
+      card = make_card(
+        checklists: [
+          api_checklist(
+            check_items: [
+              api_item(name: "visit https://example.com"),
+            ],
+          ),
+        ],
+      )
       state = make_state(cards: [card])
 
       described_class.call(state)
@@ -31,13 +35,15 @@ RSpec.describe Subsequent::Commands::OpenLinks do
     end
 
     it "opens multiple links with sleep between each" do
-      card = make_card
-      checklist = make_checklist
-      item = make_checklist_item(
-        name: "https://example.com https://example.org",
+      card = make_card(
+        checklists: [
+          api_checklist(
+            check_items: [
+              api_item(name: "https://example.com https://example.org"),
+            ],
+          ),
+        ],
       )
-      card.checklists << checklist
-      checklist.items << item
       state = make_state(cards: [card])
 
       described_class.call(state)

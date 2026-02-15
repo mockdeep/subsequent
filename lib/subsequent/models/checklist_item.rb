@@ -1,12 +1,13 @@
 # frozen_string_literal: true
 
+Subsequent::Models::ChecklistItem =
+  Data.define(:card_id, :id, :loading_spinner, :name, :pos, :state)
+
 # class to encapsulate a checklist item
 class Subsequent::Models::ChecklistItem
   include Subsequent::DisplayHelpers
 
   LOADING_FRAMES = ["○", "◑", "●", "◑"].freeze
-
-  attr_accessor :card_id, :id, :name, :pos, :state
 
   class << self
     # create a new array of checklist items from the given data
@@ -16,11 +17,8 @@ class Subsequent::Models::ChecklistItem
   end
 
   def initialize(card_id:, id:, name:, pos:, state:, **_item_data)
-    self.card_id = card_id
-    self.id = id
-    self.name = name
-    self.state = state
-    self.pos = pos
+    spinner = state == "loading" ? LOADING_FRAMES.cycle : nil
+    super(card_id:, id:, loading_spinner: spinner, name:, pos:, state:)
   end
 
   # compare the position of this checklist item with another
@@ -43,11 +41,6 @@ class Subsequent::Models::ChecklistItem
     return loading_spinner.next if loading?
 
     checked? ? "✔" : "☐"
-  end
-
-  # return the loading spinner enumerator for this item
-  def loading_spinner
-    @loading_spinner ||= LOADING_FRAMES.cycle
   end
 
   # return the links in the checklist item name

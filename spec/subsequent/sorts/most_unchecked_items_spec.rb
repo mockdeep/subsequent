@@ -7,12 +7,15 @@ RSpec.describe Subsequent::Sorts::MostUncheckedItems do
     end
   end
 
+  def card_with_items(*item_overrides)
+    items = item_overrides.map { |o| api_item(**o) }
+    make_card(checklists: [api_checklist(check_items: items)])
+  end
+
   describe "#call" do
     it "returns card with most unchecked items across checklists" do
       card1 = make_card_with_item
-      card2 = make_card_with_item
-      cl = card2.checklists.first
-      cl.items << make_checklist_item(id: 3, pos: 2)
+      card2 = card_with_items({ id: 1 }, { id: 3, pos: 2 })
 
       expect(described_class.call([card1, card2])).to eq(card2)
     end
