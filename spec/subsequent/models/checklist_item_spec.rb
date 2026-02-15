@@ -76,10 +76,10 @@ RSpec.describe Subsequent::Models::ChecklistItem do
       expect(item.icon).to eq("☐")
     end
 
-    it "returns an hourglass when loading" do
+    it "returns a spinner frame when loading" do
       item = described_class.new(**check_item_data(state: "loading"))
 
-      expect(item.icon).to eq("↻")
+      expect(item.icon).to eq("○")
     end
   end
 
