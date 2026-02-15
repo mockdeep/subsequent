@@ -8,7 +8,7 @@ module Subsequent::Commands::ToggleChecklistItem
       state => { checklist_items: }
 
       task_number = Integer(char)
-      item = checklist_items[task_number - 1]
+      item = checklist_items.fetch(task_number - 1)
 
       Subsequent::TrelloClient.toggle_checklist_item(item)
       item.state = item.checked? ? "incomplete" : "complete"

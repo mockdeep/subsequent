@@ -31,11 +31,7 @@ class Subsequent::State
 
   # return tags for all cards
   def tags
-    checklists_by_tag = Hash.new { |hash, key| hash[key] = [] }
-    cards.flat_map(&:checklists).select(&:unchecked_items?).each do |checklist|
-      checklist.tag_names.each { |name| checklists_by_tag[name] << checklist }
-    end
-    checklists_by_tag
+    tagged_checklists
       .map { |name, checklists| Subsequent::Models::Tag.new(name, checklists:) }
       .sort
   end
@@ -59,5 +55,19 @@ class Subsequent::State
   def tag_string
     tags.map.with_index { |tag, index| "(#{cyan(index + 1)}) #{tag}" }
         .join("\n")
+  end
+
+  private
+
+  def tagged_checklists
+    pairs =
+      active_checklists.flat_map do |checklist|
+        checklist.tag_names.map { |name| [name, checklist] }
+      end
+    pairs.group_by(&:first).transform_values { |group| group.map(&:last) }
+  end
+
+  def active_checklists
+    cards.flat_map(&:checklists).select(&:unchecked_items?)
   end
 end
