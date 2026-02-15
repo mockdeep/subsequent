@@ -19,13 +19,20 @@ Lint/BinaryOperatorWithIdenticalOperands:
   Exclude:
     - 'spec/subsequent/models/null_checklist_spec.rb'
 
-# Offense count: 3
+# Offense count: 1
+# Configuration parameters: Max, CountComments, CountAsOne, AllowedMethods, AllowedPatterns.
+Metrics/MethodLength:
+  Exclude:
+    - 'lib/subsequent/state.rb'
+
+# Offense count: 4
 # Configuration parameters: Max, CountKeywordArgs, MaxOptionalParameters.
 Metrics/ParameterLists:
   Exclude:
     - 'lib/subsequent/models/card.rb'
     - 'lib/subsequent/models/checklist.rb'
     - 'lib/subsequent/models/checklist_item.rb'
+    - 'lib/subsequent/state.rb'
 
 # Offense count: 1
 # This cop supports unsafe autocorrection (--autocorrect-all).

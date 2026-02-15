@@ -9,6 +9,7 @@ Subsequent::State =
     :filter,
     :mode,
     :sort,
+    :tag_page,
   )
 
 # class to handle state of the application
@@ -17,7 +18,9 @@ class Subsequent::State
 
   DEFAULT_MODE = Subsequent::Modes::Normal
 
-  def initialize(cards:, sort:, filter:, mode: DEFAULT_MODE, **args)
+  def initialize(
+    cards:, sort:, filter:, mode: DEFAULT_MODE, tag_page: 0, **args
+  )
     cards = filter.call(cards)
     card = sort.call(cards) || Subsequent::Models::NullCard.new
     checklist =
@@ -26,7 +29,10 @@ class Subsequent::State
     checklist_items =
       args.fetch(:checklist_items) { checklist.unchecked_items.first(5) }
 
-    super(cards:, filter:, sort:, card:, checklist:, checklist_items:, mode:)
+    super(
+      cards:, filter:, sort:, card:, checklist:, checklist_items:, mode:,
+      tag_page:,
+    )
   end
 
   # return tags for all cards
@@ -51,10 +57,12 @@ class Subsequent::State
     end
   end
 
-  # return the tags formatted
+  # return the tags formatted for the current page
   def tag_string
-    tags.map.with_index { |tag, index| "(#{cyan(index + 1)}) #{tag}" }
-        .join("\n")
+    page_tags = tags.each_slice(9).to_a.fetch(tag_page, [])
+    page_tags
+      .map.with_index { |tag, index| "(#{cyan(index + 1)}) #{tag}" }
+      .join("\n")
   end
 
   private

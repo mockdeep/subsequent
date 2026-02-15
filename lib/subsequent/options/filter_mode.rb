@@ -12,7 +12,7 @@ module Subsequent::Options::FilterMode
 
     # return state with mode set to filter
     def call(state, _text)
-      state.with(mode: Subsequent::Modes::Filter)
+      state.with(mode: Subsequent::Modes::Filter, tag_page: 0)
     end
   end
 end

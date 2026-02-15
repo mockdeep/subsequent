@@ -8,7 +8,9 @@ module Subsequent::Modes::Filter
 
   INPUT_METHOD = :getch
 
-  OPTIONS = [:cancel, :remove_filters, :add_filter].freeze
+  OPTIONS = [
+    :cancel, :remove_filters, :next_tag_page, :prev_tag_page, :add_filter,
+  ].freeze
 
   class << self
     # filter mode commands
@@ -17,8 +19,19 @@ module Subsequent::Modes::Filter
         select tag to filter by
         (#{cyan("n")})one
         #{state.tag_string}
-        (#{cyan("q")}) to cancel
+        #{paging_hints(state)}(#{cyan("q")}) to cancel
       COMMANDS
+    end
+
+    private
+
+    def paging_hints(state)
+      pages = state.tags.each_slice(9).count
+      return "" if pages <= 1
+
+      page = state.tag_page + 1
+      "(#{cyan("<")}) prev (#{cyan(">")}) next " \
+        "- page #{page}/#{pages}\n"
     end
   end
 end

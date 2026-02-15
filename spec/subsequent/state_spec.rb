@@ -101,5 +101,32 @@ RSpec.describe Subsequent::State do
 
       expect(state.tag_string).to eq("(\e[36m1\e[0m) @tag (1)")
     end
+
+    it "paginates tags in slices of 9" do
+      state = state_with_tags(10, tag_page: 1)
+
+      expect(state.tag_string).to include("(\e[36m1\e[0m) @tag9")
+    end
+
+    it "returns empty string for an out-of-range page" do
+      state = make_state(tag_page: 5)
+
+      expect(state.tag_string).to eq("")
+    end
+  end
+
+  describe "#tag_page" do
+    it "defaults to 0" do
+      expect(make_state.tag_page).to eq(0)
+    end
+  end
+
+  def state_with_tags(count, tag_page: 0)
+    cards =
+      count.times.map do |i|
+        checklist = api_checklist(name: "@tag#{i}", check_items: [api_item])
+        make_card(id: i, checklists: [checklist])
+      end
+    make_state(cards:, tag_page:)
   end
 end
