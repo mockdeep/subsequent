@@ -31,6 +31,33 @@ RSpec.describe Subsequent::Commands::ToggleChecklistItem do
       expect(a_request(:put, put_url)).to have_been_made.once
     end
 
+    it "toggles the item to complete when it is incomplete" do
+      state = make_state(cards: [make_card_with_item])
+      item = state.checklist_items.first
+      stub_request(:put, /checkItem/).to_return(body: "{}")
+
+      described_class.call(state, "1")
+
+      expect(item.checked?).to be(true)
+    end
+
+    it "toggles the item to incomplete when it is complete" do
+      card = make_card
+      checklist = make_checklist
+      incomplete_item = make_checklist_item(id: 1, name: "First")
+      complete_item = make_checklist_item(
+        id: 2, name: "Second", pos: 2, state: "complete",
+      )
+      card.checklists << checklist
+      checklist.items.push(incomplete_item, complete_item)
+      state = make_state(cards: [card], checklist_items: [complete_item])
+      stub_request(:put, /checkItem/).to_return(body: "{}")
+
+      described_class.call(state, "1")
+
+      expect(complete_item.checked?).to be(false)
+    end
+
     it "returns the original state" do
       state = make_state(cards: [make_card_with_item])
       stub_request(:put, /checkItem/).to_return(body: "{}")

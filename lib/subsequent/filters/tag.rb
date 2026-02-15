@@ -17,8 +17,9 @@ class Subsequent::Filters::Tag
         end
       next if matching.empty?
 
-      card.checklists = matching
-      result << card
+      filtered_card = card.dup
+      filtered_card.checklists = matching
+      result << filtered_card
     end
   end
 
