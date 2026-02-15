@@ -15,5 +15,15 @@ RSpec.describe Subsequent::Sorts::LeastUncheckedItems do
 
       expect(described_class.call([card1, card2])).to eq(card2)
     end
+
+    it "returns nil for an empty array" do
+      expect(described_class.call([])).to be_nil
+    end
+
+    it "returns the card when given a single card" do
+      card = make_card_with_item
+
+      expect(described_class.call([card])).to eq(card)
+    end
   end
 end

@@ -71,18 +71,20 @@ RSpec.describe Subsequent::State do
   end
 
   describe "#title" do
-    it "formats card name, checklist name, and link" do
-      title = make_state(cards: [make_card_with_item]).title
+    it "formats as 'card name - checklist name (link)'" do
+      state = make_state(cards: [make_card_with_item])
 
-      expect(title).to include("Card Name", "Checklist", "link")
+      expect(state.title)
+        .to eq("Card Name - Checklist (\e]8;;http://example.com\e\\link\e]8;;\e\\)")
     end
   end
 
   describe "#checklist_string" do
-    it "formats numbered items" do
+    it "formats numbered items with their to_s output" do
       state = make_state(cards: [make_card_with_item])
+      item = state.checklist_items.first
 
-      expect(state.checklist_string).to start_with("1.")
+      expect(state.checklist_string).to eq("1. #{item}")
     end
 
     it "shows empty message when no items" do
@@ -94,11 +96,12 @@ RSpec.describe Subsequent::State do
   end
 
   describe "#tag_string" do
-    it "formats indexed tags with cyan numbering" do
+    it "formats indexed tags with cyan numbering and tag name" do
       card = make_card_with_item
       card.checklists.first.name = "@tag stuff"
+      state = make_state(cards: [card])
 
-      expect(make_state(cards: [card]).tag_string).to include("\e[36m1\e[0m")
+      expect(state.tag_string).to eq("(\e[36m1\e[0m) @tag (1)")
     end
   end
 end

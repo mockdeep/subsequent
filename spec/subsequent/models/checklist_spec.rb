@@ -42,6 +42,41 @@ RSpec.describe Subsequent::Models::Checklist do
     end
   end
 
+  describe "#unchecked_items?" do
+    it "returns true when unchecked items exist" do
+      checklist = make_checklist
+      checklist.items << make_checklist_item(state: "incomplete")
+
+      expect(checklist.unchecked_items?).to be(true)
+    end
+
+    it "returns false when all items are checked" do
+      checklist = make_checklist
+      checklist.items << make_checklist_item(state: "complete")
+
+      expect(checklist.unchecked_items?).to be(false)
+    end
+  end
+
+  describe "#unchecked_items" do
+    it "returns only unchecked items" do
+      checklist = make_checklist
+      checklist.items << make_checklist_item(id: 1, state: "incomplete")
+      checklist.items << make_checklist_item(id: 2, state: "complete")
+      checklist.items << make_checklist_item(id: 3, state: "incomplete")
+
+      expect(checklist.unchecked_items.map(&:id)).to eq([1, 3])
+    end
+  end
+
+  describe "#hash" do
+    it "returns the hash of the checklist id" do
+      checklist = make_checklist(id: "abc")
+
+      expect(checklist.hash).to eq("abc".hash)
+    end
+  end
+
   describe "#tags" do
     it "returns the tags from the checklist name" do
       checklist = make_checklist(name: "foo @bar baz @qux")
