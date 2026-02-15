@@ -14,7 +14,8 @@ module Subsequent::Options::AddFilter
 
     # add filter to the current state
     def call(state, text)
-      filter = Subsequent::Filters::Tag.new(state.tags[Integer(text) - 1].name)
+      tag = state.tags.fetch(Integer(text) - 1)
+      filter = Subsequent::Filters::Tag.new(tag.name)
       Subsequent::Commands::FetchData.call(filter:, sort: state.sort)
     end
   end

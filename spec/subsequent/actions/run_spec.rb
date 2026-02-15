@@ -41,7 +41,7 @@ RSpec.describe Subsequent::Actions::Run do
 
   def no_unchecked_items_output(card_data, sort: "first")
     <<~OUTPUT.strip
-      #{card_data[:name]} - <no checklist> (#{link(card_data[:short_url])})
+      #{card_data.fetch(:name)} - <no checklist> (#{link(card_data.fetch(:short_url))})
       ====
       No unchecked items, finish the card!
 
@@ -59,14 +59,14 @@ RSpec.describe Subsequent::Actions::Run do
 
   it "displays a card with unchecked checklist items" do
     card_data = api_card
-    card_data[:checklists].first[:check_items] =
+    card_data.fetch(:checklists).first[:check_items] =
       [{ pos: 1, name: "Check Item", id: 5, state: "incomplete" }]
     stub_cards([card_data])
 
     call
 
     expected_output = <<~OUTPUT.strip
-      #{card_data[:name]} - Checklist (#{link(card_data[:short_url])})
+      #{card_data.fetch(:name)} - Checklist (#{link(card_data.fetch(:short_url))})
       ====
       1. ☐ #{green("Check Item")}
 
@@ -78,7 +78,7 @@ RSpec.describe Subsequent::Actions::Run do
 
   it "marks a checklist item as complete" do
     card_data = api_card
-    card_data[:checklists].first[:check_items] = [api_item]
+    card_data.fetch(:checklists).first[:check_items] = [api_item]
     stub_cards([card_data])
     put_url = api_url("cards/123/checkItem/5", state: "complete")
     stub_request(:put, put_url).to_return(body: "{}")
@@ -92,7 +92,7 @@ RSpec.describe Subsequent::Actions::Run do
 
   it "does nothing if the number is out of range" do
     card_data = api_card
-    card_data[:checklists].first[:check_items] =
+    card_data.fetch(:checklists).first[:check_items] =
       [{ pos: 1, name: "Check Item", id: 5, state: "incomplete" }]
     stub_cards([card_data])
 
@@ -105,7 +105,7 @@ RSpec.describe Subsequent::Actions::Run do
 
   it "does nothing if the number is 0" do
     card_data = api_card
-    card_data[:checklists].first[:check_items] =
+    card_data.fetch(:checklists).first[:check_items] =
       [{ pos: 1, name: "Check Item", id: 5, state: "incomplete" }]
     stub_cards([card_data])
 
@@ -118,7 +118,7 @@ RSpec.describe Subsequent::Actions::Run do
 
   it "does nothing if a non-option key is pressed" do
     card_data = api_card
-    card_data[:checklists].first[:check_items] =
+    card_data.fetch(:checklists).first[:check_items] =
       [{ pos: 1, name: "Check Item", id: 5, state: "incomplete" }]
     stub_cards([card_data])
 
@@ -170,7 +170,7 @@ RSpec.describe Subsequent::Actions::Run do
 
   it "cycles the checklist item" do
     card_data = api_card
-    card_data[:checklists].first[:check_items] =
+    card_data.fetch(:checklists).first[:check_items] =
       [{ pos: 1, name: "Check Item", id: 5, state: "incomplete" }]
     stub_cards([card_data])
     put_url = api_url("cards/123/checkItem/5", pos: 2)
@@ -184,7 +184,7 @@ RSpec.describe Subsequent::Actions::Run do
 
   it "cycles the checklist" do
     card_data = api_card
-    card_data[:checklists].first[:check_items] =
+    card_data.fetch(:checklists).first[:check_items] =
       [{ pos: 1, name: "Check Item", id: 5, state: "incomplete" }]
     stub_cards([card_data])
     put_url = api_url("checklist/456", pos: 2)
@@ -198,7 +198,7 @@ RSpec.describe Subsequent::Actions::Run do
 
   it "cycles the card" do
     card_data = api_card
-    card_data[:checklists].first[:check_items] =
+    card_data.fetch(:checklists).first[:check_items] =
       [{ pos: 1, name: "Check Item", id: 5, state: "incomplete" }]
     stub_cards([card_data])
     put_url = api_url("cards/123", pos: 2)
@@ -212,7 +212,7 @@ RSpec.describe Subsequent::Actions::Run do
 
   it "backs out of cycle mode" do
     card_data = api_card
-    card_data[:checklists].first[:check_items] =
+    card_data.fetch(:checklists).first[:check_items] =
       [{ pos: 1, name: "Check Item", id: 5, state: "incomplete" }]
     stub_cards([card_data])
 
@@ -221,7 +221,7 @@ RSpec.describe Subsequent::Actions::Run do
     call
 
     expected_output = <<~OUTPUT.strip
-      #{card_data[:name]} - Checklist (#{link(card_data[:short_url])})
+      #{card_data.fetch(:name)} - Checklist (#{link(card_data.fetch(:short_url))})
       ====
       1. ☐ #{green("Check Item")}
 
@@ -277,7 +277,7 @@ RSpec.describe Subsequent::Actions::Run do
 
   it "creates a new checklist item on the current checklist" do
     card_data = api_card
-    card_data[:checklists].first[:check_items] = [api_item]
+    card_data.fetch(:checklists).first[:check_items] = [api_item]
     stub_cards([card_data])
 
     input.print("ni")
@@ -296,7 +296,7 @@ RSpec.describe Subsequent::Actions::Run do
   it "opens links for checklist items" do
     card_data = api_card
     name = "foo https://example.com bar https://example.org baz"
-    card_data[:checklists].first[:check_items] =
+    card_data.fetch(:checklists).first[:check_items] =
       [{ pos: 1, name:, id: 5, state: "incomplete" }]
     stub_cards([card_data])
 
@@ -313,7 +313,7 @@ RSpec.describe Subsequent::Actions::Run do
 
   it "opens the card's short URL when there are no checklist items" do
     card_data = api_card
-    card_data[:checklists].first[:check_items] = []
+    card_data.fetch(:checklists).first[:check_items] = []
     stub_cards([card_data])
 
     allow(Subsequent::Commands::OpenLinks).to receive(:system)

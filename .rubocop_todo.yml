@@ -60,13 +60,3 @@ RSpec/MultipleExpectations:
     - 'spec/subsequent/models/checklist_item_spec.rb'
     - 'spec/subsequent/trello_client_spec.rb'
 
-# Offense count: 6
-# This cop supports unsafe autocorrection (--autocorrect-all).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: brackets, fetch
-Style/HashLookupMethod:
-  Exclude:
-    - 'lib/subsequent/modes/base.rb'
-    - 'lib/subsequent/options.rb'
-    - 'lib/subsequent/options/sort.rb'
-    - 'lib/subsequent/trello_client.rb'
