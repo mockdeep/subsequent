@@ -18,5 +18,11 @@ RSpec.describe Subsequent::Options::FilterMode do
       expect(described_class.call(state, "f"))
         .to eq(state.with(mode: Subsequent::Modes::Filter))
     end
+
+    it "resets tag_page to 0" do
+      state = make_state(tag_page: 2)
+
+      expect(described_class.call(state, "f").tag_page).to eq(0)
+    end
   end
 end
