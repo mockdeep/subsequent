@@ -11,9 +11,13 @@ module Subsequent::Commands::ToggleChecklistItem
       item = checklist_items.fetch(task_number - 1)
 
       Subsequent::TrelloClient.toggle_checklist_item(item)
-      item.state = item.checked? ? "incomplete" : "complete"
 
-      state
+      toggled_state = item.checked? ? "incomplete" : "complete"
+      toggled_item = item.dup.tap { |i| i.state = toggled_state }
+      toggled_items = checklist_items.dup
+      toggled_items[task_number - 1] = toggled_item
+
+      state.with(checklist_items: toggled_items)
     end
   end
 end
