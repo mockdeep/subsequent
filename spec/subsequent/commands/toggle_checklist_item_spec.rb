@@ -12,13 +12,18 @@ RSpec.describe Subsequent::Commands::ToggleChecklistItem do
     end
 
     it "indexes into checklist_items using 1-based char" do
-      card = make_card
-      checklist = make_checklist
-      item1 = make_checklist_item(id: 10, name: "First")
-      item2 = make_checklist_item(id: 20, name: "Second", pos: 2)
-      card.checklists << checklist
-      checklist.items.push(item1, item2)
+      card = make_card(
+        checklists: [
+          api_checklist(
+            check_items: [
+              api_item(id: 10, name: "First"),
+              api_item(id: 20, name: "Second", pos: 2),
+            ],
+          ),
+        ],
+      )
       state = make_state(cards: [card])
+      item2 = state.checklist_items.fetch(1)
 
       put_url = api_url(
         "cards/#{item2.card_id}/checkItem/#{item2.id}",
@@ -41,14 +46,17 @@ RSpec.describe Subsequent::Commands::ToggleChecklistItem do
     end
 
     it "toggles the item to incomplete when it is complete" do
-      card = make_card
-      checklist = make_checklist
-      incomplete_item = make_checklist_item(id: 1, name: "First")
-      complete_item = make_checklist_item(
-        id: 2, name: "Second", pos: 2, state: "complete",
+      card = make_card(
+        checklists: [
+          api_checklist(
+            check_items: [
+              api_item(id: 1, name: "First"),
+              api_item(id: 2, name: "Second", pos: 2, state: "complete"),
+            ],
+          ),
+        ],
       )
-      card.checklists << checklist
-      checklist.items.push(incomplete_item, complete_item)
+      complete_item = card.checklists.first.items.last
       state = make_state(cards: [card], checklist_items: [complete_item])
       stub_request(:put, /checkItem/).to_return(body: "{}")
 

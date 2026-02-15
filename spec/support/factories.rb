@@ -9,8 +9,8 @@ module Factories
     { id: "456", name: "Checklist", pos: 1, check_items: [], **overrides }
   end
 
-  def api_item
-    { id: "5", name: "Check Item", pos: 1, state: "incomplete" }
+  def api_item(**overrides)
+    { id: "5", name: "Check Item", pos: 1, state: "incomplete", **overrides }
   end
 
   def make_card(**overrides)
@@ -27,12 +27,11 @@ module Factories
 
   def make_checklist(**overrides)
     Subsequent::Models::Checklist.new(
-      card: make_card,
+      card_id: 1,
       check_items: [],
       id: "456",
       name: "Checklist",
       pos: 1,
-      items: [],
       **overrides,
     )
   end
@@ -49,12 +48,7 @@ module Factories
   end
 
   def make_card_with_item
-    card = make_card
-    checklist = make_checklist
-    checklist_item = make_checklist_item
-    card.checklists << checklist
-    checklist.items << checklist_item
-    card
+    make_card(checklists: [api_checklist(check_items: [api_item])])
   end
 
   def make_state(cards: [make_card], **overrides)

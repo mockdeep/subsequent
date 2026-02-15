@@ -2,16 +2,10 @@
 
 RSpec.describe Subsequent::Models::Checklist do
   describe "#initialize" do
-    def check_item_data(pos:)
-      { pos:, name: "Some Checklist", id: 5, state: "incomplete" }
-    end
-
     it "sorts the check items by position" do
-      check_items = [check_item_data(pos: 52), check_item_data(pos: 31)]
-      card = make_card
+      items = [{ pos: 52 }, { pos: 31 }].map { |h| api_item(**h) }
 
-      checklist =
-        described_class.new(id: 1, card:, name: "fo", pos: 1, check_items:)
+      checklist = make_checklist(check_items: items)
 
       expect(checklist.items.map(&:pos)).to eq([31, 52])
     end
@@ -44,15 +38,15 @@ RSpec.describe Subsequent::Models::Checklist do
 
   describe "#unchecked_items?" do
     it "returns true when unchecked items exist" do
-      checklist = make_checklist
-      checklist.items << make_checklist_item(state: "incomplete")
+      checklist = make_checklist(
+        check_items: [api_item(state: "incomplete")],
+      )
 
       expect(checklist.unchecked_items?).to be(true)
     end
 
     it "returns false when all items are checked" do
-      checklist = make_checklist
-      checklist.items << make_checklist_item(state: "complete")
+      checklist = make_checklist(check_items: [api_item(state: "complete")])
 
       expect(checklist.unchecked_items?).to be(false)
     end
@@ -60,12 +54,10 @@ RSpec.describe Subsequent::Models::Checklist do
 
   describe "#unchecked_items" do
     it "returns only unchecked items" do
-      checklist = make_checklist
-      checklist.items << make_checklist_item(id: 1, state: "incomplete")
-      checklist.items << make_checklist_item(id: 2, state: "complete")
-      checklist.items << make_checklist_item(id: 3, state: "incomplete")
+      items = mixed_state_items
 
-      expect(checklist.unchecked_items.map(&:id)).to eq([1, 3])
+      expect(make_checklist(check_items: items).unchecked_items.map(&:id))
+        .to eq([1, 3])
     end
   end
 
@@ -89,5 +81,13 @@ RSpec.describe Subsequent::Models::Checklist do
 
       expect(checklist.tag_names).to eq(["<no tag>"])
     end
+  end
+
+  def mixed_state_items
+    [
+      api_item(id: 1, state: "incomplete"),
+      api_item(id: 2, state: "complete", pos: 2),
+      api_item(id: 3, state: "incomplete", pos: 3),
+    ]
   end
 end

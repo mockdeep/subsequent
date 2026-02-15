@@ -49,10 +49,8 @@ RSpec.describe Subsequent::State do
 
   describe "checklist_items" do
     it "limits to first 5 unchecked items" do
-      card = make_card
-      checklist = make_checklist(card:)
-      6.times { |i| checklist.items << make_checklist_item(id: i, pos: i) }
-      card.checklists << checklist
+      items = 6.times.map { |i| api_item(id: i, pos: i) }
+      card = make_card(checklists: [api_checklist(check_items: items)])
 
       expect(make_state(cards: [card]).checklist_items.size).to eq(5)
     end
@@ -60,8 +58,8 @@ RSpec.describe Subsequent::State do
 
   describe "#tags" do
     it "returns unique sorted tags across all cards" do
-      card1 = make_card_with_item.tap { _1.checklists.first.name = "@beta" }
-      card2 = make_card_with_item.tap { _1.checklists.first.name = "@alpha" }
+      card1 = make_card(id: 1, checklists: [tagged_checklist("@beta")])
+      card2 = make_card(id: 2, checklists: [tagged_checklist("@alpha")])
 
       expect(make_state(cards: [card1, card2]).tags.map(&:name))
         .to eq(["@alpha", "@beta"])
@@ -95,8 +93,7 @@ RSpec.describe Subsequent::State do
 
   describe "#tag_string" do
     it "formats indexed tags with cyan numbering and tag name" do
-      card = make_card_with_item
-      card.checklists.first.name = "@tag stuff"
+      card = make_card(checklists: [tagged_checklist("@tag stuff")])
       state = make_state(cards: [card])
 
       expect(state.tag_string).to eq("(\e[36m1\e[0m) @tag (1)")
@@ -121,11 +118,14 @@ RSpec.describe Subsequent::State do
     end
   end
 
+  def tagged_checklist(name)
+    api_checklist(name:, check_items: [api_item])
+  end
+
   def state_with_tags(count, tag_page: 0)
     cards =
       count.times.map do |i|
-        checklist = api_checklist(name: "@tag#{i}", check_items: [api_item])
-        make_card(id: i, checklists: [checklist])
+        make_card(id: i, checklists: [tagged_checklist("@tag#{i}")])
       end
     make_state(cards:, tag_page:)
   end

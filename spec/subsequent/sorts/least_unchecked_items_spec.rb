@@ -7,10 +7,14 @@ RSpec.describe Subsequent::Sorts::LeastUncheckedItems do
     end
   end
 
+  def card_with_items(*item_overrides)
+    items = item_overrides.map { |o| api_item(**o) }
+    make_card(checklists: [api_checklist(check_items: items)])
+  end
+
   describe "#call" do
     it "returns card with fewest unchecked items" do
-      card1 = make_card_with_item
-      card1.checklists.first.items << make_checklist_item(id: 2, pos: 2)
+      card1 = card_with_items({ id: 1 }, { id: 2, pos: 2 })
       card2 = make_card_with_item
 
       expect(described_class.call([card1, card2])).to eq(card2)

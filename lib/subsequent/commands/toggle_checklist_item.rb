@@ -16,7 +16,7 @@ module Subsequent::Commands::ToggleChecklistItem
       animate_loading(state, task_number, item)
 
       toggled_state = item.checked? ? "incomplete" : "complete"
-      toggled_item = item.dup.tap { |i| i.state = toggled_state }
+      toggled_item = item.with(state: toggled_state)
       toggled_items = checklist_items.dup
       toggled_items[task_number - 1] = toggled_item
 
@@ -48,8 +48,7 @@ module Subsequent::Commands::ToggleChecklistItem
     def build_loading_state(state, task_number)
       index = task_number - 1
       loading_items = state.checklist_items.dup
-      loading_items[index] =
-        loading_items.fetch(index).dup.tap { |i| i.state = "loading" }
+      loading_items[index] = loading_items.fetch(index).with(state: "loading")
       state.with(checklist_items: loading_items)
     end
   end

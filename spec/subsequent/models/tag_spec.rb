@@ -3,8 +3,7 @@
 RSpec.describe Subsequent::Models::Tag do
   describe "#items" do
     it "returns unchecked items across all associated checklists" do
-      checklist = make_checklist
-      checklist.items << make_checklist_item
+      checklist = make_checklist(check_items: [api_item])
       tag = make_tag("@focus", checklists: [checklist])
 
       expect(tag.items.size).to eq(1)
@@ -13,8 +12,7 @@ RSpec.describe Subsequent::Models::Tag do
 
   describe "#to_s" do
     it "returns name with item count" do
-      checklist = make_checklist
-      checklist.items << make_checklist_item
+      checklist = make_checklist(check_items: [api_item])
       tag = make_tag("@focus", checklists: [checklist])
 
       expect(tag.to_s).to eq("@focus (1)")

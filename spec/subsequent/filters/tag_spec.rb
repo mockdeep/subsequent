@@ -2,11 +2,16 @@
 
 RSpec.describe Subsequent::Filters::Tag do
   def card_with_checklist(name:)
-    card = make_card
-    checklist = make_checklist(card:, name:)
-    checklist.items << make_checklist_item
-    card.checklists << checklist
-    card
+    make_card(checklists: [api_checklist(name:, check_items: [api_item])])
+  end
+
+  def card_with_two_checklists
+    make_card(
+      checklists: [
+        api_checklist(id: "1", name: "@tag stuff", check_items: [api_item]),
+        api_checklist(id: "2", name: "other", check_items: [api_item]),
+      ],
+    )
   end
 
   describe "#call" do
@@ -17,18 +22,15 @@ RSpec.describe Subsequent::Filters::Tag do
     end
 
     it "narrows card checklists to only matching ones" do
-      card = card_with_checklist(name: "@tag stuff")
-      matching = card.checklists.first
-      card.checklists << card_with_checklist(name: "other").checklists.first
+      card = card_with_two_checklists
 
       result = described_class.new("@tag").call([card])
 
-      expect(result.first.checklists).to eq([matching])
+      expect(result.first.checklists).to eq([card.checklists.first])
     end
 
     it "does not mutate the original card" do
-      card = card_with_checklist(name: "@tag stuff")
-      card.checklists << card_with_checklist(name: "other").checklists.first
+      card = card_with_two_checklists
       original_checklists = card.checklists.dup
 
       described_class.new("@tag").call([card])

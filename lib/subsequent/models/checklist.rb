@@ -1,23 +1,28 @@
 # frozen_string_literal: true
 
+Subsequent::Models::Checklist = Data.define(:card_id, :id, :items, :name, :pos)
+
 # class to encapsulate a checklist
 class Subsequent::Models::Checklist
-  attr_accessor :card, :id, :items, :name, :pos
-
   class << self
     # Create a new array of checklists from the given data
-    def from_data(checklists_data, card:)
-      checklists_data.map { |checklist_data| new(card:, **checklist_data) }.sort
+    def from_data(checklists_data, card_id:)
+      checklists_data
+        .map { |checklist_data| new(card_id:, **checklist_data) }
+        .sort
     end
   end
 
-  def initialize(card:, id:, check_items:, name:, pos:, **_checklist_data)
-    self.card = card
-    self.id = id
-    self.name = name
-    self.pos = pos
-    self.items =
-      Subsequent::Models::ChecklistItem.from_data(check_items, card_id: card.id)
+  def initialize(card_id:, id:, name:, pos:, check_items: [], **_checklist_data)
+    super(
+      card_id:,
+      id:,
+      items: Subsequent::Models::ChecklistItem.from_data(
+        check_items, card_id:,
+      ),
+      name:,
+      pos:,
+    )
   end
 
   # compare the position of this checklist with another
