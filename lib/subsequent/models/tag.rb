@@ -2,38 +2,11 @@
 
 # class to encapsulate a tag
 class Subsequent::Models::Tag
-  attr_accessor :checklists, :name
+  attr_reader :checklists, :name
 
-  class << self
-    # finds or creates a tag with the given name
-    def find_or_create(name)
-      @tags ||= []
-      tag = @tags.find { |tag| tag.name == name }
-
-      unless tag
-        tag = new(name)
-        @tags << tag
-      end
-
-      tag
-    end
-
-    # clear the list of tags
-    def clear
-      @tags = []
-    end
-  end
-
-  def initialize(name)
-    self.name = name
-    self.checklists = Set.new
-  end
-
-  # add a checklist to the tag
-  def add_checklist(checklist)
-    # remove existing copy if present to ensure freshest reference
-    checklists.delete(checklist)
-    checklists.add(checklist)
+  def initialize(name, checklists: [])
+    @name = name
+    @checklists = checklists
   end
 
   # return a list of all unchecked items in all checklists with this tag

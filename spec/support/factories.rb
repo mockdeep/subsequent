@@ -66,8 +66,8 @@ module Factories
     )
   end
 
-  def make_tag(tag_name = "@tag")
-    Subsequent::Models::Tag.new(tag_name)
+  def make_tag(tag_name = "@tag", checklists: [])
+    Subsequent::Models::Tag.new(tag_name, checklists:)
   end
 end
 

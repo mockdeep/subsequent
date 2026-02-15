@@ -77,17 +77,17 @@ RSpec.describe Subsequent::Models::Checklist do
     end
   end
 
-  describe "#tags" do
-    it "returns the tags from the checklist name" do
+  describe "#tag_names" do
+    it "returns the tag names from the checklist name" do
       checklist = make_checklist(name: "foo @bar baz @qux")
 
-      expect(checklist.tags).to eq(["@bar", "@qux"])
+      expect(checklist.tag_names).to eq(["@bar", "@qux"])
     end
 
     it "returns <no tag> if no tags are present" do
       checklist = make_checklist(name: "foo bar baz")
 
-      expect(checklist.tags).to eq(["<no tag>"])
+      expect(checklist.tag_names).to eq(["<no tag>"])
     end
   end
 end
