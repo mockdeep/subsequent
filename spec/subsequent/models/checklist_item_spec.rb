@@ -49,6 +49,20 @@ RSpec.describe Subsequent::Models::ChecklistItem do
     end
   end
 
+  describe "#loading?" do
+    it "returns true when state is loading" do
+      item = described_class.new(**check_item_data(state: "loading"))
+
+      expect(item.loading?).to be(true)
+    end
+
+    it "returns false when state is incomplete" do
+      item = described_class.new(**check_item_data(state: "incomplete"))
+
+      expect(item.loading?).to be(false)
+    end
+  end
+
   describe "#icon" do
     it "returns a checkmark when checked" do
       item = described_class.new(**check_item_data(state: "complete"))
@@ -60,6 +74,12 @@ RSpec.describe Subsequent::Models::ChecklistItem do
       item = described_class.new(**check_item_data(state: "incomplete"))
 
       expect(item.icon).to eq("☐")
+    end
+
+    it "returns an hourglass when loading" do
+      item = described_class.new(**check_item_data(state: "loading"))
+
+      expect(item.icon).to eq("↻")
     end
   end
 
@@ -74,6 +94,12 @@ RSpec.describe Subsequent::Models::ChecklistItem do
       item = described_class.new(**check_item_data(state: "complete"))
 
       expect(item.formatted_name).to eq("\e[94mSome Checklist\e[0m")
+    end
+
+    it "returns yellow name when loading" do
+      item = described_class.new(**check_item_data(state: "loading"))
+
+      expect(item.formatted_name).to eq("\e[33mSome Checklist\e[0m")
     end
   end
 

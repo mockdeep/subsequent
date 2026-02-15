@@ -31,8 +31,15 @@ class Subsequent::Models::ChecklistItem
     state == "complete"
   end
 
+  # return whether the checklist item is loading
+  def loading?
+    state == "loading"
+  end
+
   # return the icon for the checklist item
   def icon
+    return "↻" if loading?
+
     checked? ? "✔" : "☐"
   end
 
@@ -44,6 +51,8 @@ class Subsequent::Models::ChecklistItem
   # return the name linkified and colored
   def formatted_name
     linked_name = linkify(name)
+    return yellow(linked_name) if loading?
+
     checked? ? gray(linked_name) : green(linked_name)
   end
 

@@ -74,5 +74,18 @@ RSpec.describe Subsequent::Commands::ToggleChecklistItem do
 
       expect(state.checklist_items.first.checked?).to be(false)
     end
+
+    it "renders loading state before the API call" do
+      state = make_state(cards: [make_card_with_item])
+      rendered_output = nil
+
+      allow(Subsequent::TrelloClient).to receive(:toggle_checklist_item) do
+        rendered_output = output.string.dup
+      end
+
+      described_class.call(state, "1")
+
+      expect(rendered_output).to include("↻")
+    end
   end
 end
