@@ -7,7 +7,7 @@ module Subsequent::Options::ToggleChecklistItem
   class << self
     # return true if the text is a number between 1 and the number of items
     def match?(state, text)
-      ("1"..state.checklist_items.to_a.size.to_s).include?(text)
+      ("1"..state.checklist_items.size.to_s).include?(text)
     end
 
     # toggle checklist item
