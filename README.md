@@ -1,39 +1,110 @@
 # Subsequent
 
-TODO: Delete this and the text below, and describe your gem
-
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/subsequent`. To experiment with that code, run `bin/console` for an interactive prompt.
+A terminal-based CLI todo app that interfaces with Trello. Manage your cards,
+checklists, and checklist items without leaving the terminal.
 
 ## Installation
 
-TODO: Replace `UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG` with your gem name right after releasing it to RubyGems.org. Please do not do it earlier due to security reasons. Alternatively, replace this section with instructions to install your gem from git if you don't plan to release to RubyGems.org.
+```sh
+gem install subsequent
+```
 
-Install the gem and add to the application's Gemfile by executing:
+Or add it to your Gemfile:
 
-    $ bundle add UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG
+```ruby
+gem "subsequent"
+```
 
-If bundler is not being used to manage dependencies, install the gem by executing:
+## Setup
 
-    $ gem install UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG
+Subsequent requires a Trello API key, token, and list ID. Create a config file
+at `~/.subsequent/config.yml`:
+
+```yaml
+:trello_key: your-trello-api-key
+:trello_token: your-trello-api-token
+:trello_list_id: your-trello-list-id
+```
+
+To get your API key and token, visit the
+[Trello Power-Ups admin](https://trello.com/power-ups/admin). To find your list
+ID, open a Trello board in your browser, add `.json` to the URL, and search for
+the list name.
 
 ## Usage
 
-TODO: Write usage instructions here
+```sh
+subsequent
+```
+
+Use `--debug` to disable the loading spinner:
+
+```sh
+subsequent --debug
+```
+
+### Keybindings
+
+#### Normal mode (default)
+
+| Key | Action |
+|-----|--------|
+| `1-9` | Toggle checklist item at that position |
+| `r` | Refresh data from Trello |
+| `f` | Enter filter mode |
+| `s` | Enter sort mode |
+| `o` | Open links in the current card |
+| `c` | Enter cycle mode |
+| `n` | Enter add item mode |
+| `a` | Archive current card |
+| `q` | Quit |
+
+#### Filter mode
+
+| Key | Action |
+|-----|--------|
+| `1-9` | Filter cards by the selected tag |
+| `n` | Remove all filters |
+| `q` | Cancel |
+
+#### Sort mode
+
+| Key | Action |
+|-----|--------|
+| `f` | Sort by first (original Trello order) |
+| `m` | Sort by most unchecked items |
+| `l` | Sort by least unchecked items |
+| `q` | Cancel |
+
+#### Cycle mode
+
+| Key | Action |
+|-----|--------|
+| `c` | Move current card to end of list |
+| `l` | Move current checklist to end within the card |
+| `i` | Move current checklist item to end within the checklist |
+| `q` | Cancel |
+
+#### Add item mode
+
+| Key | Action |
+|-----|--------|
+| `c` | Add a new card |
+| `l` | Add a new checklist to the current card |
+| `i` | Add a new checklist item to the current checklist |
+| `q` | Cancel |
 
 ## Development
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
-
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and the created tag, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+After checking out the repo, run `bin/setup` to install dependencies. Then, run
+`rake spec` to run the tests.
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/subsequent. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/[USERNAME]/subsequent/blob/main/CODE_OF_CONDUCT.md).
+Bug reports and pull requests are welcome on GitHub at
+https://github.com/mockdeep/subsequent.
 
 ## License
 
-The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
-
-## Code of Conduct
-
-Everyone interacting in the Subsequent project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/[USERNAME]/subsequent/blob/main/CODE_OF_CONDUCT.md).
+The gem is available as open source under the terms of the
+[MIT License](https://opensource.org/licenses/MIT).
