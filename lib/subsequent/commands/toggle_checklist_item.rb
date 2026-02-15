@@ -13,9 +13,7 @@ module Subsequent::Commands::ToggleChecklistItem
       task_number = Integer(char)
       item = checklist_items.fetch(task_number - 1)
 
-      render_loading_state(state, task_number)
-
-      Subsequent::TrelloClient.toggle_checklist_item(item)
+      animate_loading(state, task_number, item)
 
       toggled_state = item.checked? ? "incomplete" : "complete"
       toggled_item = item.dup.tap { |i| i.state = toggled_state }
@@ -27,13 +25,24 @@ module Subsequent::Commands::ToggleChecklistItem
 
     private
 
-    def render_loading_state(state, task_number)
+    def animate_loading(state, task_number, item)
       loading_state = build_loading_state(state, task_number)
 
+      thread =
+        Thread.new { Subsequent::TrelloClient.toggle_checklist_item(item) }
+
+      render_loading_frame(loading_state) while thread.alive?
+      clear_screen
+
+      thread.value
+    end
+
+    def render_loading_frame(loading_state)
       clear_screen
       output.puts loading_state.title
       output.puts "=" * loading_state.card.name.size
       output.puts loading_state.checklist_string
+      sleep(0.1)
     end
 
     def build_loading_state(state, task_number)

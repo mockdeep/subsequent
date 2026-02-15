@@ -85,7 +85,7 @@ RSpec.describe Subsequent::Commands::ToggleChecklistItem do
 
       described_class.call(state, "1")
 
-      expect(rendered_output).to include("↻")
+      expect(rendered_output).to include("○")
     end
   end
 end
