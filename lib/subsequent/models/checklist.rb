@@ -45,15 +45,10 @@ class Subsequent::Models::Checklist
     id.hash
   end
 
-  # return a list of tags from the checklist name
-  def tags
-    tag_names = name.split.select { |word| word.start_with?("@") }
-    tag_names << "<no tag>" if tag_names.empty?
-
-    tag_names.map do |tag_name|
-      tag = Subsequent::Models::Tag.find_or_create(tag_name)
-      tag.add_checklist(self)
-      tag
-    end
+  # return a list of tag name strings from the checklist name
+  def tag_names
+    names = name.split.select { |word| word.start_with?("@") }
+    names << "<no tag>" if names.empty?
+    names
   end
 end

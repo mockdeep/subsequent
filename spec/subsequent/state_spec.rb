@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe Subsequent::State do
-  before { Subsequent::Models::Tag.clear }
-
   describe "default mode" do
     it "is Modes::Normal" do
       state = make_state

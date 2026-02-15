@@ -31,7 +31,13 @@ class Subsequent::State
 
   # return tags for all cards
   def tags
-    cards.flat_map(&:tags).uniq.sort
+    checklists_by_tag = Hash.new { |hash, key| hash[key] = [] }
+    cards.flat_map(&:checklists).select(&:unchecked_items?).each do |checklist|
+      checklist.tag_names.each { |name| checklists_by_tag[name] << checklist }
+    end
+    checklists_by_tag
+      .map { |name, checklists| Subsequent::Models::Tag.new(name, checklists:) }
+      .sort
   end
 
   # return the card name formatted
