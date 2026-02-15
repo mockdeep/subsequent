@@ -81,11 +81,10 @@ module Subsequent::TrelloClient
 
     # toggles the checklist item completion state on Trello
     def toggle_checklist_item(item)
-      state = item.checked? ? "incomplete" : "complete"
-      item.state = state
+      new_state = item.checked? ? "incomplete" : "complete"
       path = "cards/#{item.card_id}/checkItem/#{item.id}"
 
-      response = HTTP.put(trello_api_url(path, state:))
+      response = HTTP.put(trello_api_url(path, state: new_state))
 
       return if response.status.success?
 

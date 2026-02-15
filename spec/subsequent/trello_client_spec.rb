@@ -165,14 +165,14 @@ RSpec.describe Subsequent::TrelloClient do
         .not_to raise_error
     end
 
-    it "toggles the item to incomplete when it is complete" do
+    it "does not mutate the item state" do
       checklist_item = make_checklist_item(state: "complete")
       path = "cards/#{checklist_item.card_id}/checkItem/#{checklist_item.id}"
       stub_request(:put, /#{path}/).to_return(status: 200)
 
       described_class.toggle_checklist_item(checklist_item)
 
-      expect(checklist_item.checked?).to be(false)
+      expect(checklist_item.checked?).to be(true)
     end
 
     it "raises an error when the request fails" do

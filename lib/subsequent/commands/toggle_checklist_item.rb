@@ -11,6 +11,7 @@ module Subsequent::Commands::ToggleChecklistItem
       item = checklist_items[task_number - 1]
 
       Subsequent::TrelloClient.toggle_checklist_item(item)
+      item.state = item.checked? ? "incomplete" : "complete"
 
       state
     end

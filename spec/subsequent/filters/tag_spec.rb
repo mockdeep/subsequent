@@ -21,9 +21,19 @@ RSpec.describe Subsequent::Filters::Tag do
       matching = card.checklists.first
       card.checklists << card_with_checklist(name: "other").checklists.first
 
+      result = described_class.new("@tag").call([card])
+
+      expect(result.first.checklists).to eq([matching])
+    end
+
+    it "does not mutate the original card" do
+      card = card_with_checklist(name: "@tag stuff")
+      card.checklists << card_with_checklist(name: "other").checklists.first
+      original_checklists = card.checklists.dup
+
       described_class.new("@tag").call([card])
 
-      expect(card.checklists).to eq([matching])
+      expect(card.checklists).to eq(original_checklists)
     end
 
     it "excludes cards with no matching checklists" do
