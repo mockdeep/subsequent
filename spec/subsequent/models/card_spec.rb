@@ -29,6 +29,12 @@ RSpec.describe Subsequent::Models::Card do
       expect(card.tags.map(&:name)).to eq(["@tag"])
     end
 
+    it "returns empty array when card has no checklists" do
+      card = make_card(checklists: [])
+
+      expect(card.tags).to eq([])
+    end
+
     it "excludes tags from fully-checked checklists" do
       card = make_card_with_item.tap { _1.checklists.first.name = "@todo" }
       done = make_checklist(card:, id: "c1", name: "@done")

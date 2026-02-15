@@ -47,5 +47,22 @@ RSpec.describe Subsequent::DisplayHelpers do
       expect(linkify(string))
         .to eq("(#{link("http://example.com")}) is a great website")
     end
+
+    it "returns string unchanged when there are no URLs" do
+      expect(linkify("no links here")).to eq("no links here")
+    end
+
+    it "linkifies multiple URLs" do
+      string = "visit http://a.com and http://b.com today"
+
+      expect(linkify(string))
+        .to eq("visit (#{link("http://a.com")}) and (#{link("http://b.com")}) today")
+    end
+
+    it "linkifies a URL at the end of a string" do
+      string = "check out http://example.com"
+
+      expect(linkify(string)).to eq("check out (#{link("http://example.com")})")
+    end
   end
 end

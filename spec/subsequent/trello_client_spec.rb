@@ -50,6 +50,15 @@ RSpec.describe Subsequent::TrelloClient do
   end
 
   describe ".create_card" do
+    it "returns when the request is successful" do
+      post_url =
+        api_url("cards", idList: "test-list-id", name: "New Card", pos: "top")
+      stub_request(:post, post_url).to_return(status: 200)
+
+      expect { described_class.create_card(name: "New Card") }
+        .not_to raise_error
+    end
+
     it "raises an error when the request fails" do
       post_url =
         api_url("cards", idList: "test-list-id", name: "New Card", pos: "top")
@@ -61,6 +70,15 @@ RSpec.describe Subsequent::TrelloClient do
   end
 
   describe ".create_checklist" do
+    it "returns when the request is successful" do
+      name = "new checklist"
+      post_url = api_url("checklists", idCard: "1", name:, pos: "top")
+      stub_request(:post, post_url).to_return(status: 200)
+
+      expect { described_class.create_checklist(card: make_card, name:) }
+        .not_to raise_error
+    end
+
     it "raises an error when the request fails" do
       name = "new checklist"
       post_url = api_url("checklists", idCard: "1", name:, pos: "top")
@@ -112,6 +130,18 @@ RSpec.describe Subsequent::TrelloClient do
   end
 
   describe ".create_checklist_item" do
+    it "returns when the request is successful" do
+      checklist = make_checklist
+      name = "new item"
+
+      post_url =
+        api_url("checklists/#{checklist.id}/checkItems", name:, pos: "top")
+      stub_request(:post, post_url).to_return(status: 200)
+
+      expect { described_class.create_checklist_item(checklist:, name:) }
+        .not_to raise_error
+    end
+
     it "raises an error when the request fails" do
       checklist = make_checklist
       name = "new item"
