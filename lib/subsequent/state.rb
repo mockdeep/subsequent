@@ -2,11 +2,14 @@
 
 Subsequent::State =
   Data.define(
+    :browse_list_id,
+    :browse_page,
     :cards,
     :card,
     :checklist,
     :checklist_items,
     :filter,
+    :lists,
     :mode,
     :sort,
     :tag_page,
@@ -19,16 +22,24 @@ class Subsequent::State
   DEFAULT_MODE = Subsequent::Modes::Normal
 
   def initialize(
-    cards:, sort:, filter:, mode: DEFAULT_MODE, tag_page: 0, **args
+    cards:,
+    sort:,
+    filter:,
+    mode: DEFAULT_MODE,
+    tag_page: 0,
+    browse_list_id: nil,
+    browse_page: 0,
+    lists: [],
+    **args
   )
     cards = filter.call(cards)
-    card = derive_card(cards, sort)
+    card = derive_card(cards, sort, args)
     checklist = derive_checklist(card, args)
     checklist_items = derive_checklist_items(checklist, args)
 
     super(
-      cards:, filter:, sort:, card:, checklist:, checklist_items:, mode:,
-      tag_page:,
+      browse_list_id:, browse_page:, cards:, filter:, lists:, sort:,
+      card:, checklist:, checklist_items:, mode:, tag_page:,
     )
   end
 
@@ -54,6 +65,26 @@ class Subsequent::State
     end
   end
 
+  # return the lists formatted for the current page
+  def list_string
+    paginated_string(lists, browse_page)
+  end
+
+  # return the browse cards formatted for the current page
+  def browse_cards_string
+    paginated_string(cards, browse_page)
+  end
+
+  # return checklists with unchecked items for the current card
+  def browse_checklists
+    card.checklists.select(&:unchecked_items?)
+  end
+
+  # return the browse checklists formatted for the current page
+  def browse_checklists_string
+    paginated_string(browse_checklists, browse_page)
+  end
+
   # return the tags formatted for the current page
   def tag_string
     page_tags = tags.each_slice(9).to_a.fetch(tag_page, [])
@@ -64,8 +95,15 @@ class Subsequent::State
 
   private
 
-  def derive_card(cards, sort)
-    sort.call(cards) || Subsequent::Models::NullCard.new
+  def paginated_string(items, page)
+    page_items = items.each_slice(9).to_a.fetch(page, [])
+    page_items
+      .map.with_index { |item, index| "(#{cyan(index + 1)}) #{item.name}" }
+      .join("\n")
+  end
+
+  def derive_card(cards, sort, args)
+    args.fetch(:card) { sort.call(cards) || Subsequent::Models::NullCard.new }
   end
 
   def derive_checklist(card, args)

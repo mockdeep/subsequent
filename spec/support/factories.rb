@@ -9,6 +9,10 @@ module Factories
     { id: "456", name: "Checklist", pos: 1, check_items: [], **overrides }
   end
 
+  def api_list(**overrides)
+    { id: "list-1", name: "List One", **overrides }
+  end
+
   def api_item(**overrides)
     { id: "5", name: "Check Item", pos: 1, state: "incomplete", **overrides }
   end
@@ -23,6 +27,10 @@ module Factories
       short_url: "http://example.com",
       **overrides,
     )
+  end
+
+  def make_list(**overrides)
+    Subsequent::Models::List.new(id: "list-1", name: "List One", **overrides)
   end
 
   def make_checklist(**overrides)

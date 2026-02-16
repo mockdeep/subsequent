@@ -25,6 +25,38 @@ RSpec.describe Subsequent::TrelloClient do
       expect { described_class.fetch_cards }
         .to raise_error(Subsequent::Error, "Failed to fetch data from Trello")
     end
+
+    it "fetches cards from a specific list" do
+      url = api_url("lists/other-list/cards", checklists: "all")
+      stub_request(:get, url).to_return(body: [api_card].to_json)
+
+      cards = described_class.fetch_cards(list_id: "other-list")
+
+      expect(cards.size).to eq(1)
+      expect(cards.first.name).to eq("blah")
+    end
+  end
+
+  describe ".fetch_lists" do
+    def test_lists_url
+      api_url("boards/test-board-id/lists", filter: "open")
+    end
+
+    it "returns the lists" do
+      stub_request(:get, test_lists_url).to_return(body: [api_list].to_json)
+
+      lists = described_class.fetch_lists
+
+      expect(lists.size).to eq(1)
+      expect(lists.first.name).to eq("List One")
+    end
+
+    it "raises an error when the request fails" do
+      stub_request(:get, test_lists_url).to_return(status: 400)
+
+      expect { described_class.fetch_lists }
+        .to raise_error(Subsequent::Error, "Failed to fetch data from Trello")
+    end
   end
 
   describe ".update_checklist_item" do

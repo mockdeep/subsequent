@@ -44,5 +44,32 @@ RSpec.describe Subsequent::Commands::FetchData do
       expect(result.cards.size).to eq(1)
       expect(result.cards.first.name).to eq("blah")
     end
+
+    it "fetches from a specific list when list_id is given" do
+      url = api_url("lists/other-list/cards", checklists: "all")
+      stub_request(:get, url).to_return(body: [api_card].to_json)
+
+      result = described_class.call(
+        filter: Subsequent::Filters::None,
+        sort: Subsequent::Sorts::First,
+        list_id: "other-list",
+      )
+
+      expect(a_request(:get, url)).to have_been_made.once
+      expect(result.browse_list_id).to eq("other-list")
+    end
+
+    it "passes extra state args through" do
+      stub_request(:get, /cards/).to_return(body: [api_card].to_json)
+      lists = [make_list]
+
+      result = described_class.call(
+        filter: Subsequent::Filters::None,
+        sort: Subsequent::Sorts::First,
+        lists:,
+      )
+
+      expect(result.lists).to eq(lists)
+    end
   end
 end

@@ -7,6 +7,7 @@ end
 require_relative "models/card"
 require_relative "models/checklist"
 require_relative "models/checklist_item"
+require_relative "models/list"
 require_relative "models/null_card"
 require_relative "models/null_checklist"
 require_relative "models/tag"
