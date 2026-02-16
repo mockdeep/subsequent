@@ -22,12 +22,9 @@ class Subsequent::State
     cards:, sort:, filter:, mode: DEFAULT_MODE, tag_page: 0, **args
   )
     cards = filter.call(cards)
-    card = sort.call(cards) || Subsequent::Models::NullCard.new
-    checklist =
-      args.fetch(:checklist) { card.checklists.find(&:unchecked_items?) }
-    checklist ||= Subsequent::Models::NullChecklist.new
-    checklist_items =
-      args.fetch(:checklist_items) { checklist.unchecked_items.first(5) }
+    card = derive_card(cards, sort)
+    checklist = derive_checklist(card, args)
+    checklist_items = derive_checklist_items(checklist, args)
 
     super(
       cards:, filter:, sort:, card:, checklist:, checklist_items:, mode:,
@@ -66,6 +63,20 @@ class Subsequent::State
   end
 
   private
+
+  def derive_card(cards, sort)
+    sort.call(cards) || Subsequent::Models::NullCard.new
+  end
+
+  def derive_checklist(card, args)
+    checklist =
+      args.fetch(:checklist) { card.checklists.find(&:unchecked_items?) }
+    checklist || Subsequent::Models::NullChecklist.new
+  end
+
+  def derive_checklist_items(checklist, args)
+    args.fetch(:checklist_items) { checklist.unchecked_items.first(5) }
+  end
 
   def tagged_checklists
     pairs =
