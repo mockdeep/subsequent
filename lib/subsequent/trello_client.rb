@@ -8,13 +8,22 @@ module Subsequent::TrelloClient
   }.freeze
 
   class << self
-    # Fetches all cards from the Trello list
-    def fetch_cards
+    # Fetches all cards from the given or default list
+    def fetch_cards(list_id: self.list_id)
       path = "lists/#{list_id}/cards"
 
       cards_data = fetch_data(path, checklists: "all")
 
       cards_data.map { |data| Subsequent::Models::Card.new(**data) }
+    end
+
+    # Fetches all open lists from the board
+    def fetch_lists
+      path = "boards/#{board_id}/lists"
+
+      lists_data = fetch_data(path, filter: "open")
+
+      lists_data.map { |data| Subsequent::Models::List.new(**data) }
     end
 
     # updates the checklist item on Trello
@@ -95,7 +104,11 @@ module Subsequent::TrelloClient
     end
 
     def list_id
-      config.fetch(:trello_list_id)
+      config.fetch(:default_list_id)
+    end
+
+    def board_id
+      config.fetch(:default_board_id)
     end
 
     def fetch_data(path, **params)

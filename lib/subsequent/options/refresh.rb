@@ -14,9 +14,13 @@ module Subsequent::Options::Refresh
 
     # refresh the data
     def call(state, _text)
-      state => { filter:, sort: }
+      state => { filter:, sort:, browse_list_id:, lists: }
 
-      show_spinner { Subsequent::Commands::FetchData.call(filter:, sort:) }
+      show_spinner do
+        Subsequent::Commands::FetchData.call(
+          filter:, sort:, list_id: browse_list_id, lists:,
+        )
+      end
     end
   end
 end

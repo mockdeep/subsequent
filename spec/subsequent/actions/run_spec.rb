@@ -18,7 +18,8 @@ RSpec.describe Subsequent::Actions::Run do
       (#{cyan("1")}) toggle task
       (#{cyan("f")})ilter (#{cyan("s")})ort (#{cyan("o")})pen \
       (#{cyan("c")})ycle (#{cyan("n")})ew
-      (#{cyan("r")})efresh (#{cyan("a")})rchive (#{cyan("q")})uit
+      (#{cyan("r")})efresh (#{cyan("b")})rowse \
+      (#{cyan("a")})rchive (#{cyan("q")})uit
       #{yellow("Goodbye!")}
     OUTPUT
   end
@@ -29,7 +30,8 @@ RSpec.describe Subsequent::Actions::Run do
 
       (#{cyan("f")})ilter (#{cyan("s")})ort (#{cyan("o")})pen \
       (#{cyan("c")})ycle (#{cyan("n")})ew
-      (#{cyan("r")})efresh (#{cyan("a")})rchive (#{cyan("q")})uit
+      (#{cyan("r")})efresh (#{cyan("b")})rowse \
+      (#{cyan("a")})rchive (#{cyan("q")})uit
       #{yellow("Goodbye!")}
     OUTPUT
   end

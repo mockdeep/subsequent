@@ -118,6 +118,76 @@ RSpec.describe Subsequent::State do
     end
   end
 
+  describe "#browse_page" do
+    it "defaults to 0" do
+      expect(make_state.browse_page).to eq(0)
+    end
+  end
+
+  describe "#browse_list_id" do
+    it "defaults to nil" do
+      expect(make_state.browse_list_id).to be_nil
+    end
+  end
+
+  describe "#lists" do
+    it "defaults to empty array" do
+      expect(make_state.lists).to eq([])
+    end
+  end
+
+  describe "#list_string" do
+    it "formats indexed lists with cyan numbering" do
+      lists = [make_list(id: "1", name: "Todo")]
+      state = make_state(lists:)
+
+      expect(state.list_string).to eq("(\e[36m1\e[0m) Todo")
+    end
+
+    it "paginates lists in slices of 9" do
+      lists = 10.times.map { |i| make_list(id: i.to_s, name: "List#{i}") }
+      state = make_state(lists:, browse_page: 1)
+
+      expect(state.list_string).to include("(\e[36m1\e[0m) List9")
+    end
+
+    it "returns empty string for an out-of-range page" do
+      state = make_state(browse_page: 5)
+
+      expect(state.list_string).to eq("")
+    end
+  end
+
+  describe "#browse_cards_string" do
+    it "formats indexed cards with cyan numbering" do
+      card = make_card(name: "My Card")
+      state = make_state(cards: [card])
+
+      expect(state.browse_cards_string).to eq("(\e[36m1\e[0m) My Card")
+    end
+  end
+
+  describe "#browse_checklists" do
+    it "returns only checklists with unchecked items" do
+      active = api_checklist(name: "Active", check_items: [api_item])
+      done = api_checklist(id: "done", name: "Done")
+      card = make_card(checklists: [active, done])
+      state = make_state(cards: [card])
+
+      expect(state.browse_checklists.map(&:name)).to eq(["Active"])
+    end
+  end
+
+  describe "#browse_checklists_string" do
+    it "formats indexed checklists with cyan numbering" do
+      checklist = api_checklist(name: "My CL", check_items: [api_item])
+      card = make_card(checklists: [checklist])
+      state = make_state(cards: [card])
+
+      expect(state.browse_checklists_string).to eq("(\e[36m1\e[0m) My CL")
+    end
+  end
+
   def tagged_checklist(name)
     api_checklist(name:, check_items: [api_item])
   end

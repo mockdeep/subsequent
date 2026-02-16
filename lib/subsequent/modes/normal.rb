@@ -11,6 +11,7 @@ module Subsequent::Modes::Normal
   OPTIONS = [
     :toggle_checklist_item,
     :refresh,
+    :browse_mode,
     :filter_mode,
     :sort_mode,
     :cycle_mode,
@@ -28,7 +29,8 @@ module Subsequent::Modes::Normal
         #{checklist_item_commands(state)}
         (#{cyan("f")})ilter (#{cyan("s")})ort (#{cyan("o")})pen \
         (#{cyan("c")})ycle (#{cyan("n")})ew
-        (#{cyan("r")})efresh (#{cyan("a")})rchive (#{cyan("q")})uit
+        (#{cyan("r")})efresh (#{cyan("b")})rowse \
+        (#{cyan("a")})rchive (#{cyan("q")})uit
       COMMANDS
     end
 
