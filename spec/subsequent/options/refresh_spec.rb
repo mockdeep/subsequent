@@ -19,5 +19,63 @@ RSpec.describe Subsequent::Options::Refresh do
 
       expect(a_request(:get, /cards/)).to have_been_made.once
     end
+
+    it "preserves the selected card after refresh" do
+      target_card = api_card.merge(id: "target", name: "Target")
+      other_card = api_card.merge(id: "other", name: "Other")
+      stub_request(:get, /cards/)
+        .to_return(body: [other_card, target_card].to_json)
+
+      state = make_state(
+        cards: [make_card(id: "target"), make_card(id: "other")],
+        card: make_card(id: "target"),
+      )
+
+      result = described_class.call(state, "r")
+
+      expect(result.card.id).to eq("target")
+    end
+
+    it "preserves the selected checklist after refresh" do
+      checklist_data = api_checklist(
+        id: "cl-target",
+        check_items: [api_item],
+      )
+      card_data = api_card.merge(
+        id: "target",
+        checklists: [api_checklist(id: "cl-other"), checklist_data],
+      )
+      stub_request(:get, /cards/).to_return(body: [card_data].to_json)
+
+      card = make_card(
+        id: "target",
+        checklists: [api_checklist(id: "cl-other"), checklist_data],
+      )
+      checklist = card.checklists.find { |cl| cl.id == "cl-target" }
+
+      state = make_state(
+        cards: [card],
+        card:,
+        checklist:,
+        checklist_items: checklist.unchecked_items.first(5),
+      )
+
+      result = described_class.call(state, "r")
+
+      expect(result.checklist.id).to eq("cl-target")
+    end
+
+    it "falls back to default when card no longer exists" do
+      stub_request(:get, /cards/).to_return(body: [api_card].to_json)
+
+      state = make_state(
+        cards: [make_card(id: "gone")],
+        card: make_card(id: "gone"),
+      )
+
+      result = described_class.call(state, "r")
+
+      expect(result.card.id).to eq("123")
+    end
   end
 end

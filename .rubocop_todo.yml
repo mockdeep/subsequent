@@ -57,6 +57,7 @@ RSpec/ExampleLength:
     - 'spec/subsequent/models/checklist_item_spec.rb'
     - 'spec/subsequent/modes/add_checklist_item_spec.rb'
     - 'spec/subsequent/modes/filter_spec.rb'
+    - 'spec/subsequent/options/refresh_spec.rb'
     - 'spec/subsequent/trello_client_spec.rb'
 
 # Offense count: 10
