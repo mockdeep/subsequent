@@ -40,6 +40,11 @@ module Subsequent::DisplayHelpers
       .join(" ")
   end
 
+  # return OSC escape sequence to set terminal title
+  def terminal_title(string)
+    "\e]0;#{string}\a"
+  end
+
   # show spinner while block is running
   def show_spinner(&)
     Subsequent::Actions::Spin.call(&)

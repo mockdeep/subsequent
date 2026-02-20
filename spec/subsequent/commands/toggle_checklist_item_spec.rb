@@ -95,5 +95,18 @@ RSpec.describe Subsequent::Commands::ToggleChecklistItem do
 
       expect(rendered_output).to include("○")
     end
+
+    it "sets the terminal title during loading" do
+      state = make_state(cards: [make_card_with_item])
+      rendered_output = nil
+
+      allow(Subsequent::TrelloClient).to receive(:toggle_checklist_item) do
+        rendered_output = output.string.dup
+      end
+
+      described_class.call(state, "1")
+
+      expect(rendered_output).to include("\e]0;Card Name\a")
+    end
   end
 end

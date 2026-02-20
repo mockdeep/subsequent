@@ -37,11 +37,14 @@ module Subsequent::Commands::ToggleChecklistItem
       thread.value
     end
 
-    def render_loading_frame(loading_state)
+    def render_loading_frame(state)
+      state => { card: }
+
       clear_screen
-      output.puts loading_state.title
-      output.puts "=" * loading_state.card.name.size
-      output.puts loading_state.checklist_string
+      output.print(terminal_title(card.name))
+      output.puts(state.title)
+      output.puts("=" * card.name.size)
+      output.puts(state.checklist_string)
       sleep(0.1)
     end
 

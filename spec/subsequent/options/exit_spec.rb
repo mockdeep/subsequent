@@ -24,5 +24,11 @@ RSpec.describe Subsequent::Options::Exit do
       expect { described_class.call(make_state, "q") }
         .to raise_error(SystemExit)
     end
+
+    it "resets the terminal title" do
+      described_class.call(make_state, "q")
+    rescue SystemExit
+      expect(output.string).to include("\e]0;\a")
+    end
   end
 end
