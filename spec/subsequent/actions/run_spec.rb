@@ -19,7 +19,7 @@ RSpec.describe Subsequent::Actions::Run do
       (#{cyan("f")})ilter (#{cyan("s")})ort (#{cyan("o")})pen \
       (#{cyan("c")})ycle (#{cyan("n")})ew
       (#{cyan("r")})efresh (#{cyan("b")})rowse \
-      (#{cyan("a")})rchive (#{cyan("q")})uit
+      (#{cyan("a")})rchive (#{cyan("q")})uit#{terminal_title("")}
       #{yellow("Goodbye!")}
     OUTPUT
   end
@@ -31,7 +31,7 @@ RSpec.describe Subsequent::Actions::Run do
       (#{cyan("f")})ilter (#{cyan("s")})ort (#{cyan("o")})pen \
       (#{cyan("c")})ycle (#{cyan("n")})ew
       (#{cyan("r")})efresh (#{cyan("b")})rowse \
-      (#{cyan("a")})rchive (#{cyan("q")})uit
+      (#{cyan("a")})rchive (#{cyan("q")})uit#{terminal_title("")}
       #{yellow("Goodbye!")}
     OUTPUT
   end
@@ -42,8 +42,10 @@ RSpec.describe Subsequent::Actions::Run do
   end
 
   def no_unchecked_items_output(card_data, sort: "first")
+    name = card_data.fetch(:name)
+
     <<~OUTPUT.strip
-      #{card_data.fetch(:name)} - <no checklist> (#{link(card_data.fetch(:short_url))})
+      #{terminal_title(name)}#{name} - <no checklist> (#{link(card_data.fetch(:short_url))})
       ====
       No unchecked items, finish the card!
 
@@ -67,8 +69,9 @@ RSpec.describe Subsequent::Actions::Run do
 
     call
 
+    name = card_data.fetch(:name)
     expected_output = <<~OUTPUT.strip
-      #{card_data.fetch(:name)} - Checklist (#{link(card_data.fetch(:short_url))})
+      #{terminal_title(name)}#{name} - Checklist (#{link(card_data.fetch(:short_url))})
       ====
       1. ☐ #{green("Check Item")}
 
@@ -222,8 +225,9 @@ RSpec.describe Subsequent::Actions::Run do
 
     call
 
+    name = card_data.fetch(:name)
     expected_output = <<~OUTPUT.strip
-      #{card_data.fetch(:name)} - Checklist (#{link(card_data.fetch(:short_url))})
+      #{terminal_title(name)}#{name} - Checklist (#{link(card_data.fetch(:short_url))})
       ====
       1. ☐ #{green("Check Item")}
 

@@ -15,6 +15,7 @@ module Subsequent::Options::Exit
 
     # print a goodbye message and exit
     def call(_state, _text)
+      output.print(terminal_title(""))
       output.puts
       output.puts yellow("Goodbye!")
       exit

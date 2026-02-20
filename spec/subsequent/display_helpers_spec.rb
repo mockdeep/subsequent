@@ -40,6 +40,12 @@ RSpec.describe Subsequent::DisplayHelpers do
     end
   end
 
+  describe "#terminal_title" do
+    it "wraps string in OSC escape sequence" do
+      expect(terminal_title("text")).to eq("\e]0;text\a")
+    end
+  end
+
   describe "#linkify" do
     it "returns a string with links" do
       string = "http://example.com is a great website"

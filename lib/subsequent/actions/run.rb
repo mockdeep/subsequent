@@ -16,17 +16,27 @@ module Subsequent::Actions::Run
 
     def start_loop(state)
       loop do
-        state => { card:, mode: }
+        state => { mode: }
 
-        clear_screen
-        output.puts state.title
-        output.puts "=" * card.name.size
-        output.puts state.checklist_string
-
-        output.puts
+        render(state)
 
         state = mode.handle_input(state)
       end
+    end
+
+    def render(state)
+      state => { card: }
+
+      clear_screen
+      print_title(card.name)
+      output.puts(state.title)
+      output.puts("=" * card.name.size)
+      output.puts(state.checklist_string)
+      output.puts
+    end
+
+    def print_title(name)
+      output.print(terminal_title(name))
     end
 
     def initial_state
