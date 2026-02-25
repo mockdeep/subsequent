@@ -8,8 +8,6 @@ RSpec.describe Subsequent::Actions::Run do
     input.rewind
 
     described_class.call
-  rescue SystemExit
-    # prevent exiting prematurely
   end
 
   def checklist_end_boilerplate

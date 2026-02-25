@@ -40,6 +40,14 @@ Metrics/ParameterLists:
 # This cop supports unsafe autocorrection (--autocorrect-all).
 # Configuration parameters: SkipBlocks, EnforcedStyle, OnlyStaticConstants.
 # SupportedStyles: described_class, explicit
+RSpec/DescribeClass:
+  Exclude:
+    - 'spec/subsequent/integration/flows_spec.rb'
+
+# Offense count: 1
+# This cop supports unsafe autocorrection (--autocorrect-all).
+# Configuration parameters: SkipBlocks, EnforcedStyle, OnlyStaticConstants.
+# SupportedStyles: described_class, explicit
 RSpec/DescribedClass:
   Exclude:
     - 'spec/subsequent/modes/add_checklist_item_spec.rb'
@@ -54,6 +62,7 @@ RSpec/ExampleLength:
     - 'spec/subsequent/commands/fetch_data_spec.rb'
     - 'spec/subsequent/commands/open_links_spec.rb'
     - 'spec/subsequent/commands/toggle_checklist_item_spec.rb'
+    - 'spec/subsequent/integration/flows_spec.rb'
     - 'spec/subsequent/models/checklist_item_spec.rb'
     - 'spec/subsequent/modes/add_checklist_item_spec.rb'
     - 'spec/subsequent/modes/filter_spec.rb'
@@ -62,10 +71,17 @@ RSpec/ExampleLength:
 
 # Offense count: 10
 # Configuration parameters: Max.
+RSpec/MultipleMemoizedHelpers:
+  Exclude:
+    - 'spec/subsequent/integration/flows_spec.rb'
+
+# Offense count: 10
+# Configuration parameters: Max.
 RSpec/MultipleExpectations:
   Exclude:
     - 'spec/subsequent/actions/run_spec.rb'
     - 'spec/subsequent/commands/fetch_data_spec.rb'
     - 'spec/subsequent/commands/open_links_spec.rb'
+    - 'spec/subsequent/integration/flows_spec.rb'
     - 'spec/subsequent/models/checklist_item_spec.rb'
     - 'spec/subsequent/trello_client_spec.rb'

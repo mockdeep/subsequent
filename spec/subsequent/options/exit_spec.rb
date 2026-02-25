@@ -20,14 +20,12 @@ RSpec.describe Subsequent::Options::Exit do
   end
 
   describe ".call" do
-    it "exits the program" do
-      expect { described_class.call(make_state, "q") }
-        .to raise_error(SystemExit)
+    it "throws :quit" do
+      expect { described_class.call(make_state, "q") }.to throw_symbol(:quit)
     end
 
     it "resets the terminal title" do
-      described_class.call(make_state, "q")
-    rescue SystemExit
+      catch(:quit) { described_class.call(make_state, "q") }
       expect(output.string).to include("\e]0;\a")
     end
   end
