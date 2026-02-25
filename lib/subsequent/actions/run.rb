@@ -15,13 +15,13 @@ module Subsequent::Actions::Run
     private
 
     def start_loop(state)
-      loop do
-        state => { mode: }
+      catch(:quit) { loop { state = tick(state) } }
+    end
 
-        render(state)
+    def tick(state)
+      render(state)
 
-        state = mode.handle_input(state)
-      end
+      state.mode.handle_input(state)
     end
 
     def render(state)

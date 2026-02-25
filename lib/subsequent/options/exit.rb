@@ -18,7 +18,7 @@ module Subsequent::Options::Exit
       output.print(terminal_title(""))
       output.puts
       output.puts yellow("Goodbye!")
-      exit
+      throw(:quit)
     end
   end
 end
