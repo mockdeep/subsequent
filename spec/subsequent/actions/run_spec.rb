@@ -19,6 +19,7 @@ RSpec.describe Subsequent::Actions::Run do
       (#{cyan("r")})efresh (#{cyan("b")})rowse \
       (#{cyan("a")})rchive (#{cyan("q")})uit#{terminal_title("")}
       #{yellow("Goodbye!")}
+      \e[?25h
     OUTPUT
   end
 
@@ -31,6 +32,7 @@ RSpec.describe Subsequent::Actions::Run do
       (#{cyan("r")})efresh (#{cyan("b")})rowse \
       (#{cyan("a")})rchive (#{cyan("q")})uit#{terminal_title("")}
       #{yellow("Goodbye!")}
+      \e[?25h
     OUTPUT
   end
 

@@ -6,7 +6,9 @@ module Subsequent::Modes::Base
   def handle_input(state)
     output.print(commands(state))
 
+    show_cursor if self::INPUT_METHOD == :gets
     text = input.public_send(self::INPUT_METHOD).to_s.squish
+    hide_cursor if self::INPUT_METHOD == :gets
 
     option = options.find { |option| option.match?(state, text) }
     option ? option.call(state, text) : state

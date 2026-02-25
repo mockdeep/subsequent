@@ -45,6 +45,16 @@ module Subsequent::DisplayHelpers
     "\e]0;#{string}\a"
   end
 
+  # hide cursor
+  def hide_cursor
+    output.print("\e[?25l")
+  end
+
+  # show cursor
+  def show_cursor
+    output.print("\e[?25h")
+  end
+
   # show spinner while block is running
   def show_spinner(&)
     Subsequent::Actions::Spin.call(&)
