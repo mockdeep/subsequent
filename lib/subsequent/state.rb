@@ -2,6 +2,7 @@
 
 Subsequent::State =
   Data.define(
+    :browsed_checklist,
     :browse_list_id,
     :browse_page,
     :cards,
@@ -25,6 +26,7 @@ class Subsequent::State
     cards:,
     sort:,
     filter:,
+    browsed_checklist: false,
     mode: DEFAULT_MODE,
     tag_page: 0,
     browse_list_id: nil,
@@ -38,6 +40,7 @@ class Subsequent::State
     checklist_items = derive_checklist_items(checklist, args)
 
     super(
+      browsed_checklist:,
       browse_list_id:, browse_page:, cards:, filter:, lists:, sort:,
       card:, checklist:, checklist_items:, mode:, tag_page:,
     )

@@ -19,6 +19,7 @@ module Subsequent::Options::SelectChecklist
       checklist = state.browse_checklists.fetch(index)
 
       state.with(
+        browsed_checklist: true,
         checklist:,
         checklist_items: checklist.unchecked_items.first(5),
         mode: Subsequent::Modes::Normal,
