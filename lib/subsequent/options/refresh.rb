@@ -23,23 +23,32 @@ module Subsequent::Options::Refresh
           )
         end
 
-      restore_selection(new_state, state.card, state.checklist)
+      restore_selection(new_state, state)
     end
 
     private
 
-    def restore_selection(new_state, old_card, old_checklist)
-      card = find_by_id(new_state.cards, old_card)
+    def restore_selection(new_state, old_state)
+      card = find_by_id(new_state.cards, old_state.card)
       return new_state unless card
 
-      checklist = find_by_id(card.checklists, old_checklist)
-      return new_state.with(card:) unless checklist
+      checklist = restore_checklist(card, old_state)
 
       new_state.with(
+        browsed_checklist: old_state.browsed_checklist,
         card:,
         checklist:,
         checklist_items: checklist.unchecked_items.first(5),
       )
+    end
+
+    def restore_checklist(card, old_state)
+      if old_state.browsed_checklist
+        checklist = find_by_id(card.checklists, old_state.checklist)
+        checklist = nil unless checklist&.unchecked_items?
+      end
+      checklist || card.checklists.find(&:unchecked_items?) ||
+        Subsequent::Models::NullChecklist.new
     end
 
     def find_by_id(collection, old_item)
