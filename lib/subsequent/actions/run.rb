@@ -15,7 +15,10 @@ module Subsequent::Actions::Run
     private
 
     def start_loop(state)
+      hide_cursor
       catch(:quit) { loop { state = tick(state) } }
+    ensure
+      show_cursor
     end
 
     def tick(state)
