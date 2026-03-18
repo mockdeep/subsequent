@@ -91,7 +91,7 @@ RSpec.describe "integration flows" do
   end
 
   describe "browse flow" do
-    it "navigates through lists, cards, and checklists" do
+    it "browses lanes to switch list" do
       lists = [
         { id: "list-a", name: "Backlog" },
         { id: "list-b", name: "In Progress" },
@@ -103,16 +103,40 @@ RSpec.describe "integration flows" do
       expect(state.mode).to eq(Subsequent::Modes::Normal)
 
       state = tick(state, "b")
+      expect(state.mode).to eq(Subsequent::Modes::Browse)
+
+      state = tick(state, "l")
       expect(state.mode).to eq(Subsequent::Modes::SelectList)
       expect(state.lists.map(&:name)).to eq(["Backlog", "In Progress"])
 
       state = tick(state, "2")
-      expect(state.mode).to eq(Subsequent::Modes::SelectCard)
+      expect(state.mode).to eq(Subsequent::Modes::Normal)
       expect(state.browse_list_id).to eq("list-b")
-
-      state = tick(state, "1")
-      expect(state.mode).to eq(Subsequent::Modes::SelectChecklist)
       expect(state.card.name).to eq("First Card")
+    end
+
+    it "browses cards in the current list" do
+      state = initial_state([card_one, card_two])
+
+      state = tick(state, "b")
+      expect(state.mode).to eq(Subsequent::Modes::Browse)
+
+      state = tick(state, "c")
+      expect(state.mode).to eq(Subsequent::Modes::SelectCard)
+
+      state = tick(state, "2")
+      expect(state.mode).to eq(Subsequent::Modes::Normal)
+      expect(state.card.name).to eq("Second Card")
+    end
+
+    it "browses checklists on the current card" do
+      state = initial_state([card_one, card_two])
+
+      state = tick(state, "b")
+      expect(state.mode).to eq(Subsequent::Modes::Browse)
+
+      state = tick(state, "k")
+      expect(state.mode).to eq(Subsequent::Modes::SelectChecklist)
 
       state = tick(state, "2")
       expect(state.mode).to eq(Subsequent::Modes::Normal)
@@ -216,21 +240,17 @@ RSpec.describe "integration flows" do
 
   describe "refresh preserves browse state" do
     it "restores card and checklist after refresh" do
-      stub_lists([{ id: "list-a", name: "Backlog" }])
-      stub_browse_cards("list-a", [card_one, card_two])
-
       state = initial_state([card_one, card_two])
 
       state = tick(state, "b")
-      state = tick(state, "1")
-      state = tick(state, "1")
+      state = tick(state, "k")
       state = tick(state, "1")
 
       expect(state.card.name).to eq("First Card")
       expect(state.checklist.name).to eq("Checklist @dev")
       expect(state.browsed_checklist).to be(true)
 
-      refresh_url = api_url("lists/list-a/cards", checklists: "all")
+      refresh_url = api_url("lists/test-list-id/cards", checklists: "all")
       stub_request(:get, refresh_url)
         .to_return(body: [card_one, card_two].to_json)
 

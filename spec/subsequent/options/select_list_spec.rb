@@ -1,6 +1,17 @@
 # frozen_string_literal: true
 
 RSpec.describe Subsequent::Options::SelectList do
+  def card_with_checklist
+    checklist = api_checklist(check_items: [api_item])
+    {
+      id: "123",
+      name: "blah",
+      pos: 1,
+      short_url: "http://example.com",
+      checklists: [checklist],
+    }
+  end
+
   describe ".match?" do
     it "returns true when text is a number in list range" do
       state = make_state(lists: [make_list])
@@ -40,14 +51,14 @@ RSpec.describe Subsequent::Options::SelectList do
   end
 
   describe ".call" do
-    it "transitions to SelectCard mode" do
+    it "transitions to Normal mode" do
       state = make_state(lists: [make_list(id: "list-1")])
       stub_request(:get, %r{lists/list-1/cards})
         .to_return(body: [api_card].to_json)
 
       result = described_class.call(state, "1")
 
-      expect(result.mode).to eq(Subsequent::Modes::SelectCard)
+      expect(result.mode).to eq(Subsequent::Modes::Normal)
     end
 
     it "sets browse_list_id to the selected list" do
@@ -68,6 +79,24 @@ RSpec.describe Subsequent::Options::SelectList do
       result = described_class.call(state, "1")
 
       expect(result.cards.size).to eq(1)
+    end
+
+    it "auto-selects the first card via sort" do
+      state = make_state(lists: [make_list(id: "list-1")])
+      stub_request(:get, %r{lists/list-1/cards})
+        .to_return(body: [api_card].to_json)
+
+      result = described_class.call(state, "1")
+
+      expect(result.card.name).to eq("blah")
+    end
+
+    it "auto-selects the first unchecked checklist" do
+      state = make_state(lists: [make_list(id: "list-1")])
+      stub_request(:get, %r{lists/list-1/cards})
+        .to_return(body: [card_with_checklist].to_json)
+
+      expect(described_class.call(state, "1").checklist.name).to eq("Checklist")
     end
 
     it "offsets index by page" do

@@ -9,7 +9,7 @@ module Subsequent::Modes::SelectCard
   INPUT_METHOD = :getch
 
   OPTIONS = [
-    :cancel_browse, :select_card, :next_browse_page, :prev_browse_page,
+    :cancel, :select_card, :next_browse_page, :prev_browse_page,
   ].freeze
 
   class << self

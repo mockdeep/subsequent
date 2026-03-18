@@ -13,21 +13,26 @@ module Subsequent::Options::SelectCard
       ("1"..page_size.to_s).to_a.include?(text)
     end
 
-    # set the selected card, transition to SelectChecklist
+    # set the selected card, auto-select checklist, transition to Normal
     def call(state, text)
       index = (state.browse_page * 9) + Integer(text) - 1
       card = state.cards.fetch(index)
-
+      checklist = auto_checklist(card)
       state.with(
         card:,
-        checklist: Subsequent::Models::NullChecklist.new,
-        checklist_items: [],
-        mode: Subsequent::Modes::SelectChecklist,
+        checklist:,
+        checklist_items: checklist.unchecked_items.first(5),
+        mode: Subsequent::Modes::Normal,
         browse_page: 0,
       )
     end
 
     private
+
+    def auto_checklist(card)
+      card.checklists.find(&:unchecked_items?) ||
+        Subsequent::Models::NullChecklist.new
+    end
 
     def page_items(state)
       state.cards.each_slice(9).to_a.fetch(state.browse_page, [])
