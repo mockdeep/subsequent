@@ -33,13 +33,13 @@ RSpec.describe Subsequent::Modes::SelectChecklist do
   end
 
   describe ".handle_input" do
-    it "returns to SelectCard when input is q" do
+    it "returns to Normal when input is q" do
       state = make_state
       mock_input("q")
 
       result = described_class.handle_input(state)
 
-      expect(result.mode).to eq(Subsequent::Modes::SelectCard)
+      expect(result.mode).to eq(Subsequent::Modes::Normal)
     end
 
     it "returns state unchanged when input is something else" do

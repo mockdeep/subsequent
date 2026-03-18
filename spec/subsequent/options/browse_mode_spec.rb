@@ -12,20 +12,10 @@ RSpec.describe Subsequent::Options::BrowseMode do
   end
 
   describe ".call" do
-    it "enters SelectList mode" do
-      stub_request(:get, /lists/).to_return(body: [api_list].to_json)
-
+    it "enters Browse mode" do
       result = described_class.call(make_state, "b")
 
-      expect(result.mode).to eq(Subsequent::Modes::SelectList)
-    end
-
-    it "populates lists" do
-      stub_request(:get, /lists/).to_return(body: [api_list].to_json)
-
-      result = described_class.call(make_state, "b")
-
-      expect(result.lists.size).to eq(1)
+      expect(result.mode).to eq(Subsequent::Modes::Browse)
     end
   end
 end

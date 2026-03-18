@@ -28,13 +28,13 @@ RSpec.describe Subsequent::Options::SelectCard do
   end
 
   describe ".call" do
-    it "transitions to SelectChecklist mode" do
+    it "transitions to Normal mode" do
       card = make_card(checklists: [api_checklist])
       state = make_state(cards: [card])
 
       result = described_class.call(state, "1")
 
-      expect(result.mode).to eq(Subsequent::Modes::SelectChecklist)
+      expect(result.mode).to eq(Subsequent::Modes::Normal)
     end
 
     it "sets the selected card" do
@@ -42,6 +42,14 @@ RSpec.describe Subsequent::Options::SelectCard do
       state = make_state(cards: [card])
 
       expect(described_class.call(state, "1").card).to eq(card)
+    end
+
+    it "auto-selects the first unchecked checklist" do
+      checklist = api_checklist(check_items: [api_item])
+      card = make_card(checklists: [checklist])
+      state = make_state(cards: [card])
+
+      expect(described_class.call(state, "1").checklist.name).to eq("Checklist")
     end
 
     it "resets browse_page to 0" do

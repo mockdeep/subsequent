@@ -9,7 +9,7 @@ module Subsequent::Modes::SelectChecklist
   INPUT_METHOD = :getch
 
   OPTIONS = [
-    :cancel_to_cards, :select_checklist, :next_browse_page, :prev_browse_page,
+    :cancel, :select_checklist, :next_browse_page, :prev_browse_page,
   ].freeze
 
   class << self
