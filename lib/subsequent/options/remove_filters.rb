@@ -15,7 +15,9 @@ module Subsequent::Options::RemoveFilters
     # remove filters
     def call(state, _text)
       filter = Subsequent::Filters::None
-      Subsequent::Commands::FetchData.call(filter:, sort: state.sort)
+      Subsequent::Commands::FetchData.call(
+        filter:, sort: state.sort, list_id: state.browse_list_id,
+      )
     end
   end
 end
