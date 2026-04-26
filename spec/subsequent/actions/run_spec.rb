@@ -3,11 +3,11 @@
 RSpec.describe Subsequent::Actions::Run do
   include Subsequent::DisplayHelpers
 
-  def call
+  def call(*)
     input.print("q")
     input.rewind
 
-    described_class.call
+    described_class.call(*)
   end
 
   def checklist_end_boilerplate
@@ -354,6 +354,47 @@ RSpec.describe Subsequent::Actions::Run do
     call
 
     expect(a_request(:put, put_url)).not_to have_been_made
+  end
+
+  context "with --list" do
+    it "starts in the list that matches the given name" do
+      lists_url = api_url("boards/test-board-id/lists", filter: "open")
+      claude_list = api_list(id: "claude-list-id", name: "Claude")
+      stub_request(:get, lists_url).to_return(body: [claude_list].to_json)
+      cards_url = api_url("lists/claude-list-id/cards", checklists: "all")
+      stub_request(:get, cards_url).to_return(body: [api_card].to_json)
+
+      call("--list", "Claude")
+
+      expect(a_request(:get, cards_url)).to have_been_made
+    end
+
+    it "raises when no list matches the given name" do
+      lists_url = api_url("boards/test-board-id/lists", filter: "open")
+      stub_request(:get, lists_url)
+        .to_return(body: [api_list(name: "Other")].to_json)
+
+      expect { call("--list", "Claude") }
+        .to raise_error(Subsequent::Error, "Unknown list: Claude")
+    end
+  end
+
+  context "with --tag" do
+    it "filters cards by the given tag on startup" do
+      tagged = api_card
+      tagged.fetch(:checklists).first[:name] = "Checklist @keep"
+      tagged.fetch(:checklists).first[:check_items] =
+        [{ pos: 1, name: "Check Item", id: 5, state: "incomplete" }]
+      untagged = api_card.merge(id: "999", name: "Untagged")
+      untagged.fetch(:checklists).first[:check_items] =
+        [{ pos: 1, name: "Other", id: 6, state: "incomplete" }]
+      stub_cards([tagged, untagged])
+
+      call("--tag", "@keep")
+
+      expect(output.string).to include("blah - Checklist @keep")
+      expect(output.string).not_to include("Untagged")
+    end
   end
 
   it "does not clear screen when debug is enabled" do

@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "optparse"
+
 # module to allow configuring various Subsequent settings
 module Subsequent::Configuration
   class << self
@@ -10,6 +12,12 @@ module Subsequent::Configuration
 
     # allow setting the debug setting
     attr_writer :debug
+
+    # the list name to start in, set via --list on the command line
+    attr_accessor :list_name
+
+    # the tag to filter by on startup, set via --tag on the command line
+    attr_accessor :tag_name
 
     # return the input stream, $stdin by def ault
     def input
@@ -29,13 +37,24 @@ module Subsequent::Configuration
 
     # parse command line arguments
     def parse(args)
-      args.each do |arg|
-        case arg
-        when "--debug"
-          @debug = true
-        else
-          raise ArgumentError, "Unknown argument: #{arg}"
-        end
+      @list_name = nil
+      @tag_name = nil
+
+      remaining = option_parser.parse(args)
+      return if remaining.empty?
+
+      raise ArgumentError, "Unknown argument: #{remaining.first}"
+    rescue OptionParser::InvalidOption => e
+      raise ArgumentError, "Unknown argument: #{e.args.first}"
+    end
+
+    private
+
+    def option_parser
+      OptionParser.new do |opts|
+        opts.on("--debug") { @debug = true }
+        opts.on("--list LIST") { |value| @list_name = value }
+        opts.on("--tag TAG") { |value| @tag_name = value }
       end
     end
   end
