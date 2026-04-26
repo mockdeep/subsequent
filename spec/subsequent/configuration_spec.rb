@@ -44,9 +44,40 @@ RSpec.describe Subsequent::Configuration do
       described_class.debug = false
     end
 
-    it "raises an error for unknown arguments" do
+    it "sets list_name when --list is passed" do
+      described_class.parse(["--list", "Claude"])
+
+      expect(described_class.list_name).to eq("Claude")
+    end
+
+    it "sets tag_name when --tag is passed" do
+      described_class.parse(["--tag", "@my-tag"])
+
+      expect(described_class.tag_name).to eq("@my-tag")
+    end
+
+    it "clears prior list_name when called again without --list" do
+      described_class.parse(["--list", "Claude"])
+      described_class.parse([])
+
+      expect(described_class.list_name).to be_nil
+    end
+
+    it "clears prior tag_name when called again without --tag" do
+      described_class.parse(["--tag", "@my-tag"])
+      described_class.parse([])
+
+      expect(described_class.tag_name).to be_nil
+    end
+
+    it "raises an error for unknown flags" do
       expect { described_class.parse(["--unknown"]) }
         .to raise_error(ArgumentError, "Unknown argument: --unknown")
+    end
+
+    it "raises an error for unexpected positional arguments" do
+      expect { described_class.parse(["junk"]) }
+        .to raise_error(ArgumentError, "Unknown argument: junk")
     end
   end
 end

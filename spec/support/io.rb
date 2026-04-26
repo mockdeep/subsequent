@@ -22,5 +22,7 @@ RSpec.configure do |config|
     Subsequent::Actions::Spin::SPINNER.rewind
     Subsequent::Configuration.input = StringIO.new
     Subsequent::Configuration.output = StringIO.new
+    Subsequent::Configuration.list_name = nil
+    Subsequent::Configuration.tag_name = nil
   end
 end

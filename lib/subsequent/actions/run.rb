@@ -44,8 +44,32 @@ module Subsequent::Actions::Run
 
     def initial_state
       sort = Subsequent::Sorts::First
-      filter = Subsequent::Filters::None
-      show_spinner { Subsequent::Commands::FetchData.call(filter:, sort:) }
+      filter = build_filter
+
+      show_spinner do
+        list_id = resolve_list_id
+        Subsequent::Commands::FetchData.call(filter:, sort:, list_id:)
+      end
+    end
+
+    def build_filter
+      tag_name = Subsequent::Configuration.tag_name
+      return Subsequent::Filters::None unless tag_name
+
+      Subsequent::Filters::Tag.new(tag_name)
+    end
+
+    def resolve_list_id
+      list_name = Subsequent::Configuration.list_name
+      return unless list_name
+
+      list =
+        Subsequent::TrelloClient.fetch_lists.find do |candidate|
+          candidate.name == list_name
+        end
+      raise Subsequent::Error, "Unknown list: #{list_name}" unless list
+
+      list.id
     end
   end
 end
