@@ -20,7 +20,9 @@ module Subsequent::Options::AddFilter
       index = (state.tag_page * 9) + Integer(text) - 1
       tag = state.tags.fetch(index)
       filter = Subsequent::Filters::Tag.new(tag.name)
-      Subsequent::Commands::FetchData.call(filter:, sort: state.sort)
+      Subsequent::Commands::FetchData.call(
+        filter:, sort: state.sort, list_id: state.browse_list_id,
+      )
     end
 
     private

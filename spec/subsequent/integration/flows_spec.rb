@@ -238,6 +238,48 @@ RSpec.describe "integration flows" do
     end
   end
 
+  describe "filter within browsed lane" do
+    it "filters cards in the currently browsed lane" do
+      lane_card = {
+        id: "card-b",
+        name: "Lane Card",
+        pos: 1,
+        short_url: "http://example.com/b",
+        checklists: [
+          api_checklist(
+            id: "cl-b",
+            name: "Lane @dev",
+            pos: 1,
+            check_items: [item_a],
+          ),
+        ],
+      }
+
+      lists = [
+        { id: "list-a", name: "Backlog" },
+        { id: "list-b", name: "In Progress" },
+      ]
+      stub_lists(lists)
+      stub_browse_cards("list-b", [lane_card])
+
+      state = initial_state([card_one])
+
+      state = tick(state, "b")
+      state = tick(state, "l")
+      state = tick(state, "2")
+      expect(state.browse_list_id).to eq("list-b")
+      expect(state.card.name).to eq("Lane Card")
+
+      state = tick(state, "f")
+      expect(state.tags.map(&:name)).to eq(["@dev"])
+
+      state = tick(state, "1")
+      expect(state.filter).to eq(Subsequent::Filters::Tag.new("@dev"))
+      expect(state.browse_list_id).to eq("list-b")
+      expect(state.card.name).to eq("Lane Card")
+    end
+  end
+
   describe "refresh preserves browse state" do
     it "restores card and checklist after refresh" do
       state = initial_state([card_one, card_two])
