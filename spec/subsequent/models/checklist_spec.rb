@@ -78,4 +78,12 @@ RSpec.describe Subsequent::Models::Checklist do
       expect(checklist.items).to eq([])
     end
   end
+
+  describe '.from_data' do
+    it 'returns checklists_data
+        .map { |checklist_data| new(card_id:, **checklist_data) }
+        .sort' do
+      expect(Subsequent::Models::Checklist.from_data([], card_id: 'blah8')).to eq([])
+    end
+  end
 end
