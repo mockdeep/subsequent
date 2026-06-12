@@ -16,10 +16,22 @@ RSpec.describe Subsequent::Filters::Tag do
   end
 
   describe '#==' do
-    it 'returns other.respond_to?(:tag_name) && tag_name == other.tag_name' do
+    it 'returns other.respond_to?(:tag_name) when !(other.respond_to?(:tag_name))' do
+      tag = Subsequent::Filters::Tag.new('blah1')
+
+      expect(tag.==('blah2')).to eq(false)
+    end
+
+    it 'returns tag_name == other.tag_name when other.respond_to?(:tag_name)' do
       tag = Subsequent::Filters::Tag.new('blah1')
 
       expect(tag.==(Subsequent::Filters::Tag.new('blah1'))).to eq(true)
+    end
+
+    it 'returns tag_name == other.tag_name (false) when other.respond_to?(:tag_name)' do
+      tag = Subsequent::Filters::Tag.new('')
+
+      expect(tag.==(Subsequent::Filters::Tag.new('blah1'))).to eq(false)
     end
   end
 end
