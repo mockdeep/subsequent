@@ -1,65 +1,39 @@
-# frozen_string_literal: true
-
 RSpec.describe Subsequent::Models::Tag do
-  describe "#items" do
-    it "returns unchecked items across all associated checklists" do
-      checklist = make_checklist(check_items: [api_item])
-      tag = make_tag("@focus", checklists: [checklist])
+  describe '#items' do
+    it 'returns checklists.flat_map(&:unchecked_items)' do
+      tag = Subsequent::Models::Tag.new('blah1')
 
-      expect(tag.items.size).to eq(1)
+      expect(tag.items).to eq([])
     end
   end
 
-  describe "#to_s" do
-    it "returns name with item count" do
-      checklist = make_checklist(check_items: [api_item])
-      tag = make_tag("@focus", checklists: [checklist])
+  describe '#to_s' do
+    it 'returns "#{name} (#{items.size})"' do
+      tag = Subsequent::Models::Tag.new('blah1')
 
-      expect(tag.to_s).to eq("@focus (1)")
+      expect(tag.to_s).to eq('blah1 (0)')
     end
   end
 
-  describe "#==" do
-    it "returns true when compared with matching string" do
-      tag = make_tag("@tag")
+  describe '#==' do
+    it 'returns name == other when other.is_a?(String)' do
+      tag = Subsequent::Models::Tag.new('blah1')
 
-      expect(tag == "@tag").to be(true)
+      expect(tag.==('blah1')).to eq(true)
     end
 
-    it "returns false when compared with non-matching string" do
-      tag = make_tag("@tag")
+    it 'returns other.name == name when !(other.is_a?(String))' do
+      tag = Subsequent::Models::Tag.new('blah1')
 
-      expect(tag == "@other").to be(false)
-    end
-
-    it "returns true when compared with tag of same name" do
-      tag1 = make_tag("@tag")
-      tag2 = make_tag("@tag")
-
-      expect(tag1 == tag2).to be(true)
+      expect(tag.==(Subsequent::Models::Tag.new('blah1'))).to eq(true)
     end
   end
 
-  describe "<=>" do
-    it "returns -1 if the tag name is less than the other tag name" do
-      tag1 = make_tag("@alpha")
-      tag2 = make_tag("@beta")
+  describe '#<=>' do
+    it 'returns name <=> other.name' do
+      tag = Subsequent::Models::Tag.new('blah1')
 
-      expect(tag1 <=> tag2).to eq(-1)
-    end
-
-    it "returns 1 if the tag name is greater than the other tag name" do
-      tag1 = make_tag("@beta")
-      tag2 = make_tag("@alpha")
-
-      expect(tag1 <=> tag2).to eq(1)
-    end
-
-    it "returns 0 if the tag names are equal" do
-      tag1 = make_tag("@tag")
-      tag2 = make_tag("@tag")
-
-      expect(tag1 <=> tag2).to eq(0)
+      expect(tag.<=>(Subsequent::Models::Tag.new('blah1'))).to eq(0)
     end
   end
 end

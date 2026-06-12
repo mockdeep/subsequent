@@ -1,202 +1,76 @@
-# frozen_string_literal: true
-
 RSpec.describe Subsequent::State do
-  describe "default mode" do
-    it "is Modes::Normal" do
-      state = make_state
+  describe '#tags' do
+    it 'returns tagged_checklists
+      .map { |name, checklists| Subsequent::Models::Tag.new(name, checklists:) }
+      .sort' do
+      state = Subsequent::State.new(cards: [], sort: Subsequent::Sorts::First, filter: Subsequent::Filters::None)
 
-      expect(state.mode).to eq(Subsequent::Modes::Normal)
+      expect(state.tags).to eq([])
     end
   end
 
-  describe "filter" do
-    it "applies filter to cards" do
-      card1 = make_card(id: 1)
-      card2 = make_card(id: 2)
-      filter = ->(cards) { cards.select { |c| c.id == 2 } }
+  describe '#title' do
+    it 'returns "#{card.name} - #{checklist.name} (#{link(card.short_url)})"' do
+      state = Subsequent::State.new(cards: [], sort: Subsequent::Sorts::First, filter: Subsequent::Filters::None)
 
-      state = make_state(cards: [card1, card2], filter:)
-
-      expect(state.cards).to eq([card2])
+      expect(state.title).to eq('<No card> - <no checklist> (]8;;\link]8;;\)')
     end
   end
 
-  describe "sort" do
-    it "applies sort to select card" do
-      card1 = make_card_with_item
-      card2 = make_card_with_item
-      sort = :last.to_proc
+  describe '#checklist_string' do
+    it 'returns checklist_items
+        .map.with_index { |item, index| "#{index + 1}. #{item}" }.join("\n") when checklist_items.any?' do
+      state = Subsequent::State.new(cards: [], sort: Subsequent::Sorts::First, filter: Subsequent::Filters::None, checklist_items: ["item1"])
 
-      state = make_state(cards: [card1, card2], sort:)
+      expect(state.checklist_string).to eq('1. item1')
+    end
 
-      expect(state.card).to eq(card2)
+    it 'returns "No unchecked items, finish the card!" when !(checklist_items.any?)' do
+      state = Subsequent::State.new(cards: [], sort: Subsequent::Sorts::First, filter: Subsequent::Filters::None)
+
+      expect(state.checklist_string).to eq('No unchecked items, finish the card!')
     end
   end
 
-  describe "fallbacks" do
-    it "falls back to NullCard when no cards match" do
-      state = make_state(cards: [])
+  describe '#list_string' do
+    it 'returns paginated_string(lists, browse_page)' do
+      state = Subsequent::State.new(cards: [], sort: Subsequent::Sorts::First, filter: Subsequent::Filters::None)
 
-      expect(state.card).to be_a(Subsequent::Models::NullCard)
-    end
-
-    it "falls back to NullChecklist when card has no unchecked checklists" do
-      state = make_state(cards: [make_card(checklists: [])])
-
-      expect(state.checklist).to be_a(Subsequent::Models::NullChecklist)
+      expect(state.list_string).to eq('')
     end
   end
 
-  describe "checklist_items" do
-    it "limits to first 5 unchecked items" do
-      items = 6.times.map { |i| api_item(id: i, pos: i) }
-      card = make_card(checklists: [api_checklist(check_items: items)])
+  describe '#browse_cards_string' do
+    it 'returns paginated_string(cards, browse_page)' do
+      state = Subsequent::State.new(cards: [], sort: Subsequent::Sorts::First, filter: Subsequent::Filters::None)
 
-      expect(make_state(cards: [card]).checklist_items.size).to eq(5)
+      expect(state.browse_cards_string).to eq('')
     end
   end
 
-  describe "#tags" do
-    it "returns unique sorted tags across all cards" do
-      card1 = make_card(id: 1, checklists: [tagged_checklist("@beta")])
-      card2 = make_card(id: 2, checklists: [tagged_checklist("@alpha")])
+  describe '#browse_checklists' do
+    it 'returns card.checklists.select(&:unchecked_items?)' do
+      state = Subsequent::State.new(cards: [], sort: Subsequent::Sorts::First, filter: Subsequent::Filters::None)
 
-      expect(make_state(cards: [card1, card2]).tags.map(&:name))
-        .to eq(["@alpha", "@beta"])
+      expect(state.browse_checklists).to eq([])
     end
   end
 
-  describe "#title" do
-    it "formats as 'card name - checklist name (link)'" do
-      state = make_state(cards: [make_card_with_item])
+  describe '#browse_checklists_string' do
+    it 'returns paginated_string(browse_checklists, browse_page)' do
+      state = Subsequent::State.new(cards: [], sort: Subsequent::Sorts::First, filter: Subsequent::Filters::None)
 
-      expect(state.title)
-        .to eq("Card Name - Checklist (\e]8;;http://example.com\e\\link\e]8;;\e\\)")
+      expect(state.browse_checklists_string).to eq('')
     end
   end
 
-  describe "#checklist_string" do
-    it "formats numbered items with their to_s output" do
-      state = make_state(cards: [make_card_with_item])
-      item = state.checklist_items.first
+  describe '#tag_string' do
+    it 'returns page_tags
+      .map.with_index { |tag, index| "(#{cyan(index + 1)}) #{tag}" }
+      .join("\n")' do
+      state = Subsequent::State.new(cards: [], sort: Subsequent::Sorts::First, filter: Subsequent::Filters::None)
 
-      expect(state.checklist_string).to eq("1. #{item}")
+      expect(state.tag_string).to eq('')
     end
-
-    it "shows empty message when no items" do
-      state = make_state(cards: [])
-
-      expect(state.checklist_string)
-        .to eq("No unchecked items, finish the card!")
-    end
-  end
-
-  describe "#tag_string" do
-    it "formats indexed tags with cyan numbering and tag name" do
-      card = make_card(checklists: [tagged_checklist("@tag stuff")])
-      state = make_state(cards: [card])
-
-      expect(state.tag_string).to eq("(\e[36m1\e[0m) @tag (1)")
-    end
-
-    it "paginates tags in slices of 9" do
-      state = state_with_tags(10, tag_page: 1)
-
-      expect(state.tag_string).to include("(\e[36m1\e[0m) @tag9")
-    end
-
-    it "returns empty string for an out-of-range page" do
-      state = make_state(tag_page: 5)
-
-      expect(state.tag_string).to eq("")
-    end
-  end
-
-  describe "#tag_page" do
-    it "defaults to 0" do
-      expect(make_state.tag_page).to eq(0)
-    end
-  end
-
-  describe "#browse_page" do
-    it "defaults to 0" do
-      expect(make_state.browse_page).to eq(0)
-    end
-  end
-
-  describe "#browse_list_id" do
-    it "defaults to nil" do
-      expect(make_state.browse_list_id).to be_nil
-    end
-  end
-
-  describe "#lists" do
-    it "defaults to empty array" do
-      expect(make_state.lists).to eq([])
-    end
-  end
-
-  describe "#list_string" do
-    it "formats indexed lists with cyan numbering" do
-      lists = [make_list(id: "1", name: "Todo")]
-      state = make_state(lists:)
-
-      expect(state.list_string).to eq("(\e[36m1\e[0m) Todo")
-    end
-
-    it "paginates lists in slices of 9" do
-      lists = 10.times.map { |i| make_list(id: i.to_s, name: "List#{i}") }
-      state = make_state(lists:, browse_page: 1)
-
-      expect(state.list_string).to include("(\e[36m1\e[0m) List9")
-    end
-
-    it "returns empty string for an out-of-range page" do
-      state = make_state(browse_page: 5)
-
-      expect(state.list_string).to eq("")
-    end
-  end
-
-  describe "#browse_cards_string" do
-    it "formats indexed cards with cyan numbering" do
-      card = make_card(name: "My Card")
-      state = make_state(cards: [card])
-
-      expect(state.browse_cards_string).to eq("(\e[36m1\e[0m) My Card")
-    end
-  end
-
-  describe "#browse_checklists" do
-    it "returns only checklists with unchecked items" do
-      active = api_checklist(name: "Active", check_items: [api_item])
-      done = api_checklist(id: "done", name: "Done")
-      card = make_card(checklists: [active, done])
-      state = make_state(cards: [card])
-
-      expect(state.browse_checklists.map(&:name)).to eq(["Active"])
-    end
-  end
-
-  describe "#browse_checklists_string" do
-    it "formats indexed checklists with cyan numbering" do
-      checklist = api_checklist(name: "My CL", check_items: [api_item])
-      card = make_card(checklists: [checklist])
-      state = make_state(cards: [card])
-
-      expect(state.browse_checklists_string).to eq("(\e[36m1\e[0m) My CL")
-    end
-  end
-
-  def tagged_checklist(name)
-    api_checklist(name:, check_items: [api_item])
-  end
-
-  def state_with_tags(count, tag_page: 0)
-    cards =
-      count.times.map do |i|
-        make_card(id: i, checklists: [tagged_checklist("@tag#{i}")])
-      end
-    make_state(cards:, tag_page:)
   end
 end

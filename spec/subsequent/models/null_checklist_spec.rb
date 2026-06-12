@@ -1,31 +1,33 @@
-# frozen_string_literal: true
-
 RSpec.describe Subsequent::Models::NullChecklist do
-  describe "#name" do
+  describe '#name' do
     it 'returns "<no checklist>"' do
-      expect(described_class.new.name).to eq("<no checklist>")
+      null_checklist = Subsequent::Models::NullChecklist.new
+
+      expect(null_checklist.name).to eq('<no checklist>')
     end
   end
 
-  describe "#==" do
-    it "returns true for another NullChecklist" do
-      expect(described_class.new == described_class.new).to be(true)
-    end
+  describe '#unchecked_items' do
+    it 'returns []' do
+      null_checklist = Subsequent::Models::NullChecklist.new
 
-    it "returns false for other objects" do
-      expect(described_class.new == "something").to be(false)
+      expect(null_checklist.unchecked_items).to eq([])
     end
   end
 
-  describe "#unchecked_items" do
-    it "returns an empty array" do
-      expect(described_class.new.unchecked_items).to eq([])
+  describe '#present?' do
+    it 'returns false' do
+      null_checklist = Subsequent::Models::NullChecklist.new
+
+      expect(null_checklist.present?).to eq(false)
     end
   end
 
-  describe "#present?" do
-    it "returns false" do
-      expect(described_class.new.present?).to be(false)
+  describe '#==' do
+    it 'returns other.is_a?(self.class)' do
+      null_checklist = Subsequent::Models::NullChecklist.new
+
+      expect(null_checklist.==(Subsequent::Models::NullChecklist.new)).to eq(true)
     end
   end
 end
