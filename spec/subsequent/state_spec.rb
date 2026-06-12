@@ -98,6 +98,22 @@ RSpec.describe Subsequent::State do
     end
   end
 
+  describe '#card' do
+    it 'returns @card' do
+      state = Subsequent::State.new(cards: [], sort: Subsequent::Sorts::First, filter: Subsequent::Filters::None)
+
+      expect(state.card).to be_an_instance_of(Subsequent::Models::NullCard)
+    end
+  end
+
+  describe '#checklist' do
+    it 'returns @checklist' do
+      state = Subsequent::State.new(cards: [], sort: Subsequent::Sorts::First, filter: Subsequent::Filters::None)
+
+      expect(state.checklist).to eq(Subsequent::Models::NullChecklist.new)
+    end
+  end
+
   describe '#checklist_items' do
     it 'returns @checklist_items' do
       state = Subsequent::State.new(cards: [], sort: Subsequent::Sorts::First, filter: Subsequent::Filters::None)
