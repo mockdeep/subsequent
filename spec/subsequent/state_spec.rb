@@ -3,7 +3,7 @@ RSpec.describe Subsequent::State do
     it 'returns tagged_checklists
       .map { |name, checklists| Subsequent::Models::Tag.new(name, checklists:) }
       .sort' do
-      state = Subsequent::State.new(cards: [], sort: Subsequent::Sorts::First, filter: Subsequent::Filters::None)
+      state = Subsequent::State.new(cards: [Subsequent::Models::Card.new(id: 'blah1', name: 'blah2', pos: 'blah3', short_url: 'blah4', checklists: [])], sort: Subsequent::Sorts::First, filter: Subsequent::Filters::None)
 
       expect(state.tags).to eq([])
     end
@@ -34,17 +34,17 @@ RSpec.describe Subsequent::State do
 
   describe '#list_string' do
     it 'returns paginated_string(lists, browse_page)' do
-      state = Subsequent::State.new(cards: [], sort: Subsequent::Sorts::First, filter: Subsequent::Filters::None)
+      state = Subsequent::State.new(cards: [], sort: Subsequent::Sorts::First, filter: Subsequent::Filters::None, lists: [Subsequent::Models::List.new(id: 'blah1', name: 'blah2')])
 
-      expect(state.list_string).to eq('')
+      expect(state.list_string).to eq('([36m1[0m) blah2')
     end
   end
 
   describe '#browse_cards_string' do
     it 'returns paginated_string(cards, browse_page)' do
-      state = Subsequent::State.new(cards: [], sort: Subsequent::Sorts::First, filter: Subsequent::Filters::None)
+      state = Subsequent::State.new(cards: [Subsequent::Models::Card.new(id: 'blah1', name: 'blah2', pos: 'blah3', short_url: 'blah4', checklists: [])], sort: Subsequent::Sorts::First, filter: Subsequent::Filters::None)
 
-      expect(state.browse_cards_string).to eq('')
+      expect(state.browse_cards_string).to eq('([36m1[0m) blah2')
     end
   end
 
@@ -68,7 +68,7 @@ RSpec.describe Subsequent::State do
     it 'returns page_tags
       .map.with_index { |tag, index| "(#{cyan(index + 1)}) #{tag}" }
       .join("\n")' do
-      state = Subsequent::State.new(cards: [], sort: Subsequent::Sorts::First, filter: Subsequent::Filters::None)
+      state = Subsequent::State.new(cards: [Subsequent::Models::Card.new(id: 'blah1', name: 'blah2', pos: 'blah3', short_url: 'blah4', checklists: [])], sort: Subsequent::Sorts::First, filter: Subsequent::Filters::None)
 
       expect(state.tag_string).to eq('')
     end
