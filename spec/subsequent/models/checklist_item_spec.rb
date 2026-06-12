@@ -102,4 +102,12 @@ RSpec.describe Subsequent::Models::ChecklistItem do
       expect(checklist_item.to_s).to eq('☐ [32mblah3[0m')
     end
   end
+
+  describe '#loading_spinner' do
+    it 'returns @loading_spinner' do
+      checklist_item = Subsequent::Models::ChecklistItem.new(card_id: 'blah1', id: 'blah2', name: 'blah3', pos: 'blah4', state: 'blah5')
+
+      expect(checklist_item.loading_spinner).to eq(nil)
+    end
+  end
 end

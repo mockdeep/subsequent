@@ -73,4 +73,60 @@ RSpec.describe Subsequent::State do
       expect(state.tag_string).to eq('')
     end
   end
+
+  describe '#browsed_checklist' do
+    it 'returns @browsed_checklist' do
+      state = Subsequent::State.new(cards: [], sort: Subsequent::Sorts::First, filter: Subsequent::Filters::None)
+
+      expect(state.browsed_checklist).to eq(false)
+    end
+  end
+
+  describe '#browse_list_id' do
+    it 'returns @browse_list_id' do
+      state = Subsequent::State.new(cards: [], sort: Subsequent::Sorts::First, filter: Subsequent::Filters::None)
+
+      expect(state.browse_list_id).to eq(nil)
+    end
+  end
+
+  describe '#browse_page' do
+    it 'returns @browse_page' do
+      state = Subsequent::State.new(cards: [], sort: Subsequent::Sorts::First, filter: Subsequent::Filters::None)
+
+      expect(state.browse_page).to eq(0)
+    end
+  end
+
+  describe '#checklist_items' do
+    it 'returns @checklist_items' do
+      state = Subsequent::State.new(cards: [], sort: Subsequent::Sorts::First, filter: Subsequent::Filters::None)
+
+      expect(state.checklist_items).to eq([])
+    end
+  end
+
+  describe '#lists' do
+    it 'returns @lists' do
+      state = Subsequent::State.new(cards: [], sort: Subsequent::Sorts::First, filter: Subsequent::Filters::None)
+
+      expect(state.lists).to eq([])
+    end
+  end
+
+  describe '#mode' do
+    it 'returns @mode' do
+      state = Subsequent::State.new(cards: [], sort: Subsequent::Sorts::First, filter: Subsequent::Filters::None)
+
+      expect(state.mode).to eq(Subsequent::Modes::Normal)
+    end
+  end
+
+  describe '#tag_page' do
+    it 'returns @tag_page' do
+      state = Subsequent::State.new(cards: [], sort: Subsequent::Sorts::First, filter: Subsequent::Filters::None)
+
+      expect(state.tag_page).to eq(0)
+    end
+  end
 end

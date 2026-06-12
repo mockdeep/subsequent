@@ -70,4 +70,12 @@ RSpec.describe Subsequent::Models::Checklist do
       expect(checklist.tag_names).to eq(["@"])
     end
   end
+
+  describe '#items' do
+    it 'returns @items' do
+      checklist = Subsequent::Models::Checklist.new(card_id: 'blah1', id: 'blah2', name: 'blah3', pos: 'blah4')
+
+      expect(checklist.items).to eq([])
+    end
+  end
 end

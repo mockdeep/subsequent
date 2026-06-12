@@ -60,4 +60,12 @@ RSpec.describe Subsequent::Models::Tag do
       expect(tag.<=>(Subsequent::Models::Tag.new('blah1'))).to eq(1)
     end
   end
+
+  describe '#checklists' do
+    it 'returns @checklists' do
+      tag = Subsequent::Models::Tag.new('blah1')
+
+      expect(tag.checklists).to eq([])
+    end
+  end
 end
