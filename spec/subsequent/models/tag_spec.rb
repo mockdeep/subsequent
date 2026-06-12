@@ -19,13 +19,13 @@ RSpec.describe Subsequent::Models::Tag do
     it 'returns name == other when other.is_a?(String)' do
       tag = Subsequent::Models::Tag.new('blah1')
 
-      expect(tag.==('blah1')).to eq(true)
+      expect(tag.==('blah3')).to eq(false)
     end
 
-    it 'returns name == other (false) when other.is_a?(String)' do
-      tag = Subsequent::Models::Tag.new('')
+    it 'returns name == other (true) when other.is_a?(String)' do
+      tag = Subsequent::Models::Tag.new('blah3')
 
-      expect(tag.==('blah1')).to eq(false)
+      expect(tag.==('blah3')).to eq(true)
     end
 
     it 'returns other.name == name when !(other.is_a?(String))' do

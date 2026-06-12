@@ -9,7 +9,7 @@ RSpec.describe Subsequent::Filters::Tag do
 
       result << card.with(checklists: matching)
     end' do
-      tag = Subsequent::Filters::Tag.new([])
+      tag = Subsequent::Filters::Tag.new('blah1')
 
       expect(tag.call([Subsequent::Models::Card.new(id: 'blah1', name: 'blah2', pos: 'blah3', short_url: 'blah4', checklists: [])])).to eq([])
     end
