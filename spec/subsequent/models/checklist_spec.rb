@@ -5,6 +5,18 @@ RSpec.describe Subsequent::Models::Checklist do
 
       expect(checklist.<=>(Subsequent::Models::Checklist.new(card_id: 'blah1', id: 'blah2', name: 'blah3', pos: 'blah4'))).to eq(0)
     end
+
+    it 'returns pos <=> other.pos (-1)' do
+      checklist = Subsequent::Models::Checklist.new(card_id: 'blah1', id: 'blah2', name: 'blah3', pos: '')
+
+      expect(checklist.<=>(Subsequent::Models::Checklist.new(card_id: 'blah1', id: 'blah2', name: 'blah3', pos: 'blah4'))).to eq(-1)
+    end
+
+    it 'returns pos <=> other.pos (1)' do
+      checklist = Subsequent::Models::Checklist.new(card_id: 'blah1', id: 'blah2', name: 'blah3', pos: 'blah4x')
+
+      expect(checklist.<=>(Subsequent::Models::Checklist.new(card_id: 'blah1', id: 'blah2', name: 'blah3', pos: 'blah4'))).to eq(1)
+    end
   end
 
   describe '#unchecked_items?' do
@@ -28,6 +40,12 @@ RSpec.describe Subsequent::Models::Checklist do
       checklist = Subsequent::Models::Checklist.new(card_id: 'blah1', id: 'blah2', name: 'blah3', pos: 'blah4')
 
       expect(checklist.eql?(Subsequent::Models::Checklist.new(card_id: 'blah1', id: 'blah2', name: 'blah3', pos: 'blah4'))).to eq(true)
+    end
+
+    it 'returns id == other.id (false)' do
+      checklist = Subsequent::Models::Checklist.new(card_id: 'blah1', id: '', name: 'blah3', pos: 'blah4')
+
+      expect(checklist.eql?(Subsequent::Models::Checklist.new(card_id: 'blah1', id: 'blah2', name: 'blah3', pos: 'blah4'))).to eq(false)
     end
   end
 

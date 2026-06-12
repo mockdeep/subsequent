@@ -5,6 +5,18 @@ RSpec.describe Subsequent::Models::ChecklistItem do
 
       expect(checklist_item.<=>(Subsequent::Models::ChecklistItem.new(card_id: 'blah1', id: 'blah2', name: 'blah3', pos: 'blah4', state: 'blah5'))).to eq(0)
     end
+
+    it 'returns pos <=> other.pos (-1)' do
+      checklist_item = Subsequent::Models::ChecklistItem.new(card_id: 'blah1', id: 'blah2', name: 'blah3', pos: '', state: 'blah5')
+
+      expect(checklist_item.<=>(Subsequent::Models::ChecklistItem.new(card_id: 'blah1', id: 'blah2', name: 'blah3', pos: 'blah4', state: 'blah5'))).to eq(-1)
+    end
+
+    it 'returns pos <=> other.pos (1)' do
+      checklist_item = Subsequent::Models::ChecklistItem.new(card_id: 'blah1', id: 'blah2', name: 'blah3', pos: 'blah4x', state: 'blah5')
+
+      expect(checklist_item.<=>(Subsequent::Models::ChecklistItem.new(card_id: 'blah1', id: 'blah2', name: 'blah3', pos: 'blah4', state: 'blah5'))).to eq(1)
+    end
   end
 
   describe '#checked?' do
@@ -13,6 +25,12 @@ RSpec.describe Subsequent::Models::ChecklistItem do
 
       expect(checklist_item.checked?).to eq(false)
     end
+
+    it 'returns state == "complete" (true)' do
+      checklist_item = Subsequent::Models::ChecklistItem.new(card_id: 'blah1', id: 'blah2', name: 'blah3', pos: 'blah4', state: 'complete')
+
+      expect(checklist_item.checked?).to eq(true)
+    end
   end
 
   describe '#loading?' do
@@ -20,6 +38,12 @@ RSpec.describe Subsequent::Models::ChecklistItem do
       checklist_item = Subsequent::Models::ChecklistItem.new(card_id: 'blah1', id: 'blah2', name: 'blah3', pos: 'blah4', state: 'blah5')
 
       expect(checklist_item.loading?).to eq(false)
+    end
+
+    it 'returns state == "loading" (true)' do
+      checklist_item = Subsequent::Models::ChecklistItem.new(card_id: 'blah1', id: 'blah2', name: 'blah3', pos: 'blah4', state: 'loading')
+
+      expect(checklist_item.loading?).to eq(true)
     end
   end
 

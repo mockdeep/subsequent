@@ -29,5 +29,11 @@ RSpec.describe Subsequent::Models::NullChecklist do
 
       expect(null_checklist.==(Subsequent::Models::NullChecklist.new)).to eq(true)
     end
+
+    it 'returns other.is_a?(self.class) (false)' do
+      null_checklist = Subsequent::Models::NullChecklist.new
+
+      expect(null_checklist.==('blah1')).to eq(false)
+    end
   end
 end

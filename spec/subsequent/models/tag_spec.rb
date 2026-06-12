@@ -22,10 +22,22 @@ RSpec.describe Subsequent::Models::Tag do
       expect(tag.==('blah1')).to eq(true)
     end
 
+    it 'returns name == other (false) when other.is_a?(String)' do
+      tag = Subsequent::Models::Tag.new('')
+
+      expect(tag.==('blah1')).to eq(false)
+    end
+
     it 'returns other.name == name when !(other.is_a?(String))' do
       tag = Subsequent::Models::Tag.new('blah1')
 
       expect(tag.==(Subsequent::Models::Tag.new('blah1'))).to eq(true)
+    end
+
+    it 'returns other.name == name (false) when !(other.is_a?(String))' do
+      tag = Subsequent::Models::Tag.new('')
+
+      expect(tag.==(Subsequent::Models::Tag.new('blah1'))).to eq(false)
     end
   end
 
@@ -34,6 +46,18 @@ RSpec.describe Subsequent::Models::Tag do
       tag = Subsequent::Models::Tag.new('blah1')
 
       expect(tag.<=>(Subsequent::Models::Tag.new('blah1'))).to eq(0)
+    end
+
+    it 'returns name <=> other.name (-1)' do
+      tag = Subsequent::Models::Tag.new('')
+
+      expect(tag.<=>(Subsequent::Models::Tag.new('blah1'))).to eq(-1)
+    end
+
+    it 'returns name <=> other.name (1)' do
+      tag = Subsequent::Models::Tag.new('blah1x')
+
+      expect(tag.<=>(Subsequent::Models::Tag.new('blah1'))).to eq(1)
     end
   end
 end
