@@ -1,19 +1,9 @@
-# frozen_string_literal: true
-
 RSpec.describe Subsequent::Models::Card do
-  describe "#==" do
-    it "returns true for same id" do
-      card1 = make_card(id: 1)
-      card2 = make_card(id: 1)
+  describe '#checklists' do
+    it 'returns @checklists' do
+      card = Subsequent::Models::Card.new(id: 'blah1', name: 'blah2', pos: 'blah3', short_url: 'blah4', checklists: [{card_id: "blah1", id: "blah2", name: "blah3", pos: "blah4"}])
 
-      expect(card1).to eq(card2)
-    end
-
-    it "returns false for different id" do
-      card1 = make_card(id: 1)
-      card2 = make_card(id: 2)
-
-      expect(card1).not_to eq(card2)
+      expect(card.checklists).to eq([Subsequent::Models::Checklist.new(card_id: 'blah1', id: 'blah2', name: 'blah3', pos: 'blah4')])
     end
   end
 end
