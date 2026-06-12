@@ -3,24 +3,24 @@ RSpec.describe Subsequent::State do
     it 'returns tagged_checklists
       .map { |name, checklists| Subsequent::Models::Tag.new(name, checklists:) }
       .sort' do
-      state = Subsequent::State.new(cards: [Subsequent::Models::Card.new(id: 'blah1', name: 'blah2', pos: 'blah3', short_url: 'blah4', checklists: [])], sort: Subsequent::Sorts::First, filter: Subsequent::Filters::None)
+      state = Subsequent::State.new(cards: [Subsequent::Models::Card.new(id: 'blah1', name: 'blah2', pos: 'blah3', short_url: 'blah4', checklists: [{card_id: "blah1", id: "blah2", name: "blah3", pos: "blah4", check_items: [{card_id: "blah1", id: "blah2", name: "blah3", pos: "blah4", state: "blah5"}]}])], sort: Subsequent::Sorts::First, filter: Subsequent::Filters::None)
 
-      expect(state.tags).to eq([])
+      expect(state.tags).to eq([Subsequent::Models::Tag.new('<no tag>', checklists: [Subsequent::Models::Checklist.new(card_id: 'blah1', id: 'blah2', name: 'blah3', pos: 'blah4', check_items: [{card_id: "blah1", id: "blah2", name: "blah3", pos: "blah4", state: "blah5"}])])])
     end
   end
 
   describe '#title' do
     it 'returns "#{card.name} - #{checklist.name} (#{link(card.short_url)})"' do
-      state = Subsequent::State.new(cards: [], sort: Subsequent::Sorts::First, filter: Subsequent::Filters::None)
+      state = Subsequent::State.new(cards: [Subsequent::Models::Card.new(id: 'blah1', name: 'blah2', pos: 'blah3', short_url: 'blah4', checklists: [{card_id: "blah1", id: "blah2", name: "blah3", pos: "blah4", check_items: [{card_id: "blah1", id: "blah2", name: "blah3", pos: "blah4", state: "blah5"}]}])], sort: Subsequent::Sorts::First, filter: Subsequent::Filters::None)
 
-      expect(state.title).to eq('<No card> - <no checklist> (]8;;\link]8;;\)')
+      expect(state.title).to eq('blah2 - blah3 (]8;;blah4\link]8;;\)')
     end
   end
 
   describe '#checklist_string' do
     it 'returns checklist_items
         .map.with_index { |item, index| "#{index + 1}. #{item}" }.join("\n") when checklist_items.any?' do
-      state = Subsequent::State.new(cards: [], sort: Subsequent::Sorts::First, filter: Subsequent::Filters::None, checklist_items: ["item1"])
+      state = Subsequent::State.new(cards: [Subsequent::Models::Card.new(id: 'blah1', name: 'blah2', pos: 'blah3', short_url: 'blah4', checklists: [{card_id: "blah1", id: "blah2", name: "blah3", pos: "blah4", check_items: [{card_id: "blah1", id: "blah2", name: "blah3", pos: "blah4", state: "blah5"}]}])], sort: Subsequent::Sorts::First, filter: Subsequent::Filters::None, checklist_items: ["item1"])
 
       expect(state.checklist_string).to eq('1. item1')
     end
@@ -34,7 +34,7 @@ RSpec.describe Subsequent::State do
 
   describe '#list_string' do
     it 'returns paginated_string(lists, browse_page)' do
-      state = Subsequent::State.new(cards: [], sort: Subsequent::Sorts::First, filter: Subsequent::Filters::None, lists: [Subsequent::Models::List.new(id: 'blah1', name: 'blah2')])
+      state = Subsequent::State.new(cards: [Subsequent::Models::Card.new(id: 'blah1', name: 'blah2', pos: 'blah3', short_url: 'blah4', checklists: [{card_id: "blah1", id: "blah2", name: "blah3", pos: "blah4", check_items: [{card_id: "blah1", id: "blah2", name: "blah3", pos: "blah4", state: "blah5"}]}])], sort: Subsequent::Sorts::First, filter: Subsequent::Filters::None, lists: [Subsequent::Models::List.new(id: 'blah1', name: 'blah2')])
 
       expect(state.list_string).to eq('([36m1[0m) blah2')
     end
@@ -42,7 +42,7 @@ RSpec.describe Subsequent::State do
 
   describe '#browse_cards_string' do
     it 'returns paginated_string(cards, browse_page)' do
-      state = Subsequent::State.new(cards: [Subsequent::Models::Card.new(id: 'blah1', name: 'blah2', pos: 'blah3', short_url: 'blah4', checklists: [])], sort: Subsequent::Sorts::First, filter: Subsequent::Filters::None)
+      state = Subsequent::State.new(cards: [Subsequent::Models::Card.new(id: 'blah1', name: 'blah2', pos: 'blah3', short_url: 'blah4', checklists: [{card_id: "blah1", id: "blah2", name: "blah3", pos: "blah4", check_items: [{card_id: "blah1", id: "blah2", name: "blah3", pos: "blah4", state: "blah5"}]}])], sort: Subsequent::Sorts::First, filter: Subsequent::Filters::None)
 
       expect(state.browse_cards_string).to eq('([36m1[0m) blah2')
     end
@@ -50,17 +50,17 @@ RSpec.describe Subsequent::State do
 
   describe '#browse_checklists' do
     it 'returns card.checklists.select(&:unchecked_items?)' do
-      state = Subsequent::State.new(cards: [], sort: Subsequent::Sorts::First, filter: Subsequent::Filters::None)
+      state = Subsequent::State.new(cards: [Subsequent::Models::Card.new(id: 'blah1', name: 'blah2', pos: 'blah3', short_url: 'blah4', checklists: [{card_id: "blah1", id: "blah2", name: "blah3", pos: "blah4", check_items: [{card_id: "blah1", id: "blah2", name: "blah3", pos: "blah4", state: "blah5"}]}])], sort: Subsequent::Sorts::First, filter: Subsequent::Filters::None)
 
-      expect(state.browse_checklists).to eq([])
+      expect(state.browse_checklists).to eq([Subsequent::Models::Checklist.new(card_id: 'blah1', id: 'blah2', name: 'blah3', pos: 'blah4', check_items: [{card_id: "blah1", id: "blah2", name: "blah3", pos: "blah4", state: "blah5"}])])
     end
   end
 
   describe '#browse_checklists_string' do
     it 'returns paginated_string(browse_checklists, browse_page)' do
-      state = Subsequent::State.new(cards: [], sort: Subsequent::Sorts::First, filter: Subsequent::Filters::None)
+      state = Subsequent::State.new(cards: [Subsequent::Models::Card.new(id: 'blah1', name: 'blah2', pos: 'blah3', short_url: 'blah4', checklists: [{card_id: "blah1", id: "blah2", name: "blah3", pos: "blah4", check_items: [{card_id: "blah1", id: "blah2", name: "blah3", pos: "blah4", state: "blah5"}]}])], sort: Subsequent::Sorts::First, filter: Subsequent::Filters::None)
 
-      expect(state.browse_checklists_string).to eq('')
+      expect(state.browse_checklists_string).to eq('([36m1[0m) blah3')
     end
   end
 
@@ -68,15 +68,15 @@ RSpec.describe Subsequent::State do
     it 'returns page_tags
       .map.with_index { |tag, index| "(#{cyan(index + 1)}) #{tag}" }
       .join("\n")' do
-      state = Subsequent::State.new(cards: [Subsequent::Models::Card.new(id: 'blah1', name: 'blah2', pos: 'blah3', short_url: 'blah4', checklists: [])], sort: Subsequent::Sorts::First, filter: Subsequent::Filters::None)
+      state = Subsequent::State.new(cards: [Subsequent::Models::Card.new(id: 'blah1', name: 'blah2', pos: 'blah3', short_url: 'blah4', checklists: [{card_id: "blah1", id: "blah2", name: "blah3", pos: "blah4", check_items: [{card_id: "blah1", id: "blah2", name: "blah3", pos: "blah4", state: "blah5"}]}])], sort: Subsequent::Sorts::First, filter: Subsequent::Filters::None)
 
-      expect(state.tag_string).to eq('')
+      expect(state.tag_string).to eq('([36m1[0m) <no tag> (1)')
     end
   end
 
   describe '#browsed_checklist' do
     it 'returns @browsed_checklist' do
-      state = Subsequent::State.new(cards: [], sort: Subsequent::Sorts::First, filter: Subsequent::Filters::None)
+      state = Subsequent::State.new(cards: [Subsequent::Models::Card.new(id: 'blah1', name: 'blah2', pos: 'blah3', short_url: 'blah4', checklists: [{card_id: "blah1", id: "blah2", name: "blah3", pos: "blah4", check_items: [{card_id: "blah1", id: "blah2", name: "blah3", pos: "blah4", state: "blah5"}]}])], sort: Subsequent::Sorts::First, filter: Subsequent::Filters::None)
 
       expect(state.browsed_checklist).to eq(false)
     end
@@ -84,7 +84,7 @@ RSpec.describe Subsequent::State do
 
   describe '#browse_list_id' do
     it 'returns @browse_list_id' do
-      state = Subsequent::State.new(cards: [], sort: Subsequent::Sorts::First, filter: Subsequent::Filters::None)
+      state = Subsequent::State.new(cards: [Subsequent::Models::Card.new(id: 'blah1', name: 'blah2', pos: 'blah3', short_url: 'blah4', checklists: [{card_id: "blah1", id: "blah2", name: "blah3", pos: "blah4", check_items: [{card_id: "blah1", id: "blah2", name: "blah3", pos: "blah4", state: "blah5"}]}])], sort: Subsequent::Sorts::First, filter: Subsequent::Filters::None)
 
       expect(state.browse_list_id).to eq(nil)
     end
@@ -92,7 +92,7 @@ RSpec.describe Subsequent::State do
 
   describe '#browse_page' do
     it 'returns @browse_page' do
-      state = Subsequent::State.new(cards: [], sort: Subsequent::Sorts::First, filter: Subsequent::Filters::None)
+      state = Subsequent::State.new(cards: [Subsequent::Models::Card.new(id: 'blah1', name: 'blah2', pos: 'blah3', short_url: 'blah4', checklists: [{card_id: "blah1", id: "blah2", name: "blah3", pos: "blah4", check_items: [{card_id: "blah1", id: "blah2", name: "blah3", pos: "blah4", state: "blah5"}]}])], sort: Subsequent::Sorts::First, filter: Subsequent::Filters::None)
 
       expect(state.browse_page).to eq(0)
     end
@@ -100,31 +100,31 @@ RSpec.describe Subsequent::State do
 
   describe '#card' do
     it 'returns @card' do
-      state = Subsequent::State.new(cards: [], sort: Subsequent::Sorts::First, filter: Subsequent::Filters::None)
+      state = Subsequent::State.new(cards: [Subsequent::Models::Card.new(id: 'blah1', name: 'blah2', pos: 'blah3', short_url: 'blah4', checklists: [{card_id: "blah1", id: "blah2", name: "blah3", pos: "blah4", check_items: [{card_id: "blah1", id: "blah2", name: "blah3", pos: "blah4", state: "blah5"}]}])], sort: Subsequent::Sorts::First, filter: Subsequent::Filters::None)
 
-      expect(state.card).to be_an_instance_of(Subsequent::Models::NullCard)
+      expect(state.card).to eq(Subsequent::Models::Card.new(id: 'blah1', name: 'blah2', pos: 'blah3', short_url: 'blah4', checklists: [{card_id: "blah1", id: "blah2", name: "blah3", pos: "blah4", check_items: [{card_id: "blah1", id: "blah2", name: "blah3", pos: "blah4", state: "blah5"}]}]))
     end
   end
 
   describe '#checklist' do
     it 'returns @checklist' do
-      state = Subsequent::State.new(cards: [], sort: Subsequent::Sorts::First, filter: Subsequent::Filters::None)
+      state = Subsequent::State.new(cards: [Subsequent::Models::Card.new(id: 'blah1', name: 'blah2', pos: 'blah3', short_url: 'blah4', checklists: [{card_id: "blah1", id: "blah2", name: "blah3", pos: "blah4", check_items: [{card_id: "blah1", id: "blah2", name: "blah3", pos: "blah4", state: "blah5"}]}])], sort: Subsequent::Sorts::First, filter: Subsequent::Filters::None)
 
-      expect(state.checklist).to eq(Subsequent::Models::NullChecklist.new)
+      expect(state.checklist).to eq(Subsequent::Models::Checklist.new(card_id: 'blah1', id: 'blah2', name: 'blah3', pos: 'blah4', check_items: [{card_id: "blah1", id: "blah2", name: "blah3", pos: "blah4", state: "blah5"}]))
     end
   end
 
   describe '#checklist_items' do
     it 'returns @checklist_items' do
-      state = Subsequent::State.new(cards: [], sort: Subsequent::Sorts::First, filter: Subsequent::Filters::None)
+      state = Subsequent::State.new(cards: [Subsequent::Models::Card.new(id: 'blah1', name: 'blah2', pos: 'blah3', short_url: 'blah4', checklists: [{card_id: "blah1", id: "blah2", name: "blah3", pos: "blah4", check_items: [{card_id: "blah1", id: "blah2", name: "blah3", pos: "blah4", state: "blah5"}]}])], sort: Subsequent::Sorts::First, filter: Subsequent::Filters::None)
 
-      expect(state.checklist_items).to eq([])
+      expect(state.checklist_items).to eq([Subsequent::Models::ChecklistItem.new(card_id: 'blah1', id: 'blah2', name: 'blah3', pos: 'blah4', state: 'blah5')])
     end
   end
 
   describe '#lists' do
     it 'returns @lists' do
-      state = Subsequent::State.new(cards: [], sort: Subsequent::Sorts::First, filter: Subsequent::Filters::None)
+      state = Subsequent::State.new(cards: [Subsequent::Models::Card.new(id: 'blah1', name: 'blah2', pos: 'blah3', short_url: 'blah4', checklists: [{card_id: "blah1", id: "blah2", name: "blah3", pos: "blah4", check_items: [{card_id: "blah1", id: "blah2", name: "blah3", pos: "blah4", state: "blah5"}]}])], sort: Subsequent::Sorts::First, filter: Subsequent::Filters::None)
 
       expect(state.lists).to eq([])
     end
@@ -132,7 +132,7 @@ RSpec.describe Subsequent::State do
 
   describe '#mode' do
     it 'returns @mode' do
-      state = Subsequent::State.new(cards: [], sort: Subsequent::Sorts::First, filter: Subsequent::Filters::None)
+      state = Subsequent::State.new(cards: [Subsequent::Models::Card.new(id: 'blah1', name: 'blah2', pos: 'blah3', short_url: 'blah4', checklists: [{card_id: "blah1", id: "blah2", name: "blah3", pos: "blah4", check_items: [{card_id: "blah1", id: "blah2", name: "blah3", pos: "blah4", state: "blah5"}]}])], sort: Subsequent::Sorts::First, filter: Subsequent::Filters::None)
 
       expect(state.mode).to eq(Subsequent::Modes::Normal)
     end
@@ -140,7 +140,7 @@ RSpec.describe Subsequent::State do
 
   describe '#tag_page' do
     it 'returns @tag_page' do
-      state = Subsequent::State.new(cards: [], sort: Subsequent::Sorts::First, filter: Subsequent::Filters::None)
+      state = Subsequent::State.new(cards: [Subsequent::Models::Card.new(id: 'blah1', name: 'blah2', pos: 'blah3', short_url: 'blah4', checklists: [{card_id: "blah1", id: "blah2", name: "blah3", pos: "blah4", check_items: [{card_id: "blah1", id: "blah2", name: "blah3", pos: "blah4", state: "blah5"}]}])], sort: Subsequent::Sorts::First, filter: Subsequent::Filters::None)
 
       expect(state.tag_page).to eq(0)
     end

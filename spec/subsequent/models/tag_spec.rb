@@ -1,17 +1,17 @@
 RSpec.describe Subsequent::Models::Tag do
   describe '#items' do
     it 'returns checklists.flat_map(&:unchecked_items)' do
-      tag = Subsequent::Models::Tag.new('blah1', checklists: [Subsequent::Models::Checklist.new(card_id: 'blah1', id: 'blah2', name: 'blah3', pos: 'blah4')])
+      tag = Subsequent::Models::Tag.new('blah1', checklists: [Subsequent::Models::Checklist.new(card_id: 'blah1', id: 'blah2', name: 'blah3', pos: 'blah4', check_items: [{card_id: "blah1", id: "blah2", name: "blah3", pos: "blah4", state: "blah5"}])])
 
-      expect(tag.items).to eq([])
+      expect(tag.items).to eq([Subsequent::Models::ChecklistItem.new(card_id: 'blah1', id: 'blah2', name: 'blah3', pos: 'blah4', state: 'blah5')])
     end
   end
 
   describe '#to_s' do
     it 'returns "#{name} (#{items.size})"' do
-      tag = Subsequent::Models::Tag.new('blah1', checklists: [Subsequent::Models::Checklist.new(card_id: 'blah1', id: 'blah2', name: 'blah3', pos: 'blah4')])
+      tag = Subsequent::Models::Tag.new('blah1', checklists: [Subsequent::Models::Checklist.new(card_id: 'blah1', id: 'blah2', name: 'blah3', pos: 'blah4', check_items: [{card_id: "blah1", id: "blah2", name: "blah3", pos: "blah4", state: "blah5"}])])
 
-      expect(tag.to_s).to eq('blah1 (0)')
+      expect(tag.to_s).to eq('blah1 (1)')
     end
   end
 

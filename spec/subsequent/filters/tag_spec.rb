@@ -11,7 +11,7 @@ RSpec.describe Subsequent::Filters::Tag do
     end' do
       tag = Subsequent::Filters::Tag.new('blah1')
 
-      expect(tag.call([Subsequent::Models::Card.new(id: 'blah1', name: 'blah2', pos: 'blah3', short_url: 'blah4', checklists: [])])).to eq([])
+      expect(tag.call([Subsequent::Models::Card.new(id: 'blah1', name: 'blah2', pos: 'blah3', short_url: 'blah4', checklists: [{card_id: "blah1", id: "blah2", name: "blah3", pos: "blah4", check_items: [{card_id: "blah1", id: "blah2", name: "blah3", pos: "blah4", state: "blah5"}]}])])).to eq([])
     end
   end
 
