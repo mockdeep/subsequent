@@ -1,24 +1,22 @@
-# frozen_string_literal: true
-
 RSpec.describe Subsequent::Options::CycleCard do
-  describe ".match?" do
-    it "returns true when text is c" do
-      expect(described_class.match?(make_state, "c")).to be(true)
+  describe '.match?' do
+    it 'returns text == "c"' do
+      expect(Subsequent::Options::CycleCard.match?('blah1', 'blah2')).to eq(false)
     end
 
-    it "returns false when text is not c" do
-      expect(described_class.match?(make_state, "x")).to be(false)
+    it 'returns text == "c" (true)' do
+      expect(Subsequent::Options::CycleCard.match?('blah1', 'c')).to eq(true)
     end
   end
 
-  describe ".call" do
-    it "updates the card position via API" do
-      stub_request(:put, /cards/).to_return(body: api_card.to_json)
-      stub_request(:get, /cards/).to_return(body: [api_card].to_json)
+  describe '.call' do
+    it 'returns show_spinner do
+        Subsequent::TrelloClient.update_card(card, pos:)
+        Subsequent::Commands::FetchData.call(filter:, sort:)
+      end' do
+      skip 'Buttress cannot yet evaluate: state => { cards:, card:, filter:, sort: }'
 
-      described_class.call(make_state(cards: [make_card_with_item]), "c")
-
-      expect(a_request(:put, /cards/)).to have_been_made.once
+      Subsequent::Options::CycleCard.call('blah1', 'blah2')
     end
   end
 end

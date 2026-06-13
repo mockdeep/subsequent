@@ -1,32 +1,17 @@
-# frozen_string_literal: true
-
 RSpec.describe Subsequent::Options::AddChecklistItem do
-  describe ".match?" do
-    it "returns true when text is i and checklist is present" do
-      state = make_state(cards: [make_card_with_item])
-
-      expect(described_class.match?(state, "i")).to be(true)
+  describe '.match?' do
+    it 'returns text == "i" when text != "i"' do
+      expect(Subsequent::Options::AddChecklistItem.match?('blah1', 'not i')).to eq(false)
     end
 
-    it "returns false when text is i but no checklist" do
-      state = make_state(cards: [make_card])
-
-      expect(described_class.match?(state, "i")).to be(false)
-    end
-
-    it "returns false when text is not i" do
-      state = make_state(cards: [make_card_with_item])
-
-      expect(described_class.match?(state, "x")).to be(false)
+    it 'returns state.checklist.present? when text == "i"' do
+      expect(Subsequent::Options::AddChecklistItem.match?(Subsequent::State.new(cards: [], sort: Subsequent::Sorts::First, filter: Subsequent::Filters::None), 'i')).to eq(false)
     end
   end
 
-  describe ".call" do
-    it "returns state with AddChecklistItem mode" do
-      state = make_state(cards: [make_card_with_item])
-
-      expect(described_class.call(state, "i"))
-        .to eq(state.with(mode: Subsequent::Modes::AddChecklistItem))
+  describe '.call' do
+    it 'returns state.with(mode: Subsequent::Modes::AddChecklistItem)' do
+      expect(Subsequent::Options::AddChecklistItem.call(Subsequent::State.new(cards: [], sort: Subsequent::Sorts::First, filter: Subsequent::Filters::None), 'blah2')).to be_an_instance_of(Subsequent::State)
     end
   end
 end

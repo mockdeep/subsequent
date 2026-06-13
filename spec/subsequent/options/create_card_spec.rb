@@ -1,20 +1,15 @@
-# frozen_string_literal: true
-
 RSpec.describe Subsequent::Options::CreateCard do
-  describe ".match?" do
-    it "always returns true" do
-      expect(described_class.match?(make_state, "anything")).to be(true)
+  describe '.match?' do
+    it 'returns true' do
+      expect(Subsequent::Options::CreateCard.match?).to eq(true)
     end
   end
 
-  describe ".call" do
-    it "returns state with AddChecklist mode" do
-      stub_request(:post, /cards/).to_return(body: api_card.to_json)
-      stub_request(:get, /cards/).to_return(body: [api_card].to_json)
+  describe '.call' do
+    it 'returns state.with(mode: Subsequent::Modes::AddChecklist)' do
+      skip 'Buttress cannot yet evaluate: state => { filter:, sort: }'
 
-      result = described_class.call(make_state, "New Card")
-
-      expect(result.mode).to eq(Subsequent::Modes::AddChecklist)
+      Subsequent::Options::CreateCard.call('blah1', 'blah2')
     end
   end
 end

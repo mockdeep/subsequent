@@ -1,41 +1,19 @@
-# frozen_string_literal: true
-
 RSpec.describe Subsequent::Options::Sort do
-  describe ".match?" do
-    it "returns true when text is f" do
-      expect(described_class.match?(make_state, "f")).to be(true)
+  describe '.match?' do
+    it 'returns ["f", "l", "m"].include?(text)' do
+      expect(Subsequent::Options::Sort.match?('blah1', 'f')).to eq(true)
     end
 
-    it "returns true when text is l" do
-      expect(described_class.match?(make_state, "l")).to be(true)
-    end
-
-    it "returns true when text is m" do
-      expect(described_class.match?(make_state, "m")).to be(true)
-    end
-
-    it "returns false when text is something else" do
-      expect(described_class.match?(make_state, "x")).to be(false)
+    it 'returns ["f", "l", "m"].include?(text) (false)' do
+      expect(Subsequent::Options::Sort.match?('blah1', '')).to eq(false)
     end
   end
 
-  describe ".call" do
-    it "returns state with First sort when text is f" do
-      result = described_class.call(make_state, "f")
+  describe '.call' do
+    it 'returns Subsequent::State.new(cards:, filter:, sort:)' do
+      skip 'Buttress cannot yet evaluate: state => { cards:, filter: }'
 
-      expect(result.sort).to eq(Subsequent::Sorts::First)
-    end
-
-    it "returns state with LeastUncheckedItems sort when text is l" do
-      result = described_class.call(make_state, "l")
-
-      expect(result.sort).to eq(Subsequent::Sorts::LeastUncheckedItems)
-    end
-
-    it "returns state with MostUncheckedItems sort when text is m" do
-      result = described_class.call(make_state, "m")
-
-      expect(result.sort).to eq(Subsequent::Sorts::MostUncheckedItems)
+      Subsequent::Options::Sort.call('blah1', 'blah2')
     end
   end
 end

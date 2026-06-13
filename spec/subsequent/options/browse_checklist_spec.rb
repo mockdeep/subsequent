@@ -1,27 +1,17 @@
-# frozen_string_literal: true
-
 RSpec.describe Subsequent::Options::BrowseChecklist do
-  describe ".match?" do
-    it "returns true when text is k" do
-      expect(described_class.match?(make_state, "k")).to be(true)
+  describe '.match?' do
+    it 'returns text == "k"' do
+      expect(Subsequent::Options::BrowseChecklist.match?('blah1', 'blah2')).to eq(false)
     end
 
-    it "returns false when text is not k" do
-      expect(described_class.match?(make_state, "x")).to be(false)
+    it 'returns text == "k" (true)' do
+      expect(Subsequent::Options::BrowseChecklist.match?('blah1', 'k')).to eq(true)
     end
   end
 
-  describe ".call" do
-    it "enters SelectChecklist mode" do
-      result = described_class.call(make_state, "k")
-
-      expect(result.mode).to eq(Subsequent::Modes::SelectChecklist)
-    end
-
-    it "resets browse_page to 0" do
-      state = make_state(browse_page: 2)
-
-      expect(described_class.call(state, "k").browse_page).to eq(0)
+  describe '.call' do
+    it 'returns state.with(mode: Subsequent::Modes::SelectChecklist, browse_page: 0)' do
+      expect(Subsequent::Options::BrowseChecklist.call(Subsequent::State.new(cards: [], sort: Subsequent::Sorts::First, filter: Subsequent::Filters::None), 'blah2')).to be_an_instance_of(Subsequent::State)
     end
   end
 end

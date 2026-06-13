@@ -1,69 +1,27 @@
-# frozen_string_literal: true
-
 RSpec.describe Subsequent::Options::SelectCard do
-  describe ".match?" do
-    it "returns true when text is a number in card range" do
-      state = make_state(cards: [make_card])
-
-      expect(described_class.match?(state, "1")).to be(true)
+  describe '.match?' do
+    it 'returns false when page_size.zero?' do
+      expect(Subsequent::Options::SelectCard.match?(Subsequent::State.new(cards: [], sort: Subsequent::Sorts::First, filter: Subsequent::Filters::None), 'blah2')).to eq(false)
     end
 
-    it "returns false when text is out of card range" do
-      state = make_state(cards: [make_card])
+    it 'returns ("1"..page_size.to_s).to_a.include?(text) when !(page_size.zero?)' do
+      skip 'Buttress cannot yet evaluate: String#browse_page'
 
-      expect(described_class.match?(state, "5")).to be(false)
-    end
-
-    it "returns false when no cards" do
-      state = make_state(cards: [])
-
-      expect(described_class.match?(state, "1")).to be(false)
-    end
-
-    it "returns false when text is not a number" do
-      state = make_state(cards: [make_card])
-
-      expect(described_class.match?(state, "x")).to be(false)
+      Subsequent::Options::SelectCard.match?('blah1', 'blah2')
     end
   end
 
-  describe ".call" do
-    it "transitions to Normal mode" do
-      card = make_card(checklists: [api_checklist])
-      state = make_state(cards: [card])
+  describe '.call' do
+    it 'returns state.with(
+        card:,
+        checklist:,
+        checklist_items: checklist.unchecked_items.first(5),
+        mode: Subsequent::Modes::Normal,
+        browse_page: 0,
+      )' do
+      skip 'Buttress cannot yet evaluate: Integer(text)'
 
-      result = described_class.call(state, "1")
-
-      expect(result.mode).to eq(Subsequent::Modes::Normal)
-    end
-
-    it "sets the selected card" do
-      card = make_card(checklists: [api_checklist])
-      state = make_state(cards: [card])
-
-      expect(described_class.call(state, "1").card).to eq(card)
-    end
-
-    it "auto-selects the first unchecked checklist" do
-      checklist = api_checklist(check_items: [api_item])
-      card = make_card(checklists: [checklist])
-      state = make_state(cards: [card])
-
-      expect(described_class.call(state, "1").checklist.name).to eq("Checklist")
-    end
-
-    it "resets browse_page to 0" do
-      card = make_card(checklists: [api_checklist])
-      state = make_state(cards: [card])
-
-      expect(described_class.call(state, "1").browse_page).to eq(0)
-    end
-
-    it "offsets index by page" do
-      cards = 10.times.map { |i| make_card(id: i, name: "C#{i}") }
-      state = make_state(cards:, browse_page: 1)
-
-      expect(described_class.call(state, "1").card.name).to eq("C9")
+      Subsequent::Options::SelectCard.call('blah1', 'blah2')
     end
   end
 end

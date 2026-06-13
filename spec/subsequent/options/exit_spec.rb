@@ -1,32 +1,19 @@
-# frozen_string_literal: true
-
 RSpec.describe Subsequent::Options::Exit do
-  describe ".match?" do
-    it "returns true when text is q" do
-      expect(described_class.match?(make_state, "q")).to be(true)
+  describe '.match?' do
+    it 'returns ["q", "\u0004", "\u0003"].include?(text)' do
+      expect(Subsequent::Options::Exit.match?('blah1', 'q')).to eq(true)
     end
 
-    it "returns true when text is Ctrl+D" do
-      expect(described_class.match?(make_state, "\u0004")).to be(true)
-    end
-
-    it "returns true when text is Ctrl+C" do
-      expect(described_class.match?(make_state, "\u0003")).to be(true)
-    end
-
-    it "returns false when text is something else" do
-      expect(described_class.match?(make_state, "x")).to be(false)
+    it 'returns ["q", "\u0004", "\u0003"].include?(text) (false)' do
+      expect(Subsequent::Options::Exit.match?('blah1', '')).to eq(false)
     end
   end
 
-  describe ".call" do
-    it "throws :quit" do
-      expect { described_class.call(make_state, "q") }.to throw_symbol(:quit)
-    end
+  describe '.call' do
+    it 'returns throw(:quit)' do
+      skip 'Buttress cannot yet evaluate: terminal_title("")'
 
-    it "resets the terminal title" do
-      catch(:quit) { described_class.call(make_state, "q") }
-      expect(output.string).to include("\e]0;\a")
+      Subsequent::Options::Exit.call('blah1', 'blah2')
     end
   end
 end

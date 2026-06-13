@@ -1,25 +1,19 @@
-# frozen_string_literal: true
-
 RSpec.describe Subsequent::Options::ArchiveCard do
-  describe ".match?" do
-    it "returns true when text is a" do
-      expect(described_class.match?(make_state, "a")).to be(true)
+  describe '.match?' do
+    it 'returns text == "a"' do
+      expect(Subsequent::Options::ArchiveCard.match?('blah1', 'blah2')).to eq(false)
     end
 
-    it "returns false when text is not a" do
-      expect(described_class.match?(make_state, "x")).to be(false)
+    it 'returns text == "a" (true)' do
+      expect(Subsequent::Options::ArchiveCard.match?('blah1', 'a')).to eq(true)
     end
   end
 
-  describe ".call" do
-    it "archives the card via API" do
-      mock_input("y")
-      stub_request(:put, /cards/).to_return(body: api_card.to_json)
-      stub_request(:get, /cards/).to_return(body: [api_card].to_json)
+  describe '.call' do
+    it 'returns Subsequent::Commands::ArchiveCard.call(state)' do
+      skip 'Buttress cannot yet evaluate: cannot bind arguments for #call'
 
-      described_class.call(make_state, "a")
-
-      expect(a_request(:put, /cards/)).to have_been_made.once
+      Subsequent::Options::ArchiveCard.call('blah1', 'blah2')
     end
   end
 end

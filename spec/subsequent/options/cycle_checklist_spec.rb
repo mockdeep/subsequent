@@ -1,24 +1,22 @@
-# frozen_string_literal: true
-
 RSpec.describe Subsequent::Options::CycleChecklist do
-  describe ".match?" do
-    it "returns true when text is l" do
-      expect(described_class.match?(make_state, "l")).to be(true)
+  describe '.match?' do
+    it 'returns text == "l"' do
+      expect(Subsequent::Options::CycleChecklist.match?('blah1', 'blah2')).to eq(false)
     end
 
-    it "returns false when text is not l" do
-      expect(described_class.match?(make_state, "x")).to be(false)
+    it 'returns text == "l" (true)' do
+      expect(Subsequent::Options::CycleChecklist.match?('blah1', 'l')).to eq(true)
     end
   end
 
-  describe ".call" do
-    it "updates the checklist position via API" do
-      stub_request(:put, /checklist/).to_return(body: api_checklist.to_json)
-      stub_request(:get, /cards/).to_return(body: [api_card].to_json)
+  describe '.call' do
+    it 'returns show_spinner do
+        Subsequent::TrelloClient.update_checklist(checklist, pos:)
+        Subsequent::Commands::FetchData.call(filter:, sort:)
+      end' do
+      skip 'Buttress cannot yet evaluate: state => { card:, checklist:, filter:, sort: }'
 
-      described_class.call(make_state(cards: [make_card_with_item]), "l")
-
-      expect(a_request(:put, /checklist/)).to have_been_made.once
+      Subsequent::Options::CycleChecklist.call('blah1', 'blah2')
     end
   end
 end

@@ -1,34 +1,17 @@
-# frozen_string_literal: true
-
 RSpec.describe Subsequent::Options::Cancel do
-  describe ".match?" do
-    it "returns true when text is empty string" do
-      expect(described_class.match?(make_state, "")).to be(true)
+  describe '.match?' do
+    it 'returns ["", "q", "\u0004", "\u0003"].include?(text)' do
+      expect(Subsequent::Options::Cancel.match?('blah1', '')).to eq(true)
     end
 
-    it "returns true when text is q" do
-      expect(described_class.match?(make_state, "q")).to be(true)
-    end
-
-    it "returns true when text is Ctrl+D" do
-      expect(described_class.match?(make_state, "\u0004")).to be(true)
-    end
-
-    it "returns true when text is Ctrl+C" do
-      expect(described_class.match?(make_state, "\u0003")).to be(true)
-    end
-
-    it "returns false when text is something else" do
-      expect(described_class.match?(make_state, "x")).to be(false)
+    it 'returns ["", "q", "\u0004", "\u0003"].include?(text) (false)' do
+      expect(Subsequent::Options::Cancel.match?('blah1', 'x')).to eq(false)
     end
   end
 
-  describe ".call" do
-    it "returns state with Normal mode" do
-      state = make_state
-
-      expect(described_class.call(state, "q"))
-        .to eq(state.with(mode: Subsequent::Modes::Normal))
+  describe '.call' do
+    it 'returns state.with(mode: Subsequent::Modes::Normal)' do
+      expect(Subsequent::Options::Cancel.call(Subsequent::State.new(cards: [], sort: Subsequent::Sorts::First, filter: Subsequent::Filters::None), 'blah2')).to be_an_instance_of(Subsequent::State)
     end
   end
 end

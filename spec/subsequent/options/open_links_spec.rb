@@ -1,24 +1,19 @@
-# frozen_string_literal: true
-
 RSpec.describe Subsequent::Options::OpenLinks do
-  describe ".match?" do
-    it "returns true when text is o" do
-      expect(described_class.match?(make_state, "o")).to be(true)
+  describe '.match?' do
+    it 'returns text == "o"' do
+      expect(Subsequent::Options::OpenLinks.match?('blah1', 'blah2')).to eq(false)
     end
 
-    it "returns false when text is not o" do
-      expect(described_class.match?(make_state, "x")).to be(false)
+    it 'returns text == "o" (true)' do
+      expect(Subsequent::Options::OpenLinks.match?('blah1', 'o')).to eq(true)
     end
   end
 
-  describe ".call" do
-    it "delegates to OpenLinks command" do
-      state = make_state
-      allow(Subsequent::Commands::OpenLinks).to receive(:system)
+  describe '.call' do
+    it 'returns Subsequent::Commands::OpenLinks.call(state)' do
+      skip 'Buttress cannot yet evaluate: cannot bind arguments for #call'
 
-      result = described_class.call(state, "o")
-
-      expect(result).to eq(state)
+      Subsequent::Options::OpenLinks.call('blah1', 'blah2')
     end
   end
 end

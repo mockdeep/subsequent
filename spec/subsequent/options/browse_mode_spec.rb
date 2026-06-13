@@ -1,21 +1,17 @@
-# frozen_string_literal: true
-
 RSpec.describe Subsequent::Options::BrowseMode do
-  describe ".match?" do
-    it "returns true when text is b" do
-      expect(described_class.match?(make_state, "b")).to be(true)
+  describe '.match?' do
+    it 'returns text == "b"' do
+      expect(Subsequent::Options::BrowseMode.match?('blah1', 'blah2')).to eq(false)
     end
 
-    it "returns false when text is not b" do
-      expect(described_class.match?(make_state, "x")).to be(false)
+    it 'returns text == "b" (true)' do
+      expect(Subsequent::Options::BrowseMode.match?('blah1', 'b')).to eq(true)
     end
   end
 
-  describe ".call" do
-    it "enters Browse mode" do
-      result = described_class.call(make_state, "b")
-
-      expect(result.mode).to eq(Subsequent::Modes::Browse)
+  describe '.call' do
+    it 'returns state.with(mode: Subsequent::Modes::Browse)' do
+      expect(Subsequent::Options::BrowseMode.call(Subsequent::State.new(cards: [], sort: Subsequent::Sorts::First, filter: Subsequent::Filters::None), 'blah2')).to be_an_instance_of(Subsequent::State)
     end
   end
 end

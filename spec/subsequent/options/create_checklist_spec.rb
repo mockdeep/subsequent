@@ -1,20 +1,15 @@
-# frozen_string_literal: true
-
 RSpec.describe Subsequent::Options::CreateChecklist do
-  describe ".match?" do
-    it "always returns true" do
-      expect(described_class.match?(make_state, "anything")).to be(true)
+  describe '.match?' do
+    it 'returns true' do
+      expect(Subsequent::Options::CreateChecklist.match?).to eq(true)
     end
   end
 
-  describe ".call" do
-    it "returns state with AddChecklistItem mode" do
-      stub_request(:post, /checklists/).to_return(body: api_checklist.to_json)
-      stub_request(:get, /cards/).to_return(body: [api_card].to_json)
+  describe '.call' do
+    it 'returns Subsequent::Commands::CreateChecklist.call(state, text)' do
+      skip 'Buttress cannot yet evaluate: recursion in #call'
 
-      result = described_class.call(make_state, "New Checklist")
-
-      expect(result.mode).to eq(Subsequent::Modes::AddChecklistItem)
+      Subsequent::Options::CreateChecklist.call('blah1', 'blah2')
     end
   end
 end

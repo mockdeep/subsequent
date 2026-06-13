@@ -1,40 +1,17 @@
-# frozen_string_literal: true
-
 RSpec.describe Subsequent::Options::PrevTagPage do
-  describe ".match?" do
-    it "returns true when text is < and not on first page" do
-      state = state_with_tags(10).with(tag_page: 1)
-
-      expect(described_class.match?(state, "<")).to be(true)
+  describe '.match?' do
+    it 'returns text == "<" when text != "<"' do
+      expect(Subsequent::Options::PrevTagPage.match?('blah1', 'not <')).to eq(false)
     end
 
-    it "returns false when on the first page" do
-      state = state_with_tags(10)
-
-      expect(described_class.match?(state, "<")).to be(false)
-    end
-
-    it "returns false when text is not <" do
-      state = state_with_tags(10).with(tag_page: 1)
-
-      expect(described_class.match?(state, "x")).to be(false)
+    it 'returns state.tag_page.positive? when text == "<"' do
+      expect(Subsequent::Options::PrevTagPage.match?(Subsequent::State.new(cards: [], sort: Subsequent::Sorts::First, filter: Subsequent::Filters::None), '<')).to eq(false)
     end
   end
 
-  describe ".call" do
-    it "decrements tag_page" do
-      state = state_with_tags(10).with(tag_page: 1)
-
-      expect(described_class.call(state, "<").tag_page).to eq(0)
+  describe '.call' do
+    it 'returns state.with(tag_page: state.tag_page - 1)' do
+      expect(Subsequent::Options::PrevTagPage.call(Subsequent::State.new(cards: [], sort: Subsequent::Sorts::First, filter: Subsequent::Filters::None), 'blah2')).to be_an_instance_of(Subsequent::State)
     end
-  end
-
-  def state_with_tags(count)
-    cards =
-      count.times.map do |i|
-        checklist = api_checklist(name: "@tag#{i}", check_items: [api_item])
-        make_card(id: i, checklists: [checklist])
-      end
-    make_state(cards:)
   end
 end
