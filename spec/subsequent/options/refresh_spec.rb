@@ -11,7 +11,7 @@ RSpec.describe Subsequent::Options::Refresh do
 
   describe '.call' do
     it 'returns restore_selection(new_state, state)' do
-      skip 'Buttress cannot yet evaluate: state => { filter:, sort:, browse_list_id:, lists: }'
+      skip 'Buttress cannot yet evaluate: String#filter'
 
       Subsequent::Options::Refresh.call('blah1', 'blah2')
     end

@@ -11,7 +11,7 @@ RSpec.describe Subsequent::Options::Sort do
 
   describe '.call' do
     it 'returns Subsequent::State.new(cards:, filter:, sort:)' do
-      skip 'Buttress cannot yet evaluate: state => { cards:, filter: }'
+      skip 'Buttress cannot yet evaluate: String#cards'
 
       Subsequent::Options::Sort.call('blah1', 'blah2')
     end

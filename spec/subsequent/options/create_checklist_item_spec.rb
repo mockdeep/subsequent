@@ -7,7 +7,7 @@ RSpec.describe Subsequent::Options::CreateChecklistItem do
 
   describe '.call' do
     it 'returns state.with(mode: Subsequent::Modes::AddChecklistItem)' do
-      skip 'Buttress cannot yet evaluate: state => { checklist:, filter:, sort: }'
+      skip 'Buttress cannot yet evaluate: String#checklist'
 
       Subsequent::Options::CreateChecklistItem.call('blah1', 'blah2')
     end

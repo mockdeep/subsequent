@@ -14,7 +14,7 @@ RSpec.describe Subsequent::Options::CycleCard do
         Subsequent::TrelloClient.update_card(card, pos:)
         Subsequent::Commands::FetchData.call(filter:, sort:)
       end' do
-      skip 'Buttress cannot yet evaluate: state => { cards:, card:, filter:, sort: }'
+      skip 'Buttress cannot yet evaluate: String#cards'
 
       Subsequent::Options::CycleCard.call('blah1', 'blah2')
     end
