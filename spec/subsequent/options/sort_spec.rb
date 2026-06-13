@@ -11,9 +11,7 @@ RSpec.describe Subsequent::Options::Sort do
 
   describe '.call' do
     it 'returns Subsequent::State.new(cards:, filter:, sort:)' do
-      skip 'Buttress cannot yet evaluate: String#cards'
-
-      Subsequent::Options::Sort.call('blah1', 'blah2')
+      expect(Subsequent::Options::Sort.call(Subsequent::State.new(cards: [], sort: Subsequent::Sorts::First, filter: Subsequent::Filters::None), 'f')).to be_an_instance_of(Subsequent::State)
     end
   end
 end
