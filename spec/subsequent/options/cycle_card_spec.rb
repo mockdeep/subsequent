@@ -1,4 +1,4 @@
-RSpec.describe Subsequent::Options::CycleCard do
+RSpec.describe Subsequent::Options::CycleCard, :buttress_io do
   describe '.match?' do
     it 'returns text == "c"' do
       expect(Subsequent::Options::CycleCard.match?('blah1', 'blah2')).to eq(false)
@@ -14,9 +14,11 @@ RSpec.describe Subsequent::Options::CycleCard do
         Subsequent::TrelloClient.update_card(card, pos:)
         Subsequent::Commands::FetchData.call(filter:, sort:)
       end' do
-      skip 'Buttress cannot yet evaluate: String#cards'
+      Subsequent::Configuration.debug = true
 
-      Subsequent::Options::CycleCard.call('blah1', 'blah2')
+      expect(Subsequent::Options::CycleCard.call(Subsequent::State.new(cards: [Subsequent::Models::Card.new(id: 'blah1', name: 'blah2', pos: 1, short_url: 'blah4', checklists: [{card_id: "blah1", id: "blah2", name: "blah3", pos: 1, check_items: [{card_id: "blah1", id: "blah2", name: "blah3", pos: 1, state: "blah5"}]}])], sort: Subsequent::Sorts::First, filter: Subsequent::Filters::None), 'blah2')).to be_an_instance_of(Subsequent::State)
+      expect(a_request(:put, %r{/1/cards/blah1})).to have_been_made
+      expect(a_request(:get, %r{/1/lists/default_list_id/cards})).to have_been_made
     end
   end
 end

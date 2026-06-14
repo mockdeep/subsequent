@@ -24,5 +24,6 @@ RSpec.configure do |config|
     Subsequent::Configuration.output = StringIO.new
     Subsequent::Configuration.list_name = nil
     Subsequent::Configuration.tag_name = nil
+    Subsequent::Configuration.debug = false
   end
 end
