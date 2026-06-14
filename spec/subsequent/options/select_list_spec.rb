@@ -1,4 +1,4 @@
-RSpec.describe Subsequent::Options::SelectList do
+RSpec.describe Subsequent::Options::SelectList, :buttress_io do
   describe '.match?' do
     it 'returns false when page_size.zero?' do
       expect(Subsequent::Options::SelectList.match?(Subsequent::State.new(cards: [], sort: Subsequent::Sorts::First, filter: Subsequent::Filters::None), 'blah2')).to eq(false)
@@ -15,9 +15,10 @@ RSpec.describe Subsequent::Options::SelectList do
 
   describe '.call' do
     it 'returns show_spinner { fetch_and_transition(state, list) }' do
-      skip 'Buttress cannot yet evaluate: Integer(text)'
+      Subsequent::Configuration.debug = true
 
-      Subsequent::Options::SelectList.call('blah1', 'blah2')
+      expect(Subsequent::Options::SelectList.call(Subsequent::State.new(cards: [], sort: Subsequent::Sorts::First, filter: Subsequent::Filters::None, lists: [Subsequent::Models::List.new(id: 'blah1', name: 'blah2')]), '1')).to be_an_instance_of(Subsequent::State)
+      expect(a_request(:get, %r{/1/lists/blah1/cards})).to have_been_made
     end
   end
 end

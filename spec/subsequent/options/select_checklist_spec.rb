@@ -20,9 +20,7 @@ RSpec.describe Subsequent::Options::SelectChecklist do
         checklist_items: checklist.unchecked_items.first(5),
         mode: Subsequent::Modes::Normal,
       )' do
-      skip 'Buttress cannot yet evaluate: Integer(text)'
-
-      Subsequent::Options::SelectChecklist.call('blah1', 'blah2')
+      expect(Subsequent::Options::SelectChecklist.call(Subsequent::State.new(cards: [Subsequent::Models::Card.new(id: 'blah1', name: 'blah2', pos: 'blah3', short_url: 'blah4', checklists: [{card_id: "blah1", id: "blah2", name: "blah3", pos: "blah4", check_items: [{card_id: "blah1", id: "blah2", name: "blah3", pos: "blah4", state: "blah5"}]}])], sort: Subsequent::Sorts::First, filter: Subsequent::Filters::None), '1')).to eq(Subsequent::State.new(browsed_checklist: true, browse_list_id: nil, browse_page: 0, cards: [Subsequent::Models::Card.new(id: 'blah1', name: 'blah2', pos: 'blah3', short_url: 'blah4', checklists: [{card_id: "blah1", id: "blah2", name: "blah3", pos: "blah4", check_items: [{card_id: "blah1", id: "blah2", name: "blah3", pos: "blah4", state: "blah5"}]}])], card: Subsequent::Models::Card.new(id: 'blah1', name: 'blah2', pos: 'blah3', short_url: 'blah4', checklists: [{card_id: "blah1", id: "blah2", name: "blah3", pos: "blah4", check_items: [{card_id: "blah1", id: "blah2", name: "blah3", pos: "blah4", state: "blah5"}]}]), checklist: Subsequent::Models::Checklist.new(card_id: 'blah1', id: 'blah2', name: 'blah3', pos: 'blah4', check_items: [{card_id: "blah1", id: "blah2", name: "blah3", pos: "blah4", state: "blah5"}]), checklist_items: [Subsequent::Models::ChecklistItem.new(card_id: 'blah1', id: 'blah2', name: 'blah3', pos: 'blah4', state: 'blah5')], filter: Subsequent::Filters::None, lists: [], mode: Subsequent::Modes::Normal, sort: Subsequent::Sorts::First, tag_page: 0))
     end
   end
 end
