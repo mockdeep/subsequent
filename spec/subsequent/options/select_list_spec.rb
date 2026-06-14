@@ -5,9 +5,11 @@ RSpec.describe Subsequent::Options::SelectList do
     end
 
     it 'returns ("1"..page_size.to_s).to_a.include?(text) when !(page_size.zero?)' do
-      skip 'Buttress cannot yet evaluate: String#browse_page'
+      expect(Subsequent::Options::SelectList.match?(Subsequent::State.new(cards: [], sort: Subsequent::Sorts::First, filter: Subsequent::Filters::None, lists: [{id: "blah1", name: "blah2"}]), '1')).to eq(true)
+    end
 
-      Subsequent::Options::SelectList.match?('blah1', 'blah2')
+    it 'returns ("1"..page_size.to_s).to_a.include?(text) (false) when !(page_size.zero?)' do
+      expect(Subsequent::Options::SelectList.match?(Subsequent::State.new(cards: [], sort: Subsequent::Sorts::First, filter: Subsequent::Filters::None, lists: [{id: "blah1", name: "blah2"}]), '')).to eq(false)
     end
   end
 

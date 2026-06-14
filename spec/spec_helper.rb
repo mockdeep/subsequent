@@ -9,6 +9,7 @@ require_relative "support/fixtures"
 require_relative "support/io"
 require_relative "support/trello"
 require_relative "support/webmock"
+require_relative "support/buttress_support"
 
 RSpec.configure do |config|
   config.order = :random

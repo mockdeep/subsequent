@@ -11,7 +11,7 @@ RSpec.describe Subsequent::Options::Exit do
 
   describe '.call' do
     it 'returns throw(:quit)' do
-      skip 'Buttress cannot yet evaluate: terminal_title("")'
+      skip 'Buttress cannot yet evaluate: throw(:quit)'
 
       Subsequent::Options::Exit.call('blah1', 'blah2')
     end

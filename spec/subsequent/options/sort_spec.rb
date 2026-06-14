@@ -11,7 +11,7 @@ RSpec.describe Subsequent::Options::Sort do
 
   describe '.call' do
     it 'returns Subsequent::State.new(cards:, filter:, sort:)' do
-      expect(Subsequent::Options::Sort.call(Subsequent::State.new(cards: [], sort: Subsequent::Sorts::First, filter: Subsequent::Filters::None), 'f')).to be_an_instance_of(Subsequent::State)
+      expect(Subsequent::Options::Sort.call(Subsequent::State.new(cards: [], sort: Subsequent::Sorts::First, filter: Subsequent::Filters::None, lists: [Subsequent::Models::List.new(id: 'blah1', name: 'blah2')]), 'f')).to be_an_instance_of(Subsequent::State)
     end
   end
 end
