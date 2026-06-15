@@ -5,9 +5,7 @@ RSpec.describe Subsequent::Options::NextTagPage do
     end
 
     it 'returns state.tag_page < state.tags.each_slice(9).count - 1 when text == ">"' do
-      skip 'Buttress cannot yet evaluate: String#tags'
-
-      Subsequent::Options::NextTagPage.match?('blah1', '>')
+      expect(Subsequent::Options::NextTagPage.match?(Subsequent::State.new(cards: [], sort: Subsequent::Sorts::First, filter: Subsequent::Filters::None), '>')).to eq(false)
     end
   end
 
