@@ -16,5 +16,12 @@ RSpec.describe Subsequent::Options::BrowseLane, :buttress_io do
       expect(Subsequent::Options::BrowseLane.call(Subsequent::State.new(cards: [], sort: Subsequent::Sorts::First, filter: Subsequent::Filters::None), 'blah2')).to be_an_instance_of(Subsequent::State)
       expect(a_request(:get, %r{/1/boards/default_board_id/lists})).to have_been_made
     end
+
+    it 'raises Subsequent::Error' do
+      Subsequent::Configuration.debug = true
+      stub_request(:get, %r{/1/boards/default_board_id/lists}).to_return(status: 500)
+
+      expect { Subsequent::Options::BrowseLane.call(Subsequent::State.new(cards: [], sort: Subsequent::Sorts::First, filter: Subsequent::Filters::None), 'blah2') }.to raise_error(Subsequent::Error)
+    end
   end
 end
