@@ -17,6 +17,8 @@ RSpec.describe Subsequent::Options::AddFilter, :buttress_io do
     it 'returns Subsequent::Commands::FetchData.call(
         filter:, sort: state.sort, list_id: state.browse_list_id,
       )' do
+      stub_request(:get, %r{/1/lists/default_list_id/cards}).to_return(status: 200, body: "[{\"id\":\"blah1\",\"name\":\"blah2\",\"pos\":\"blah3\",\"short_url\":\"blah4\",\"checklists\":[]}]")
+
       expect(Subsequent::Options::AddFilter.call(Subsequent::State.new(cards: [Subsequent::Models::Card.new(id: 'blah1', name: 'blah2', pos: 'blah3', short_url: 'blah4', checklists: [{card_id: "blah1", id: "blah2", name: "blah3", pos: "blah4", check_items: [{card_id: "blah1", id: "blah2", name: "blah3", pos: "blah4", state: "blah5"}]}])], sort: Subsequent::Sorts::First, filter: Subsequent::Filters::None), '1')).to be_an_instance_of(Subsequent::State)
       expect(a_request(:get, %r{/1/lists/default_list_id/cards})).to have_been_made
     end
