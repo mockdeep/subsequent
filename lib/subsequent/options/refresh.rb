@@ -25,14 +25,9 @@ module Subsequent::Options::Refresh
       card = find_by_id(new_state.cards, old_state.card)
       return new_state unless card
 
-      checklist = restore_checklist(card, old_state)
-
-      new_state.with(
-        browsed_checklist: old_state.browsed_checklist,
-        card:,
-        checklist:,
-        checklist_items: checklist.unchecked_items.first(5),
-      )
+      new_state
+        .with(browsed_checklist: old_state.browsed_checklist, card:)
+        .select_checklist(restore_checklist(card, old_state))
     end
 
     def restore_checklist(card, old_state)

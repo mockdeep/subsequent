@@ -17,22 +17,13 @@ module Subsequent::Options::SelectCard
     def call(state, text)
       index = (state.browse_page * 9) + Integer(text) - 1
       card = state.cards.fetch(index)
-      checklist = auto_checklist(card)
-      state.with(
-        card:,
-        checklist:,
-        checklist_items: checklist.unchecked_items.first(5),
-        mode: Subsequent::Modes::Normal,
-        browse_page: 0,
-      )
+
+      state
+        .with(mode: Subsequent::Modes::Normal, browse_page: 0)
+        .select_card(card)
     end
 
     private
-
-    def auto_checklist(card)
-      card.checklists.find(&:unchecked_items?) ||
-        Subsequent::Models::NullChecklist.new
-    end
 
     def page_items(state)
       state.cards.each_slice(9).to_a.fetch(state.browse_page, [])

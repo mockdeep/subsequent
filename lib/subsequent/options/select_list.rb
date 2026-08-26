@@ -27,30 +27,14 @@ module Subsequent::Options::SelectList
 
     def fetch_and_transition(state, list)
       cards = Subsequent::TrelloClient.fetch_cards(list_id: list.id)
-      card, checklist = auto_select(state.sort, cards)
-      build_state(state, cards:, card:, checklist:, list_id: list.id)
-    end
 
-    def build_state(state, cards:, card:, checklist:, list_id:)
-      state.with(
-        cards:,
-        card:,
-        checklist:,
-        checklist_items: checklist.unchecked_items.first(5),
-        list_id:,
-        mode: Subsequent::Modes::Normal,
-        browse_page: 0,
-      )
-    end
-
-    def auto_select(sort, cards)
-      card = sort.call(cards) || Subsequent::Models::NullCard.new
-      [card, auto_checklist(card)]
-    end
-
-    def auto_checklist(card)
-      card.checklists.find(&:unchecked_items?) ||
-        Subsequent::Models::NullChecklist.new
+      state
+        .with(
+          list_id: list.id,
+          mode: Subsequent::Modes::Normal,
+          browse_page: 0,
+        )
+        .load(cards)
     end
 
     def page_items(state)

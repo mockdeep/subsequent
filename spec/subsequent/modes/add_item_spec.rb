@@ -5,7 +5,7 @@ RSpec.describe Subsequent::Modes::AddItem do
 
   describe ".commands" do
     it "returns command to add item when checklist is present" do
-      state = make_state(checklist: make_checklist)
+      state = make_state.with(checklist: make_checklist)
       text1 = "add new (#{cyan("c")})ard, " \
               "check(#{cyan("l")})ist or (#{cyan("i")})tem"
       text2 = "(#{cyan("q")}) to cancel"

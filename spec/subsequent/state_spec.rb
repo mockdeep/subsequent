@@ -135,6 +135,13 @@ RSpec.describe Subsequent::State do
     end
   end
 
+  describe ".build" do
+    it "raises when given a field it selects itself" do
+      expect { make_state(checklist: make_checklist) }
+        .to raise_error(ArgumentError, "build selects checklist itself")
+    end
+  end
+
   describe "#lists" do
     it "defaults to empty array" do
       expect(make_state.lists).to eq([])

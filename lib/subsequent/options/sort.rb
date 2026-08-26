@@ -16,12 +16,11 @@ module Subsequent::Options::Sort
       ["f", "l", "m"].include?(text)
     end
 
-    # return state with selected sort
+    # return state with selected sort, back in normal mode
     def call(state, text)
-      state => { cards:, filter:, list_id:, lists: }
-      sort = MODES.fetch(text.to_sym)
-
-      Subsequent::State.new(cards:, filter:, sort:, list_id:, lists:)
+      state
+        .with(sort: MODES.fetch(text.to_sym), mode: Subsequent::Modes::Normal)
+        .reselect
     end
   end
 end

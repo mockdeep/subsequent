@@ -18,12 +18,9 @@ module Subsequent::Options::SelectChecklist
       index = (state.browse_page * 9) + Integer(text) - 1
       checklist = state.browse_checklists.fetch(index)
 
-      state.with(
-        browsed_checklist: true,
-        checklist:,
-        checklist_items: checklist.unchecked_items.first(5),
-        mode: Subsequent::Modes::Normal,
-      )
+      state
+        .with(browsed_checklist: true, mode: Subsequent::Modes::Normal)
+        .select_checklist(checklist)
     end
 
     private

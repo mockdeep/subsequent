@@ -15,7 +15,7 @@ module Subsequent::Commands::FetchData
     def initial(filter:, sort:, list_id:, **state_args)
       cards = Subsequent::TrelloClient.fetch_cards(list_id:)
 
-      Subsequent::State.new(cards:, filter:, sort:, list_id:, **state_args)
+      Subsequent::State.build(cards:, filter:, sort:, list_id:, **state_args)
     end
   end
 end
