@@ -37,5 +37,18 @@ RSpec.describe Subsequent::Options::Sort do
 
       expect(result.sort).to eq(Subsequent::Sorts::MostUncheckedItems)
     end
+
+    it "keeps the current list" do
+      state = make_state(list_id: "lane-1")
+
+      expect(described_class.call(state, "m").list_id).to eq("lane-1")
+    end
+
+    it "keeps the cached lists" do
+      lists = [make_list]
+      state = make_state(lists:)
+
+      expect(described_class.call(state, "m").lists).to eq(lists)
+    end
   end
 end

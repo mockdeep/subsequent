@@ -64,6 +64,7 @@ module Factories
       cards:,
       filter: Subsequent::Filters::None,
       sort: Subsequent::Sorts::First,
+      list_id: "test-list-id",
       **overrides,
     )
   end

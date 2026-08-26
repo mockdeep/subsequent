@@ -61,7 +61,7 @@ module Subsequent::Actions::Run
 
     def resolve_list_id
       list_name = Subsequent::Configuration.list_name
-      return unless list_name
+      return Subsequent::TrelloClient.default_list_id unless list_name
 
       list =
         Subsequent::TrelloClient.fetch_lists.find do |candidate|

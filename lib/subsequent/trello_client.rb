@@ -8,9 +8,14 @@ module Subsequent::TrelloClient
   }.freeze
 
   class << self
-    # Fetches all cards from the given or default list
-    def fetch_cards(list_id: nil)
-      path = "lists/#{list_id || default_list_id}/cards"
+    # the list the app starts on, used to seed the state
+    def default_list_id
+      config.fetch(:default_list_id)
+    end
+
+    # Fetches all cards from the given list
+    def fetch_cards(list_id:)
+      path = "lists/#{list_id}/cards"
 
       cards_data = fetch_data(path, checklists: "all")
 
@@ -32,9 +37,9 @@ module Subsequent::TrelloClient
       request(:put, path, "update checklist item", **params)
     end
 
-    # creates a new card on Trello in the given or default list
-    def create_card(name:, list_id: nil)
-      params = { name:, idList: list_id || default_list_id, pos: "top" }
+    # creates a new card on Trello in the given list
+    def create_card(name:, list_id:)
+      params = { name:, idList: list_id, pos: "top" }
       request(:post, "cards", "create card", **params)
     end
 
@@ -101,10 +106,6 @@ module Subsequent::TrelloClient
         key: config.fetch(:trello_key),
         token: config.fetch(:trello_token),
       }
-    end
-
-    def default_list_id
-      config.fetch(:default_list_id)
     end
 
     def board_id

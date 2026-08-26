@@ -68,7 +68,7 @@ RSpec.describe Subsequent::Options::SelectList do
 
       result = described_class.call(state, "1")
 
-      expect(result.browse_list_id).to eq("list-1")
+      expect(result.list_id).to eq("list-1")
     end
 
     it "fetches cards for the selected list" do
@@ -104,7 +104,7 @@ RSpec.describe Subsequent::Options::SelectList do
       state = make_state(lists:, browse_page: 1)
       stub_request(:get, %r{lists/l9/cards}).to_return(body: [api_card].to_json)
 
-      expect(described_class.call(state, "1").browse_list_id).to eq("l9")
+      expect(described_class.call(state, "1").list_id).to eq("l9")
     end
   end
 end

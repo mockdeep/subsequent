@@ -356,6 +356,14 @@ RSpec.describe Subsequent::Actions::Run do
     expect(a_request(:put, put_url)).not_to have_been_made
   end
 
+  it "seeds the state with the configured default list" do
+    stub_cards([api_card])
+
+    state = described_class.__send__(:initial_state)
+
+    expect(state.list_id).to eq("test-list-id")
+  end
+
   context "with --list" do
     it "starts in the list that matches the given name" do
       lists_url = api_url("boards/test-board-id/lists", filter: "open")

@@ -37,7 +37,7 @@ module Subsequent::Options::SelectList
         card:,
         checklist:,
         checklist_items: checklist.unchecked_items.first(5),
-        browse_list_id: list_id,
+        list_id:,
         mode: Subsequent::Modes::Normal,
         browse_page: 0,
       )
