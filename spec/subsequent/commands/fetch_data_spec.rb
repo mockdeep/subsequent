@@ -9,6 +9,7 @@ RSpec.describe Subsequent::Commands::FetchData do
       described_class.initial(
         filter: Subsequent::Filters::None,
         sort: Subsequent::Sorts::First,
+        list_id: "test-list-id",
       )
 
       expect(a_request(:get, get_url)).to have_been_made.once
@@ -18,7 +19,11 @@ RSpec.describe Subsequent::Commands::FetchData do
       stub_request(:get, /cards/).to_return(body: [api_card].to_json)
       filter = Subsequent::Filters::None
 
-      result = described_class.initial(filter:, sort: Subsequent::Sorts::First)
+      result = described_class.initial(
+        filter:,
+        sort: Subsequent::Sorts::First,
+        list_id: "test-list-id",
+      )
 
       expect(result.filter).to eq(Subsequent::Filters::None)
     end
@@ -27,7 +32,11 @@ RSpec.describe Subsequent::Commands::FetchData do
       stub_request(:get, /cards/).to_return(body: [api_card].to_json)
       filter = Subsequent::Filters::Tag.new("@tag")
 
-      result = described_class.initial(filter:, sort: Subsequent::Sorts::First)
+      result = described_class.initial(
+        filter:,
+        sort: Subsequent::Sorts::First,
+        list_id: "test-list-id",
+      )
 
       expect(result.filter).to eq(Subsequent::Filters::Tag.new("@tag"))
     end
@@ -38,6 +47,7 @@ RSpec.describe Subsequent::Commands::FetchData do
       result = described_class.initial(
         filter: Subsequent::Filters::None,
         sort: Subsequent::Sorts::First,
+        list_id: "test-list-id",
       )
 
       expect(result).to be_a(Subsequent::State)
@@ -45,7 +55,7 @@ RSpec.describe Subsequent::Commands::FetchData do
       expect(result.cards.first.name).to eq("blah")
     end
 
-    it "fetches from a specific list when list_id is given" do
+    it "fetches from the given list" do
       url = api_url("lists/other-list/cards", checklists: "all")
       stub_request(:get, url).to_return(body: [api_card].to_json)
 
@@ -56,7 +66,7 @@ RSpec.describe Subsequent::Commands::FetchData do
       )
 
       expect(a_request(:get, url)).to have_been_made.once
-      expect(result.browse_list_id).to eq("other-list")
+      expect(result.list_id).to eq("other-list")
     end
 
     it "passes extra state args through" do
@@ -66,6 +76,7 @@ RSpec.describe Subsequent::Commands::FetchData do
       result = described_class.initial(
         filter: Subsequent::Filters::None,
         sort: Subsequent::Sorts::First,
+        list_id: "test-list-id",
         lists:,
       )
 
@@ -74,25 +85,15 @@ RSpec.describe Subsequent::Commands::FetchData do
   end
 
   describe ".call" do
-    it "fetches from the default list when nothing is browsed" do
-      url = api_url("lists/test-list-id/cards", checklists: "all")
-      stub_request(:get, url).to_return(body: [api_card].to_json)
-
-      result = described_class.call(make_state)
-
-      expect(a_request(:get, url)).to have_been_made.once
-      expect(result.browse_list_id).to be_nil
-    end
-
-    it "re-fetches the list being browsed" do
+    it "re-fetches the list the state is on" do
       url = api_url("lists/other-list/cards", checklists: "all")
       stub_request(:get, url).to_return(body: [api_card].to_json)
-      state = make_state(browse_list_id: "other-list")
+      state = make_state(list_id: "other-list")
 
       result = described_class.call(state)
 
       expect(a_request(:get, url)).to have_been_made.once
-      expect(result.browse_list_id).to eq("other-list")
+      expect(result.list_id).to eq("other-list")
     end
 
     it "keeps the sort, filter, and cached lists from the state" do

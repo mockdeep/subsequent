@@ -5,11 +5,15 @@ RSpec.describe Subsequent::TrelloClient do
     api_url("lists/test-list-id/cards", checklists: "all")
   end
 
+  def create_test_card
+    described_class.create_card(name: "New Card", list_id: "test-list-id")
+  end
+
   describe ".fetch_cards" do
     it "returns the cards" do
       stub_request(:get, test_cards_url).to_return(body: [api_card].to_json)
 
-      cards = described_class.fetch_cards
+      cards = described_class.fetch_cards(list_id: "test-list-id")
 
       expect(cards.size).to eq(1)
       card = cards.first
@@ -22,7 +26,7 @@ RSpec.describe Subsequent::TrelloClient do
     it "raises an error when the request fails" do
       stub_request(:get, test_cards_url).to_return(status: 400)
 
-      expect { described_class.fetch_cards }
+      expect { described_class.fetch_cards(list_id: "test-list-id") }
         .to raise_error(Subsequent::Error, "Failed to fetch data from Trello")
     end
 
@@ -87,8 +91,7 @@ RSpec.describe Subsequent::TrelloClient do
         api_url("cards", idList: "test-list-id", name: "New Card", pos: "top")
       stub_request(:post, post_url).to_return(status: 200)
 
-      expect { described_class.create_card(name: "New Card") }
-        .not_to raise_error
+      expect { create_test_card }.not_to raise_error
     end
 
     it "raises an error when the request fails" do
@@ -96,7 +99,7 @@ RSpec.describe Subsequent::TrelloClient do
         api_url("cards", idList: "test-list-id", name: "New Card", pos: "top")
       stub_request(:post, post_url).to_return(status: 400)
 
-      expect { described_class.create_card(name: "New Card") }
+      expect { create_test_card }
         .to raise_error(Subsequent::Error, "Failed to create card")
     end
   end

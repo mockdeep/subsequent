@@ -21,10 +21,10 @@ RSpec.describe Subsequent::Options::RemoveFilters do
     end
 
     it "fetches cards from the browsed lane" do
-      state = make_state(browse_list_id: "lane-1")
+      state = make_state(list_id: "lane-1")
       stub_request(:get, %r{lists/lane-1}).to_return(body: [api_card].to_json)
 
-      expect(described_class.call(state, "n").browse_list_id).to eq("lane-1")
+      expect(described_class.call(state, "n").list_id).to eq("lane-1")
     end
   end
 end

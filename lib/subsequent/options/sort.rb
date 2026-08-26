@@ -18,10 +18,10 @@ module Subsequent::Options::Sort
 
     # return state with selected sort
     def call(state, text)
-      state => { cards:, filter: }
+      state => { cards:, filter:, list_id:, lists: }
       sort = MODES.fetch(text.to_sym)
 
-      Subsequent::State.new(cards:, filter:, sort:)
+      Subsequent::State.new(cards:, filter:, sort:, list_id:, lists:)
     end
   end
 end

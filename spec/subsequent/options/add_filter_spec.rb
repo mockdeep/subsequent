@@ -50,10 +50,10 @@ RSpec.describe Subsequent::Options::AddFilter do
     end
 
     it "fetches cards from the browsed lane" do
-      state = state_with_tags(1).with(browse_list_id: "lane-1")
+      state = state_with_tags(1).with(list_id: "lane-1")
       stub_request(:get, %r{lists/lane-1}).to_return(body: [api_card].to_json)
 
-      expect(described_class.call(state, "1").browse_list_id).to eq("lane-1")
+      expect(described_class.call(state, "1").list_id).to eq("lane-1")
     end
   end
 

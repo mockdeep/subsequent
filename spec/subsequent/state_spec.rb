@@ -124,9 +124,14 @@ RSpec.describe Subsequent::State do
     end
   end
 
-  describe "#browse_list_id" do
-    it "defaults to nil" do
-      expect(make_state.browse_list_id).to be_nil
+  describe "#list_id" do
+    it "returns the list the state was built for" do
+      expect(make_state(list_id: "other-list").list_id).to eq("other-list")
+    end
+
+    it "is required" do
+      expect { described_class.new(cards: [], sort: nil, filter: nil) }
+        .to raise_error(ArgumentError, /list_id/)
     end
   end
 

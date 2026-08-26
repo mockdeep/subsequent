@@ -111,7 +111,7 @@ RSpec.describe "integration flows" do
 
       state = tick(state, "2")
       expect(state.mode).to eq(Subsequent::Modes::Normal)
-      expect(state.browse_list_id).to eq("list-b")
+      expect(state.list_id).to eq("list-b")
       expect(state.card.name).to eq("First Card")
     end
 
@@ -267,7 +267,7 @@ RSpec.describe "integration flows" do
       state = tick(state, "b")
       state = tick(state, "l")
       state = tick(state, "2")
-      expect(state.browse_list_id).to eq("list-b")
+      expect(state.list_id).to eq("list-b")
       expect(state.card.name).to eq("Lane Card")
 
       state = tick(state, "f")
@@ -275,7 +275,7 @@ RSpec.describe "integration flows" do
 
       state = tick(state, "1")
       expect(state.filter).to eq(Subsequent::Filters::Tag.new("@dev"))
-      expect(state.browse_list_id).to eq("list-b")
+      expect(state.list_id).to eq("list-b")
       expect(state.card.name).to eq("Lane Card")
     end
   end
@@ -337,7 +337,7 @@ RSpec.describe "integration flows" do
       state = tick(state, "b")
       state = tick(state, "l")
       state = tick(state, "3")
-      expect(state.browse_list_id).to eq("list-c")
+      expect(state.list_id).to eq("list-c")
       expect(state.card.name).to eq("Lane Card")
 
       state = tick(state, "c")
@@ -345,9 +345,34 @@ RSpec.describe "integration flows" do
 
       state = tick(state, "c")
       expect(a_request(:put, cycle_url)).to have_been_made
-      expect(state.browse_list_id).to eq("list-c")
+      expect(state.list_id).to eq("list-c")
       expect(state.lists.map(&:name)).to eq(["Backlog", "In Progress", "Done"])
       expect(state.card.name).to eq("Lane Card")
+    end
+  end
+
+  describe "sort within browsed lane" do
+    it "stays on the browsed lane after sorting" do
+      lists = [
+        { id: "list-a", name: "Backlog" },
+        { id: "list-b", name: "In Progress" },
+      ]
+      stub_lists(lists)
+      stub_browse_cards("list-b", [card_one, card_two])
+
+      state = initial_state([card_one])
+
+      state = tick(state, "b")
+      state = tick(state, "l")
+      state = tick(state, "2")
+      expect(state.list_id).to eq("list-b")
+
+      state = tick(state, "s")
+      state = tick(state, "m")
+
+      expect(state.sort).to eq(Subsequent::Sorts::MostUncheckedItems)
+      expect(state.list_id).to eq("list-b")
+      expect(state.lists.map(&:name)).to eq(["Backlog", "In Progress"])
     end
   end
 
@@ -373,7 +398,7 @@ RSpec.describe "integration flows" do
       state = tick(state, "b")
       state = tick(state, "l")
       state = tick(state, "2")
-      expect(state.browse_list_id).to eq("list-b")
+      expect(state.list_id).to eq("list-b")
 
       state = tick(state, "n")
       state = tick(state, "c")
@@ -381,7 +406,7 @@ RSpec.describe "integration flows" do
 
       expect(a_request(:post, card_post)).to have_been_made
       expect(state.mode).to eq(Subsequent::Modes::AddChecklist)
-      expect(state.browse_list_id).to eq("list-b")
+      expect(state.list_id).to eq("list-b")
     end
   end
 end

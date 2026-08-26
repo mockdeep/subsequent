@@ -3,13 +3,13 @@
 Subsequent::State =
   Data.define(
     :browsed_checklist,
-    :browse_list_id,
     :browse_page,
     :cards,
     :card,
     :checklist,
     :checklist_items,
     :filter,
+    :list_id,
     :lists,
     :mode,
     :sort,
@@ -26,10 +26,10 @@ class Subsequent::State
     cards:,
     sort:,
     filter:,
+    list_id:,
     browsed_checklist: false,
     mode: DEFAULT_MODE,
     tag_page: 0,
-    browse_list_id: nil,
     browse_page: 0,
     lists: [],
     **args
@@ -41,7 +41,7 @@ class Subsequent::State
 
     super(
       browsed_checklist:,
-      browse_list_id:, browse_page:, cards:, filter:, lists:, sort:,
+      browse_page:, cards:, filter:, list_id:, lists:, sort:,
       card:, checklist:, checklist_items:, mode:, tag_page:,
     )
   end
