@@ -12,10 +12,10 @@ module Subsequent::Options::CreateChecklistItem
 
     # create a new checklist item in Trello and re-fetch data
     def call(state, text)
-      state => { checklist:, filter:, sort: }
+      state => { checklist: }
       Subsequent::TrelloClient.create_checklist_item(checklist:, name: text)
 
-      state = Subsequent::Commands::FetchData.call(filter:, sort:)
+      state = Subsequent::Commands::FetchData.call(state)
       state.with(mode: Subsequent::Modes::AddChecklistItem)
     end
   end

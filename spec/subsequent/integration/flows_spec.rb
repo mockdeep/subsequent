@@ -303,4 +303,85 @@ RSpec.describe "integration flows" do
       expect(state.checklist_items.map(&:name)).to include("Item A")
     end
   end
+
+  describe "cycle within browsed lane" do
+    it "stays on the browsed lane after cycling a card" do
+      lane_card = {
+        id: "card-b",
+        name: "Lane Card",
+        pos: 1,
+        short_url: "http://example.com/b",
+        checklists: [
+          api_checklist(
+            id: "cl-b",
+            name: "Lane @dev",
+            pos: 1,
+            check_items: [item_a],
+          ),
+        ],
+      }
+
+      lists = [
+        { id: "list-a", name: "Backlog" },
+        { id: "list-b", name: "In Progress" },
+        { id: "list-c", name: "Done" },
+      ]
+      stub_lists(lists)
+      stub_browse_cards("list-c", [lane_card])
+
+      cycle_url = api_url("cards/card-b", pos: 2)
+      stub_request(:put, cycle_url).to_return(body: "{}")
+
+      state = initial_state([card_one])
+
+      state = tick(state, "b")
+      state = tick(state, "l")
+      state = tick(state, "3")
+      expect(state.browse_list_id).to eq("list-c")
+      expect(state.card.name).to eq("Lane Card")
+
+      state = tick(state, "c")
+      expect(state.mode).to eq(Subsequent::Modes::Cycle)
+
+      state = tick(state, "c")
+      expect(a_request(:put, cycle_url)).to have_been_made
+      expect(state.browse_list_id).to eq("list-c")
+      expect(state.lists.map(&:name)).to eq(["Backlog", "In Progress", "Done"])
+      expect(state.card.name).to eq("Lane Card")
+    end
+  end
+
+  describe "create card within browsed lane" do
+    it "creates the card in the browsed lane, not the default list" do
+      lists = [
+        { id: "list-a", name: "Backlog" },
+        { id: "list-b", name: "In Progress" },
+      ]
+      stub_lists(lists)
+      stub_browse_cards("list-b", [card_two])
+
+      card_post = api_url(
+        "cards",
+        idList: "list-b",
+        name: "New Card",
+        pos: "top",
+      )
+      stub_request(:post, card_post)
+
+      state = initial_state([card_one])
+
+      state = tick(state, "b")
+      state = tick(state, "l")
+      state = tick(state, "2")
+      expect(state.browse_list_id).to eq("list-b")
+
+      state = tick(state, "n")
+      state = tick(state, "c")
+      state = tick(state, "New Card\n")
+
+      expect(a_request(:post, card_post)).to have_been_made
+      expect(state.mode).to eq(Subsequent::Modes::AddChecklist)
+      expect(state.browse_list_id).to eq("list-b")
+    end
+  end
 end

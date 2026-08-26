@@ -14,13 +14,13 @@ module Subsequent::Options::CycleCard
 
     # cycle card to the end and fetch data
     def call(state, _text)
-      state => { cards:, card:, filter:, sort: }
+      state => { cards:, card: }
 
       pos = cards.last.pos + 1
 
       show_spinner do
         Subsequent::TrelloClient.update_card(card, pos:)
-        Subsequent::Commands::FetchData.call(filter:, sort:)
+        Subsequent::Commands::FetchData.call(state)
       end
     end
   end
