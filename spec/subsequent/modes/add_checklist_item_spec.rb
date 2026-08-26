@@ -25,7 +25,7 @@ RSpec.describe Subsequent::Modes::AddChecklistItem do
 
     it "creates a checklist item with the input text" do
       checklist = make_checklist
-      state = make_state(cards: [make_card_with_item], checklist:)
+      state = make_state(cards: [make_card_with_item]).with(checklist:)
       stub_request(:post, /checkItems/)
       stub_request(:get, /cards/).to_return(body: [api_card].to_json)
       mock_input("new item")

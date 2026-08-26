@@ -21,6 +21,22 @@ class Subsequent::State
   include Subsequent::DisplayHelpers
 
   DEFAULT_MODE = Subsequent::Modes::Normal
+  CHECKLIST_ITEM_LIMIT = 5
+
+  # the fields build derives, which callers must not preset
+  SELECTED = [:card, :checklist, :checklist_items].freeze
+
+  class << self
+    # build a state for freshly fetched cards, selecting card and checklist
+    def build(cards:, sort:, filter:, list_id:, **args)
+      preset = args.keys & SELECTED
+      unless preset.empty?
+        raise ArgumentError, "build selects #{preset.join(", ")} itself"
+      end
+
+      new(cards: [], sort:, filter:, list_id:, **args).load(cards)
+    end
+  end
 
   def initialize(
     cards:,
@@ -28,21 +44,37 @@ class Subsequent::State
     filter:,
     list_id:,
     browsed_checklist: false,
-    mode: DEFAULT_MODE,
-    tag_page: 0,
     browse_page: 0,
+    card: Subsequent::Models::NullCard.new,
+    checklist: Subsequent::Models::NullChecklist.new,
+    checklist_items: [],
     lists: [],
-    **args
+    mode: DEFAULT_MODE,
+    tag_page: 0
   )
-    cards = filter.call(cards)
-    card = derive_card(cards, sort, args)
-    checklist = derive_checklist(card, args)
-    checklist_items = derive_checklist_items(checklist, args)
+    super
+  end
 
-    super(
-      browsed_checklist:,
-      browse_page:, cards:, filter:, list_id:, lists:, sort:,
-      card:, checklist:, checklist_items:, mode:, tag_page:,
+  # replace the cards, applying the current filter and re-selecting
+  def load(cards)
+    with(cards: filter.call(cards)).reselect
+  end
+
+  # re-run the current sort to pick the card and its checklist
+  def reselect
+    select_card(sort.call(cards) || Subsequent::Models::NullCard.new)
+  end
+
+  # select the given card and its first checklist with unchecked items
+  def select_card(card)
+    with(card:).select_checklist(auto_checklist(card))
+  end
+
+  # select the given checklist on the current card
+  def select_checklist(checklist)
+    with(
+      checklist:,
+      checklist_items: checklist.unchecked_items.first(CHECKLIST_ITEM_LIMIT),
     )
   end
 
@@ -105,18 +137,9 @@ class Subsequent::State
       .join("\n")
   end
 
-  def derive_card(cards, sort, args)
-    args.fetch(:card) { sort.call(cards) || Subsequent::Models::NullCard.new }
-  end
-
-  def derive_checklist(card, args)
-    checklist =
-      args.fetch(:checklist) { card.checklists.find(&:unchecked_items?) }
-    checklist || Subsequent::Models::NullChecklist.new
-  end
-
-  def derive_checklist_items(checklist, args)
-    args.fetch(:checklist_items) { checklist.unchecked_items.first(5) }
+  def auto_checklist(card)
+    card.checklists.find(&:unchecked_items?) ||
+      Subsequent::Models::NullChecklist.new
   end
 
   def tagged_checklists

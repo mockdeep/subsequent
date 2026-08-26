@@ -60,7 +60,7 @@ module Factories
   end
 
   def make_state(cards: [make_card], **overrides)
-    Subsequent::State.new(
+    Subsequent::State.build(
       cards:,
       filter: Subsequent::Filters::None,
       sort: Subsequent::Sorts::First,

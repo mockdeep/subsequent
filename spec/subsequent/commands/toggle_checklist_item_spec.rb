@@ -57,7 +57,7 @@ RSpec.describe Subsequent::Commands::ToggleChecklistItem do
         ],
       )
       complete_item = card.checklists.first.items.last
-      state = make_state(cards: [card], checklist_items: [complete_item])
+      state = make_state(cards: [card]).with(checklist_items: [complete_item])
       stub_request(:put, /checkItem/).to_return(body: "{}")
 
       result = described_class.call(state, "1")

@@ -26,10 +26,9 @@ RSpec.describe Subsequent::Options::Refresh do
       stub_request(:get, /cards/)
         .to_return(body: [other_card, target_card].to_json)
 
-      state = make_state(
-        cards: [make_card(id: "target"), make_card(id: "other")],
-        card: make_card(id: "target"),
-      )
+      target = make_card(id: "target")
+      state = make_state(cards: [target, make_card(id: "other")])
+              .select_card(target)
 
       result = described_class.call(state, "r")
 
@@ -57,12 +56,7 @@ RSpec.describe Subsequent::Options::Refresh do
         checklists: [checklist1_data, checklist2_data],
       )
 
-      state = make_state(
-        cards: [card],
-        card:,
-        checklist: card.checklists.last,
-        checklist_items: card.checklists.last.unchecked_items.first(5),
-      )
+      state = make_state(cards: [card]).select_checklist(card.checklists.last)
 
       result = described_class.call(state, "r")
 
@@ -90,12 +84,9 @@ RSpec.describe Subsequent::Options::Refresh do
         checklists: [checklist1_data, checklist2_data],
       )
 
-      state = make_state(
-        cards: [card],
-        card:,
-        checklist: card.checklists.last,
-        checklist_items: card.checklists.last.unchecked_items.first(5),
-      ).with(browsed_checklist: true)
+      state = make_state(cards: [card])
+              .with(browsed_checklist: true)
+              .select_checklist(card.checklists.last)
 
       result = described_class.call(state, "r")
 
@@ -123,12 +114,9 @@ RSpec.describe Subsequent::Options::Refresh do
         checklists: [checklist1_data, checklist2_data],
       )
 
-      state = make_state(
-        cards: [card],
-        card:,
-        checklist: card.checklists.first,
-        checklist_items: [],
-      ).with(browsed_checklist: true)
+      state = make_state(cards: [card])
+              .with(browsed_checklist: true)
+              .select_checklist(card.checklists.first)
 
       result = described_class.call(state, "r")
 
@@ -145,11 +133,9 @@ RSpec.describe Subsequent::Options::Refresh do
 
       card = make_card(id: "target", checklists: [checklist_data])
 
-      state = make_state(
-        cards: [card],
-        card:,
-        checklist: make_checklist(id: "cl-gone"),
-      ).with(browsed_checklist: true)
+      state = make_state(cards: [card])
+              .with(browsed_checklist: true)
+              .select_checklist(make_checklist(id: "cl-gone"))
 
       result = described_class.call(state, "r")
 
@@ -177,12 +163,7 @@ RSpec.describe Subsequent::Options::Refresh do
         checklists: [checklist1_data, checklist2_data],
       )
 
-      state = make_state(
-        cards: [card],
-        card:,
-        checklist: card.checklists.first,
-        checklist_items: [],
-      )
+      state = make_state(cards: [card]).select_checklist(card.checklists.first)
 
       result = described_class.call(state, "r")
 
@@ -192,10 +173,7 @@ RSpec.describe Subsequent::Options::Refresh do
     it "falls back to default when card no longer exists" do
       stub_request(:get, /cards/).to_return(body: [api_card].to_json)
 
-      state = make_state(
-        cards: [make_card(id: "gone")],
-        card: make_card(id: "gone"),
-      )
+      state = make_state(cards: [make_card(id: "gone")])
 
       result = described_class.call(state, "r")
 
