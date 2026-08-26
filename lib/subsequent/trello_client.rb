@@ -9,8 +9,8 @@ module Subsequent::TrelloClient
 
   class << self
     # Fetches all cards from the given or default list
-    def fetch_cards(list_id: self.list_id)
-      path = "lists/#{list_id}/cards"
+    def fetch_cards(list_id: nil)
+      path = "lists/#{list_id || default_list_id}/cards"
 
       cards_data = fetch_data(path, checklists: "all")
 
@@ -32,9 +32,9 @@ module Subsequent::TrelloClient
       request(:put, path, "update checklist item", **params)
     end
 
-    # creates a new card on Trello
-    def create_card(name:)
-      params = { name:, idList: list_id, pos: "top" }
+    # creates a new card on Trello in the given or default list
+    def create_card(name:, list_id: nil)
+      params = { name:, idList: list_id || default_list_id, pos: "top" }
       request(:post, "cards", "create card", **params)
     end
 
@@ -103,7 +103,7 @@ module Subsequent::TrelloClient
       }
     end
 
-    def list_id
+    def default_list_id
       config.fetch(:default_list_id)
     end
 

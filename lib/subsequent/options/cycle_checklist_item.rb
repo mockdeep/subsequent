@@ -14,13 +14,13 @@ module Subsequent::Options::CycleChecklistItem
 
     # cycle checklist item to the end and fetch data
     def call(state, _text)
-      state => { checklist:, checklist_items:, filter:, sort: }
+      state => { checklist:, checklist_items: }
 
       checklist_item = checklist_items.first
       pos = checklist.items.last.pos + 1
       show_spinner do
         Subsequent::TrelloClient.update_checklist_item(checklist_item, pos:)
-        Subsequent::Commands::FetchData.call(filter:, sort:)
+        Subsequent::Commands::FetchData.call(state)
       end
     end
   end
