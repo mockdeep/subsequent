@@ -48,7 +48,7 @@ module Subsequent::Actions::Run
 
       show_spinner do
         list_id = resolve_list_id
-        Subsequent::Commands::FetchData.call(filter:, sort:, list_id:)
+        Subsequent::Commands::FetchData.initial(filter:, sort:, list_id:)
       end
     end
 

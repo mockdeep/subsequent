@@ -14,14 +14,7 @@ module Subsequent::Options::Refresh
 
     # refresh the data
     def call(state, _text)
-      state => { filter:, sort:, browse_list_id:, lists: }
-
-      new_state =
-        show_spinner do
-          Subsequent::Commands::FetchData.call(
-            filter:, sort:, list_id: browse_list_id, lists:,
-          )
-        end
+      new_state = show_spinner { Subsequent::Commands::FetchData.call(state) }
 
       restore_selection(new_state, state)
     end

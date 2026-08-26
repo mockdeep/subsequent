@@ -5,10 +5,10 @@ module Subsequent::Commands::CreateChecklist
   class << self
     # create a checklist on the current card
     def call(state, name)
-      state => { card:, filter:, sort: }
+      state => { card: }
       Subsequent::TrelloClient.create_checklist(card: card, name:)
 
-      state = Subsequent::Commands::FetchData.call(filter:, sort:)
+      state = Subsequent::Commands::FetchData.call(state)
       checklist = state.card.checklists.first
       mode = Subsequent::Modes::AddChecklistItem
 
